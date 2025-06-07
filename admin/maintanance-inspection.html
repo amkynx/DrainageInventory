@@ -1066,7 +1066,7 @@
       if (inspectorSelect) {
         inspectorSelect.innerHTML = '<option value="">Select inspector</option>';
         users.forEach(user => {
-          if (user.role === 'Inspector' || user.role === 'Admin') {
+          if (user.role === 'Operator' || user.role === 'Admin') {
             const option = document.createElement('option');
             option.value = user.id;
             option.textContent = `${user.first_name} ${user.last_name} (${user.role})`;
@@ -1292,7 +1292,7 @@
       document.getElementById('modal-inspection-date').value = schedule.scheduled_date;
       document.getElementById('modal-inspection-time').value = schedule.scheduled_time;
       document.getElementById('modal-inspection-frequency').value = schedule.frequency;
-      document.getElementById('modal-inspection-inspector').value = schedule.inspector_id;
+      document.getElementById('modal-inspection-inspector').value = schedule.operator_id;
       document.getElementById('modal-inspection-description').value = schedule.description || '';
       document.getElementById('modal-inspection-findings').value = schedule.findings || '';
       document.getElementById('modal-inspection-recommendations').value = schedule.recommendations || '';
@@ -1353,7 +1353,7 @@
         scheduled_date: document.getElementById('modal-inspection-date').value,
         scheduled_time: document.getElementById('modal-inspection-time').value || null,
         frequency: document.getElementById('modal-inspection-frequency').value,
-        inspector_id: document.getElementById('modal-inspection-inspector').value || null,
+        operator_id: document.getElementById('modal-inspection-inspector').value || null,
         description: document.getElementById('modal-inspection-description').value,
         findings: document.getElementById('modal-inspection-findings').value,
         recommendations: document.getElementById('modal-inspection-recommendations').value

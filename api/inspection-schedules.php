@@ -50,17 +50,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         if (isset($_GET['id'])) {
             $id = (int)$_GET['id'];
             $sql = "SELECT ins.*, dp.name as drainage_point_name, dp.latitude, dp.longitude,
-                           u1.first_name as inspector_name, u1.last_name as inspector_lastname,
+                           u1.first_name as operator_name, u1.last_name as operator_lastname,
                            u2.first_name as created_by_name, u2.last_name as created_by_lastname
                     FROM inspection_schedules ins
                     LEFT JOIN drainage_points dp ON ins.drainage_point_id = dp.id
-                    LEFT JOIN users u1 ON ins.inspector_id = u1.id
+                    LEFT JOIN users u1 ON ins.operator_id = u1.id
                     LEFT JOIN users u2 ON ins.created_by = u2.id
                     WHERE ins.id = $id";
         } else {
             // Get all inspection schedules with related data
             $sql = "SELECT ins.*, dp.name as drainage_point_name, dp.latitude, dp.longitude,
-                           u1.first_name as inspector_name, u1.last_name as inspector_lastname,
+                           u1.first_name as operator_name, u1.last_name as operator_lastname,
                            u2.first_name as created_by_name, u2.last_name as created_by_lastname,
                            CASE 
                                WHEN ins.scheduled_date < CURDATE() AND ins.status != 'Completed' THEN 'Overdue'
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                            END as current_status
                     FROM inspection_schedules ins
                     LEFT JOIN drainage_points dp ON ins.drainage_point_id = dp.id
-                    LEFT JOIN users u1 ON ins.inspector_id = u1.id
+                    LEFT JOIN users u1 ON ins.operator_id = u1.id
                     LEFT JOIN users u2 ON ins.created_by = u2.id
                     ORDER BY ins.scheduled_date ASC";
         }
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             while ($row = $result->fetch_assoc()) {
                 $schedules[] = [
                     'id' => (int)$row['id'],
-                    'drainage_point_id' => (int)$row['drainage_point_id'],
+                    'drainage_point_id' => $row['drainage_point_id'],
                     'drainage_point_name' => $row['drainage_point_name'],
                     'drainage_point_coordinates' => [
                         'lat' => $row['latitude'] ? (float)$row['latitude'] : null,
@@ -89,8 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     'inspection_type' => $row['inspection_type'],
                     'scheduled_date' => $row['scheduled_date'],
                     'scheduled_time' => $row['scheduled_time'],
-                    'inspector_id' => $row['inspector_id'],
-                    'inspector_name' => $row['inspector_name'] ? $row['inspector_name'] . ' ' . $row['inspector_lastname'] : null,
+                    'operator_id' => $row['operator_id'],
+                    'operator_name' => $row['operator_name'] ? $row['operator_name'] . ' ' . $row['operator_lastname'] : null,
                     'frequency' => $row['frequency'],
                     'next_inspection_date' => $row['next_inspection_date'],
                     'status' => $row['current_status'] ?? $row['status'],
@@ -145,11 +145,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         // Sanitize and prepare data
-        $drainage_point_id = (int)$data['drainage_point_id'];
-        $inspection_type = $conn->real_escape_string($data['inspection_type']);
+        
+        $drainage_point_id = $conn->real_escape_string($data['drainage_point_id']);        $inspection_type = $conn->real_escape_string($data['inspection_type']);
         $scheduled_date = $conn->real_escape_string($data['scheduled_date']);
         $scheduled_time = isset($data['scheduled_time']) ? "'" . $conn->real_escape_string($data['scheduled_time']) . "'" : 'NULL';
-        $inspector_id = isset($data['inspector_id']) ? (int)$data['inspector_id'] : 4; // Default to inspector user
+        $operator_id = isset($data['operator_id']) ? (int)$data['operator_id'] : 4; // Default to operator user
         $frequency = $conn->real_escape_string($data['frequency'] ?? 'One-time');
         $priority = $conn->real_escape_string($data['priority'] ?? 'Medium');
         $description = $conn->real_escape_string($data['description'] ?? '');
@@ -169,14 +169,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         $sql = "INSERT INTO inspection_schedules (
-                    drainage_point_id, inspection_type, scheduled_date, scheduled_time,
-                    inspector_id, frequency, next_inspection_date, priority,
-                    description, inspection_checklist, created_by
-                ) VALUES (
-                    $drainage_point_id, '$inspection_type', '$scheduled_date', $scheduled_time,
-                    $inspector_id, '$frequency', $next_inspection_date, '$priority',
-                    '$description', $inspection_checklist, $created_by
-                )";
+            drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+            operator_id, frequency, next_inspection_date, priority,
+            description, inspection_checklist, created_by
+        ) VALUES (
+            '$drainage_point_id', '$inspection_type', '$scheduled_date', $scheduled_time,
+            $operator_id, '$frequency', $next_inspection_date, '$priority',
+            '$description', $inspection_checklist, $created_by
+        )";
         
         file_put_contents($logFile, "SQL Query: " . $sql . "\n", FILE_APPEND);
         
@@ -224,8 +224,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         if (isset($data['scheduled_time'])) {
             $updates[] = "scheduled_time = '" . $conn->real_escape_string($data['scheduled_time']) . "'";
         }
-        if (isset($data['inspector_id'])) {
-            $updates[] = "inspector_id = " . (int)$data['inspector_id'];
+        if (isset($data['operator_id'])) {
+            $updates[] = "operator_id = " . (int)$data['operator_id'];
         }
         if (isset($data['frequency'])) {
             $updates[] = "frequency = '" . $conn->real_escape_string($data['frequency']) . "'";

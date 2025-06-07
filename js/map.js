@@ -2356,6 +2356,22 @@ function setupPointDetailHandlers() {
       deletePoint(currentPointId);
     });
   }
+
+  const scheduleInspectionBtn = document.querySelector(
+    ".btn-outline-success[onclick^='showScheduleInspectionModal']"
+  );
+  if (scheduleInspectionBtn) {
+    scheduleInspectionBtn.onclick = () =>
+      showScheduleInspectionModal(currentPointId);
+  }
+
+  const requestMaintenanceBtn = document.querySelector(
+    ".btn-outline-warning[onclick^='showRequestMaintenanceModal']"
+  );
+  if (requestMaintenanceBtn) {
+    requestMaintenanceBtn.onclick = () =>
+      showRequestMaintenanceModal(currentPointId);
+  }
 }
 
 function setupMapControls() {
@@ -2600,7 +2616,7 @@ function populateUserDropdowns() {
     inspectionInspector.innerHTML =
       '<option value="">Select inspector (optional)</option>';
     users.forEach((user) => {
-      if (user.role === "Inspector" || user.role === "Admin") {
+      if (user.role === "Operator" || user.role === "Admin") {
         const option = document.createElement("option");
         option.value = user.id;
         option.textContent = `${user.first_name} ${user.last_name} (${user.role})`;
@@ -2701,6 +2717,8 @@ async function handleMaintenanceRequestForm() {
 }
 
 function showScheduleInspectionModal(pointId) {
+  resetForm("inspection-schedule-form");
+
   const point = allDrainageData.find((p) => p.id == pointId);
   if (!point) {
     showNotification("Point not found", "danger");
@@ -2708,9 +2726,12 @@ function showScheduleInspectionModal(pointId) {
   }
 
   document.getElementById("inspection-drainage-point-id").value = point.id;
-  document.getElementById("inspection-point-name").value = point.name;
+  document.getElementById("inspection-point-name").value = `${point.name}`;
 
-  resetForm("inspection-schedule-form");
+  console.log(
+    "Set drainage point ID:",
+    document.getElementById("inspection-drainage-point-id").value
+  );
 
   const nextWeek = new Date();
   nextWeek.setDate(nextWeek.getDate() + 7);
@@ -2723,10 +2744,13 @@ function showScheduleInspectionModal(pointId) {
 }
 
 async function handleInspectionScheduleForm() {
+  const drainagePointIdValue = document.getElementById(
+    "inspection-drainage-point-id"
+  ).value;
+  console.log("Drainage Point ID:", drainagePointIdValue); // Debug
+
   const formData = {
-    drainage_point_id: parseInt(
-      document.getElementById("inspection-drainage-point-id").value
-    ),
+    drainage_point_id: drainagePointIdValue,
     inspection_type: document.getElementById("inspection-type").value,
     scheduled_date: document.getElementById("inspection-scheduled-date").value,
     scheduled_time:
@@ -2759,6 +2783,12 @@ async function handleInspectionScheduleForm() {
 
   if (checklist.length > 0) {
     formData.inspection_checklist = checklist;
+  }
+
+  if (!formData.drainage_point_id) {
+    showNotification("Invalid drainage point selected", "warning");
+    document.getElementById("inspection-drainage-point-id").focus();
+    return;
   }
 
   if (!formData.inspection_type) {

@@ -9380,3 +9380,182 @@ GET error: Unknown column 'ins.inspector_id' in 'on clause'
 2025-06-07 20:04:55 - GET request
 Database connection successful
 GET error: Unknown column 'ins.inspector_id' in 'on clause'
+2025-06-07 21:17:38 - POST request
+Database connection successful
+POST input: {"drainage_point_id":null,"inspection_type":"Routine Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"High","frequency":"Monthly","inspector_id":"8","description":"","inspection_checklist":["Check for blockages or debris","Water flow assessment"]}
+POST error: Missing required fields: drainage_point_id, inspection_type, and scheduled_date are required
+2025-06-07 21:18:42 - POST request
+Database connection successful
+POST input: {"drainage_point_id":null,"inspection_type":"Routine Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"Monthly","inspector_id":"7","description":"q","inspection_checklist":["Structural integrity assessment"]}
+POST error: Missing required fields: drainage_point_id, inspection_type, and scheduled_date are required
+2025-06-07 21:45:45 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","inspection_type":"Safety Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"One-time","inspector_id":"7","description":"","inspection_checklist":["Structural integrity assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+                    drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+                    inspector_id, frequency, next_inspection_date, priority,
+                    description, inspection_checklist, created_by
+                ) VALUES (
+                    0, 'Safety Inspection', '2025-06-14', '09:00',
+                    7, 'One-time', NULL, 'Medium',
+                    '', '[\"Structural integrity assessment\"]', 1
+                )
+POST error: Unknown column 'inspector_id' in 'field list'
+2025-06-07 21:49:36 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","inspection_type":"Safety Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"One-time","inspector_id":"8","description":"","inspection_checklist":["Structural integrity assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+                    drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+                    operator_id, frequency, next_inspection_date, priority,
+                    description, inspection_checklist, created_by
+                ) VALUES (
+                    0, 'Safety Inspection', '2025-06-14', '09:00',
+                    4, 'One-time', NULL, 'Medium',
+                    '', '[\"Structural integrity assessment\"]', 1
+                )
+POST error: Cannot add or update a child row: a foreign key constraint fails (`drainageinventory`.`inspection_schedules`, CONSTRAINT `fk_inspection_drainage_point` FOREIGN KEY (`drainage_point_id`) REFERENCES `drainage_points_backup` (`id`) ON DELETE CASCADE)
+2025-06-07 22:00:41 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","inspection_type":"Safety Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"One-time","inspector_id":"7","description":"","inspection_checklist":["Structural integrity assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+                    drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+                    operator_id, frequency, next_inspection_date, priority,
+                    description, inspection_checklist, created_by
+                ) VALUES (
+                    0, 'Safety Inspection', '2025-06-14', '09:00',
+                    4, 'One-time', NULL, 'Medium',
+                    '', '[\"Structural integrity assessment\"]', 1
+                )
+POST error: Unknown column 'operator_id' in 'field list'
+2025-06-07 22:01:56 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","inspection_type":"Routine Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"Weekly","inspector_id":"8","description":"","inspection_checklist":["Structural integrity assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+                    drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+                    operator_id, frequency, next_inspection_date, priority,
+                    description, inspection_checklist, created_by
+                ) VALUES (
+                    0, 'Routine Inspection', '2025-06-14', '09:00',
+                    4, 'Weekly', '2025-06-21', 'Medium',
+                    '', '[\"Structural integrity assessment\"]', 1
+                )
+POST error: Unknown column 'next_inspection_date' in 'field list'
+2025-06-07 22:02:56 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","inspection_type":"Safety Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"One-time","inspector_id":"8","description":"","inspection_checklist":["Structural integrity assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+                    drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+                    operator_id, frequency, next_inspection_date, priority,
+                    description, inspection_checklist, created_by
+                ) VALUES (
+                    0, 'Safety Inspection', '2025-06-14', '09:00',
+                    4, 'One-time', NULL, 'Medium',
+                    '', '[\"Structural integrity assessment\"]', 1
+                )
+POST error: Cannot add or update a child row: a foreign key constraint fails (`drainageinventory`.`inspection_schedules`, CONSTRAINT `inspection_schedules_ibfk_1` FOREIGN KEY (`drainage_point_id`) REFERENCES `drainage_points` (`id`) ON DELETE CASCADE)
+2025-06-07 22:06:44 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","inspection_type":"Safety Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"Monthly","inspector_id":"7","description":"","inspection_checklist":["Structural integrity assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+                    drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+                    operator_id, frequency, next_inspection_date, priority,
+                    description, inspection_checklist, created_by
+                ) VALUES (
+                    0, 'Safety Inspection', '2025-06-14', '09:00',
+                    4, 'Monthly', '2025-07-14', 'Medium',
+                    '', '[\"Structural integrity assessment\"]', 1
+                )
+POST error: Cannot add or update a child row: a foreign key constraint fails (`drainageinventory`.`inspection_schedules`, CONSTRAINT `inspection_schedules_ibfk_1` FOREIGN KEY (`drainage_point_id`) REFERENCES `drainage_points` (`id`) ON DELETE CASCADE)
+2025-06-07 22:12:40 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","inspection_type":"Safety Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"Monthly","inspector_id":"7","description":"","inspection_checklist":["Structural integrity assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+                    drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+                    operator_id, frequency, next_inspection_date, priority,
+                    description, inspection_checklist, created_by
+                ) VALUES (
+                    0, 'Safety Inspection', '2025-06-14', '09:00',
+                    4, 'Monthly', '2025-07-14', 'Medium',
+                    '', '[\"Structural integrity assessment\"]', 1
+                )
+POST error: Cannot add or update a child row: a foreign key constraint fails (`drainageinventory`.`inspection_schedules`, CONSTRAINT `inspection_schedules_ibfk_1` FOREIGN KEY (`drainage_point_id`) REFERENCES `drainage_points` (`id`) ON DELETE CASCADE)
+2025-06-07 22:12:56 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","inspection_type":"Structural Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"One-time","inspector_id":"8","description":"","inspection_checklist":["Structural integrity assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+                    drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+                    operator_id, frequency, next_inspection_date, priority,
+                    description, inspection_checklist, created_by
+                ) VALUES (
+                    0, 'Structural Inspection', '2025-06-14', '09:00',
+                    4, 'One-time', NULL, 'Medium',
+                    '', '[\"Structural integrity assessment\"]', 1
+                )
+POST error: Cannot add or update a child row: a foreign key constraint fails (`drainageinventory`.`inspection_schedules`, CONSTRAINT `inspection_schedules_ibfk_1` FOREIGN KEY (`drainage_point_id`) REFERENCES `drainage_points` (`id`) ON DELETE CASCADE)
+2025-06-07 22:14:10 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"PHL1","inspection_type":"Structural Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"One-time","inspector_id":"8","description":"","inspection_checklist":["Structural integrity assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+                    drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+                    operator_id, frequency, next_inspection_date, priority,
+                    description, inspection_checklist, created_by
+                ) VALUES (
+                    0, 'Structural Inspection', '2025-06-14', '09:00',
+                    4, 'One-time', NULL, 'Medium',
+                    '', '[\"Structural integrity assessment\"]', 1
+                )
+POST error: Cannot add or update a child row: a foreign key constraint fails (`drainageinventory`.`inspection_schedules`, CONSTRAINT `inspection_schedules_ibfk_1` FOREIGN KEY (`drainage_point_id`) REFERENCES `drainage_points` (`id`) ON DELETE CASCADE)
+2025-06-07 22:14:18 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"PHL1","inspection_type":"Structural Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"One-time","inspector_id":"8","description":"","inspection_checklist":["Structural integrity assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+                    drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+                    operator_id, frequency, next_inspection_date, priority,
+                    description, inspection_checklist, created_by
+                ) VALUES (
+                    0, 'Structural Inspection', '2025-06-14', '09:00',
+                    4, 'One-time', NULL, 'Medium',
+                    '', '[\"Structural integrity assessment\"]', 1
+                )
+POST error: Cannot add or update a child row: a foreign key constraint fails (`drainageinventory`.`inspection_schedules`, CONSTRAINT `inspection_schedules_ibfk_1` FOREIGN KEY (`drainage_point_id`) REFERENCES `drainage_points` (`id`) ON DELETE CASCADE)
+2025-06-07 22:17:05 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","inspection_type":"Routine Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"One-time","inspector_id":"8","description":"","inspection_checklist":["Structural integrity assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+            drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+            operator_id, frequency, next_inspection_date, priority,
+            description, inspection_checklist, created_by
+        ) VALUES (
+            'BB7', 'Routine Inspection', '2025-06-14', '09:00',
+            4, 'One-time', NULL, 'Medium',
+            '', '[\"Structural integrity assessment\"]', 1
+        )
+Inspection schedule created successfully with ID: 7
+2025-06-07 22:18:38 - GET request
+Database connection successful
+GET error: Unknown column 'ins.status' in 'field list'
+2025-06-07 22:18:50 - GET request
+Database connection successful
+GET error: Unknown column 'ins.status' in 'field list'
+2025-06-07 22:21:20 - GET request
+Database connection successful
+GET error: Unknown column 'ins.status' in 'field list'
+2025-06-07 22:23:57 - GET request
+Database connection successful
+GET error: Unknown column 'ins.status' in 'field list'
+2025-06-07 22:25:51 - GET request
+Database connection successful
+GET error: Unknown column 'ins.status' in 'field list'
+2025-06-07 22:26:13 - POST request
+Database connection successful
+POST input: {"drainage_point_id":null,"inspection_type":"Structural Inspection","priority":"High","status":"Completed","scheduled_date":"2025-06-25","scheduled_time":"16:29","frequency":"Monthly","operator_id":"7","description":"","findings":"","recommendations":""}
+POST error: Missing required fields: drainage_point_id, inspection_type, and scheduled_date are required
+2025-06-07 22:37:50 - GET request
+Database connection successful
+GET error: Unknown column 'ins.status' in 'field list'
+2025-06-07 22:38:05 - GET request
+Database connection successful
+GET error: Unknown column 'ins.status' in 'field list'
+2025-06-07 22:38:25 - GET request
+Database connection successful
+GET error: Unknown column 'ins.status' in 'field list'
