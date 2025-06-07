@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DrainTrack - Management Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Common DrainTrack Styles -->
+  <link href="../css/common.css" rel="stylesheet">
+  
+  <style>
+    /* Tab styling */
+    .nav-tabs .nav-link {
+      border-radius: 15px 15px 0 0;
+      border: none;
+      background: #f8f9fa;
+      color: #6c757d;
+      margin-right: 0.5rem;
+      padding: 1rem 1.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .nav-tabs .nav-link:hover {
+      background: #e9ecef;
+      color: #495057;
+    }
+
+    .nav-tabs .nav-link.active {
+      background: white;
+      color: var(--primary-color);
+      border-bottom: 3px solid var(--primary-color);
+    }
+
+    .tab-content {
+      background: white;
+      border-radius: 0 15px 15px 15px;
+      padding: 2rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    #maintenance-tab.nav-link.active {
+        background-color: #0d6efd !important;
+        color: #ffffff !important;
+    }
+
+    #maintenance-tab.nav-link {
+        background-color: grey !important;
+        color: #ffffff !important;
+    }
+
+    #inspection-tab.nav-link.active {
+        background-color: #0d6efd !important;
+        color: #ffffff !important;
+    }
+
+    #inspection-tab.nav-link {
+        background-color: grey !important;
+        color: #ffffff !important;
+    }
+
+    /* Status and priority badges */
+    .status-pending { background-color: #fef3c7; color: #92400e; }
+    .status-approved { background-color: #dbeafe; color: #1e40af; }
+    .status-in-progress { background-color: #e0e7ff; color: #3730a3; }
+    .status-completed { background-color: #d1fae5; color: #065f46; }
+    .status-cancelled { background-color: #f3f4f6; color: #374151; }
+    .status-scheduled { background-color: #dbeafe; color: #1e40af; }
+    .status-overdue { background-color: #fee2e2; color: #991b1b; }
+
+    .priority-low { background-color: #f3f4f6; color: #374151; }
+    .priority-medium { background-color: #dbeafe; color: #1e40af; }
+    .priority-high { background-color: #fef3c7; color: #92400e; }
+    .priority-critical { background-color: #fee2e2; color: #991b1b; }
+
+    /* Table improvements */
+    .table th {
+      border-bottom: 2px solid #e9ecef;
+      font-weight: 600;
+      color: #495057;
+      background-color: #f8f9fa;
+    }
+
+    .table-hover tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+
+    /* Action buttons */
+    .action-buttons .btn {
+      margin: 0.125rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    /* Filter section */
+    .filter-section {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Statistics cards for tabs */
+    .stats-row {
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-card.maintenance {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .stat-card.inspection {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    /* Modal improvements */
+    .modal-lg {
+      max-width: 800px;
+    }
+
+    /* Loading overlay styles */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.3s ease;
+    }
+
+    .loading-content {
+      text-align: center;
+      color: var(--primary-color);
+    }
+
+    .loading-spinner {
+      width: 3rem;
+      height: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Notification styles */
+    .notification {
+      position: fixed;
+      top: 100px;
+      right: 20px;
+      z-index: 9999;
+      max-width: 400px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Responsive improvements */
+    @media (max-width: 768px) {
+      .tab-content {
+        padding: 1rem;
+      }
+      
+      .action-buttons .btn {
+        padding: 0.125rem 0.25rem;
+        font-size: 0.625rem;
+      }
+      
+      .table-responsive {
+        font-size: 0.875rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="spinner-border loading-spinner" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <h4>Loading Dashboard...</h4>
+      <p>Please wait while we prepare your workspace</p>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="admin.html">
+        <i class="fas fa-water"></i>
+        DrainTrack
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="admin.html">
+              <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="map.html">
+              <i class="fas fa-map me-1"></i>Interactive Map
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="flood-report.html">
+              <i class="fas fa-exclamation-triangle me-1"></i>Flood Reports
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="maintanance-inspection.html">
+              <i class="fas fa-tools me-1"></i>Management
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="user.html">
+              <i class="fas fa-users me-1"></i>User Management
+            </a>
+          </li>
+        </ul>
+        <div class="ms-3">
+          <div class="dropdown">
+            <a class="btn btn-outline-light dropdown-toggle" href="#" role="role" id="userDropdown" data-bs-toggle="dropdown">
+              <i class="fas fa-user-circle me-1"></i><span id="userName">Admin</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+              <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="container-fluid">
+      <!-- Page Header -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <h1 class="h2 mb-3 text-gradient">
+            <i class="fas fa-tools me-2"></i>
+            Maintenance & Inspection Management
+          </h1>
+          <p class="text-muted">Manage maintenance requests and inspection schedules for drainage infrastructure.</p>
+        </div>
+      </div>
+
+      <!-- Tabs Navigation -->
+      <ul class="nav nav-tabs" id="managementTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="maintenance-tab" data-bs-toggle="tab" data-bs-target="#maintenance" type="button" role="tab">
+            <i class="fas fa-wrench me-2"></i>Maintenance Requests
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="inspection-tab" data-bs-toggle="tab" data-bs-target="#inspection" type="button" role="tab">
+            <i class="fas fa-clipboard-check me-2"></i>Inspection Schedules
+          </button>
+        </li>
+      </ul>
+
+      <!-- Tab Content -->
+      <div class="tab-content" id="managementTabsContent">
+        
+        <!-- Maintenance Requests Tab -->
+        <div class="tab-pane fade show active" id="maintenance" role="tabpanel">
+          <!-- Statistics Cards -->
+          <div class="row stats-row">
+            <div class="col-xl-3 col-md-6">
+              <div class="stat-card maintenance">
+                <div class="stat-number" id="maintenance-total">0</div>
+                <div class="stat-label">Total Requests</div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="stat-card maintenance">
+                <div class="stat-number" id="maintenance-pending">0</div>
+                <div class="stat-label">Pending</div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="stat-card maintenance">
+                <div class="stat-number" id="maintenance-in-progress">0</div>
+                <div class="stat-label">In Progress</div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="stat-card maintenance">
+                <div class="stat-number" id="maintenance-completed">0</div>
+                <div class="stat-label">Completed</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filters Section -->
+          <div class="filter-section">
+            <div class="row">
+              <div class="col-md-3">
+                <label class="form-label fw-bold">Search</label>
+                <input type="text" class="form-control" id="maintenance-search" placeholder="Search requests...">
+              </div>
+              <div class="col-md-2">
+                <label class="form-label fw-bold">Status</label>
+                <select class="form-select" id="maintenance-status-filter" title="Maintenance Status">
+                  <option value="">All Statuses</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label fw-bold">Priority</label>
+                <select class="form-select" id="maintenance-priority-filter" title="Maintenance Priority">
+                  <option value="">All Priorities</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                  <option value="Critical">Critical</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label fw-bold">Type</label>
+                <select class="form-select" id="maintenance-type-filter" title="Maintenance Type">
+                  <option value="">All Types</option>
+                  <option value="Cleaning">Cleaning</option>
+                  <option value="Repair">Repair</option>
+                  <option value="Replacement">Replacement</option>
+                  <option value="Inspection">Inspection</option>
+                  <option value="Upgrade">Upgrade</option>
+                  <option value="Emergency Repair">Emergency Repair</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-bold">Actions</label>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-primary" onclick="applyMaintenanceFilters()">
+                    <i class="fas fa-filter me-1"></i>Filter
+                  </button>
+                  <button class="btn btn-success" onclick="showAddMaintenanceModal()">
+                    <i class="fas fa-plus me-1"></i>Add Request
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Maintenance Requests Table -->
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">
+                <i class="fas fa-wrench me-2"></i>
+                Maintenance Requests (<span id="maintenance-count">0</span>)
+              </h5>
+              <button class="btn btn-outline-primary btn-sm" onclick="refreshMaintenanceData()">
+                <i class="fas fa-sync-alt"></i> Refresh
+              </button>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Point</th>
+                      <th>Type</th>
+                      <th>Priority</th>
+                      <th>Status</th>
+                      <th>Assigned To</th>
+                      <th>Scheduled</th>
+                      <th>Cost</th>
+                      <th>Created</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="maintenance-table-body">
+                    <!-- Data will be populated here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inspection Schedules Tab -->
+        <div class="tab-pane fade" id="inspection" role="tabpanel">
+          <!-- Statistics Cards -->
+          <div class="row stats-row">
+            <div class="col-xl-3 col-md-6">
+              <div class="stat-card inspection">
+                <div class="stat-number" id="inspection-total">0</div>
+                <div class="stat-label">Total Schedules</div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="stat-card inspection">
+                <div class="stat-number" id="inspection-scheduled">0</div>
+                <div class="stat-label">Scheduled</div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="stat-card inspection">
+                <div class="stat-number" id="inspection-overdue">0</div>
+                <div class="stat-label">Overdue</div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="stat-card inspection">
+                <div class="stat-number" id="inspection-completed">0</div>
+                <div class="stat-label">Completed</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filters Section -->
+          <div class="filter-section">
+            <div class="row">
+              <div class="col-md-3">
+                <label class="form-label fw-bold">Search</label>
+                <input type="text" class="form-control" id="inspection-search" placeholder="Search schedules...">
+              </div>
+              <div class="col-md-2">
+                <label class="form-label fw-bold">Status</label>
+                <select class="form-select" id="inspection-status-filter" title="Inspection Status">
+                  <option value="">All Statuses</option>
+                  <option value="Scheduled">Scheduled</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Cancelled">Cancelled</option>
+                  <option value="Overdue">Overdue</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label fw-bold">Priority</label>
+                <select class="form-select" id="inspection-priority-filter" title="Inspection Priority">
+                  <option value="">All Priorities</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                  <option value="Critical">Critical</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label fw-bold">Frequency</label>
+                <select class="form-select" id="inspection-frequency-filter" title="Inspection Frequency">
+                  <option value="">All Frequencies</option>
+                  <option value="One-time">One-time</option>
+                  <option value="Weekly">Weekly</option>
+                  <option value="Monthly">Monthly</option>
+                  <option value="Quarterly">Quarterly</option>
+                  <option value="Yearly">Yearly</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-bold">Actions</label>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-primary" onclick="applyInspectionFilters()">
+                    <i class="fas fa-filter me-1"></i>Filter
+                  </button>
+                  <button class="btn btn-success" onclick="showAddInspectionModal()">
+                    <i class="fas fa-plus me-1"></i>Add Schedule
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inspection Schedules Table -->
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">
+                <i class="fas fa-clipboard-check me-2"></i>
+                Inspection Schedules (<span id="inspection-count">0</span>)
+              </h5>
+              <button class="btn btn-outline-primary btn-sm" onclick="refreshInspectionData()">
+                <i class="fas fa-sync-alt"></i> Refresh
+              </button>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Point</th>
+                      <th>Type</th>
+                      <th>Priority</th>
+                      <th>Status</th>
+                      <th>Inspector</th>
+                      <th>Scheduled</th>
+                      <th>Frequency</th>
+                      <th>Created</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inspection-table-body">
+                    <!-- Data will be populated here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Maintenance Request Modal -->
+  <div class="modal fade" id="maintenanceModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-warning">
+          <h5 class="modal-title" id="maintenanceModalTitle">
+            <i class="fas fa-wrench me-2"></i>Maintenance Request
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="maintenanceForm">
+            <input type="hidden" id="maintenance-id" name="id">
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="modal-maintenance-point" class="form-label">Drainage Point *</label>
+                  <select class="form-select" id="modal-maintenance-point" required>
+                    <option value="">Select drainage point</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="modal-maintenance-type" class="form-label">Maintenance Type *</label>
+                  <select class="form-select" id="modal-maintenance-type" required>
+                    <option value="">Select type</option>
+                    <option value="Cleaning">Cleaning</option>
+                    <option value="Repair">Repair</option>
+                    <option value="Replacement">Replacement</option>
+                    <option value="Inspection">Inspection</option>
+                    <option value="Upgrade">Upgrade</option>
+                    <option value="Emergency Repair">Emergency Repair</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="modal-maintenance-priority" class="form-label">Priority *</label>
+                  <select class="form-select" id="modal-maintenance-priority" required>
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                    <option value="Critical">Critical</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="modal-maintenance-status" class="form-label">Status</label>
+                  <select class="form-select" id="modal-maintenance-status">
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="modal-maintenance-cost" class="form-label">Estimated Cost (RM)</label>
+                  <input type="number" class="form-control" id="modal-maintenance-cost" step="0.01" min="0">
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="modal-maintenance-assigned" class="form-label">Assigned To</label>
+                  <select class="form-select" id="modal-maintenance-assigned">
+                    <option value="">Select team member</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="modal-maintenance-scheduled" class="form-label">Scheduled Date</label>
+                  <input type="date" class="form-control" id="modal-maintenance-scheduled">
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="modal-maintenance-description" class="form-label">Description *</label>
+              <textarea class="form-control" id="modal-maintenance-description" rows="3" required></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="modal-maintenance-notes" class="form-label">Notes</label>
+              <textarea class="form-control" id="modal-maintenance-notes" rows="2"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-warning" id="saveMaintenanceBtn">
+            <i class="fas fa-save me-1"></i>Save Request
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inspection Schedule Modal -->
+  <div class="modal fade" id="inspectionModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-success">
+          <h5 class="modal-title" id="inspectionModalTitle">
+            <i class="fas fa-clipboard-check me-2"></i>Inspection Schedule
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="inspectionForm">
+            <input type="hidden" id="inspection-id" name="id">
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="modal-inspection-point" class="form-label">Drainage Point *</label>
+                  <select class="form-select" id="modal-inspection-point" required>
+                    <option value="">Select drainage point</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="modal-inspection-type" class="form-label">Inspection Type *</label>
+                  <select class="form-select" id="modal-inspection-type" required>
+                    <option value="">Select type</option>
+                    <option value="Routine Inspection">Routine Inspection</option>
+                    <option value="Safety Inspection">Safety Inspection</option>
+                    <option value="Structural Inspection">Structural Inspection</option>
+                    <option value="Emergency Inspection">Emergency Inspection</option>
+                    <option value="Post-Maintenance Inspection">Post-Maintenance Inspection</option>
+                    <option value="Compliance Inspection">Compliance Inspection</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label for="modal-inspection-priority" class="form-label">Priority *</label>
+                  <select class="form-select" id="modal-inspection-priority" required>
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                    <option value="Critical">Critical</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label for="modal-inspection-status" class="form-label">Status</label>
+                  <select class="form-select" id="modal-inspection-status">
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label for="modal-inspection-date" class="form-label">Scheduled Date *</label>
+                  <input type="date" class="form-control" id="modal-inspection-date" required>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label for="modal-inspection-time" class="form-label">Time</label>
+                  <input type="time" class="form-control" id="modal-inspection-time">
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="modal-inspection-frequency" class="form-label">Frequency</label>
+                  <select class="form-select" id="modal-inspection-frequency">
+                    <option value="One-time" selected>One-time</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly">Monthly</option>
+                    <option value="Quarterly">Quarterly</option>
+                    <option value="Yearly">Yearly</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="modal-inspection-inspector" class="form-label">Inspector</label>
+                  <select class="form-select" id="modal-inspection-inspector">
+                    <option value="">Select inspector</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="modal-inspection-description" class="form-label">Description</label>
+              <textarea class="form-control" id="modal-inspection-description" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="modal-inspection-findings" class="form-label">Findings</label>
+              <textarea class="form-control" id="modal-inspection-findings" rows="2"></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="modal-inspection-recommendations" class="form-label">Recommendations</label>
+              <textarea class="form-control" id="modal-inspection-recommendations" rows="2"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-success" id="saveInspectionBtn">
+            <i class="fas fa-save me-1"></i>Save Schedule
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Global variables
+    let maintenanceRequests = [];
+    let inspectionSchedules = [];
+    let drainagePoints = [];
+    let users = [];
+    let filteredMaintenanceRequests = [];
+    let filteredInspectionSchedules = [];
+    let currentUser = null;
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      checkAuthentication();
+    });
+
+    /**
+     * Check if user is authenticated and has appropriate role
+     */
+    async function checkAuthentication() {
+      try {
+        const response = await fetch('../api/session-check.php');
+        const result = await response.json();
+        
+        if (result.success && result.authenticated) {
+          // Check if user has Admin role
+          if (result.user.role !== 'Admin') {
+            showNotification('Access denied. This page is for administrators only.', 'danger');
+            setTimeout(() => {
+              window.location.href = '../login.html?unauthorized=1';
+            }, 2000);
+            return;
+          }
+          
+          currentUser = result.user;
+          document.getElementById('userName').textContent = currentUser.name;
+          hideLoadingOverlay();
+          loadInitialData();
+        } else {
+          // Redirect to login page
+          window.location.href = '../login.html?unauthorized=1';
+        }
+      } catch (error) {
+        console.error('Authentication check failed:', error);
+        showNotification('Authentication check failed. Redirecting to login...', 'danger');
+        setTimeout(() => {
+          window.location.href = '../login.html?error=1';
+        }, 2000);
+      }
+    }
+
+    /**
+     * Hide the loading overlay
+     */
+    function hideLoadingOverlay() {
+      const overlay = document.getElementById('loadingOverlay');
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+      }, 300);
+    }
+
+    /**
+     * Logout function - redirect to centralized login
+     */
+    async function logout() {
+      try {
+        showNotification('Logging out...', 'info');
+        
+        // Clear session on server
+        await fetch('../api/logout.php', { method: 'POST' });
+        
+        // Redirect to login page
+        window.location.href = '../login.html?logout=1';
+      } catch (error) {
+        console.error('Logout failed:', error);
+        // Still redirect even if logout request fails
+        window.location.href = '../login.html?logout=1';
+      }
+    }
+
+    // Load all required data
+    async function loadInitialData() {
+      try {
+        await Promise.all([
+          loadMaintenanceRequests(),
+          loadInspectionSchedules(),
+          loadDrainagePoints(),
+          loadUsers()
+        ]);
+        
+        populateDropdowns();
+        setupEventListeners();
+        showNotification('Data loaded successfully', 'success');
+      } catch (error) {
+        console.error('Error loading initial data:', error);
+        showNotification('Error loading data', 'danger');
+      }
+    }
+
+    // Load maintenance requests
+    async function loadMaintenanceRequests() {
+      try {
+        const response = await fetch('/DrainageInventory/api/maintenance-requests.php');
+        if (response.ok) {
+          maintenanceRequests = await response.json();
+        } else {
+          maintenanceRequests = getSampleMaintenanceData();
+        }
+        filteredMaintenanceRequests = [...maintenanceRequests];
+        updateMaintenanceStatistics();
+        renderMaintenanceTable();
+      } catch (error) {
+        console.error('Error loading maintenance requests:', error);
+        maintenanceRequests = getSampleMaintenanceData();
+        filteredMaintenanceRequests = [...maintenanceRequests];
+        updateMaintenanceStatistics();
+        renderMaintenanceTable();
+      }
+    }
+
+    // Load inspection schedules
+    async function loadInspectionSchedules() {
+      try {
+        const response = await fetch('/DrainageInventory/api/inspection-schedules.php');
+        if (response.ok) {
+          inspectionSchedules = await response.json();
+        } else {
+          inspectionSchedules = getSampleInspectionData();
+        }
+        filteredInspectionSchedules = [...inspectionSchedules];
+        updateInspectionStatistics();
+        renderInspectionTable();
+      } catch (error) {
+        console.error('Error loading inspection schedules:', error);
+        inspectionSchedules = getSampleInspectionData();
+        filteredInspectionSchedules = [...inspectionSchedules];
+        updateInspectionStatistics();
+        renderInspectionTable();
+      }
+    }
+
+    // Load drainage points
+    async function loadDrainagePoints() {
+      try {
+        const response = await fetch('/DrainageInventory/api/drainage-points.php');
+        if (response.ok) {
+          drainagePoints = await response.json();
+        } else {
+          drainagePoints = getSampleDrainagePoints();
+        }
+      } catch (error) {
+        console.error('Error loading drainage points:', error);
+        drainagePoints = getSampleDrainagePoints();
+      }
+    }
+
+    // Load users
+    async function loadUsers() {
+      try {
+        const response = await fetch('/DrainageInventory/api/users.php');
+        if (response.ok) {
+          users = await response.json();
+        } else {
+          users = getSampleUsers();
+        }
+      } catch (error) {
+        console.error('Error loading users:', error);
+        users = getSampleUsers();
+      }
+    }
+
+    // Sample data functions
+    function getSampleMaintenanceData() {
+      return [
+        {
+          id: 1,
+          drainage_point_id: 1,
+          drainage_point_name: 'Main Street Drain A1',
+          request_type: 'Cleaning',
+          priority: 'Medium',
+          status: 'Pending',
+          description: 'Regular cleaning required',
+          assigned_to_name: 'Sarah Operator',
+          estimated_cost: 150.00,
+          scheduled_date: '2025-06-10',
+          created_at: '2025-06-04 10:00:00'
+        },
+        {
+          id: 2,
+          drainage_point_id: 2,
+          drainage_point_name: 'Park Avenue Culvert',
+          request_type: 'Repair',
+          priority: 'High',
+          status: 'In Progress',
+          description: 'Crack in concrete needs repair',
+          assigned_to_name: 'John Inspector',
+          estimated_cost: 500.00,
+          scheduled_date: '2025-06-08',
+          created_at: '2025-06-03 14:30:00'
+        }
+      ];
+    }
+
+    function getSampleInspectionData() {
+      return [
+        {
+          id: 1,
+          drainage_point_id: 1,
+          drainage_point_name: 'Main Street Drain A1',
+          inspection_type: 'Routine Inspection',
+          priority: 'Medium',
+          status: 'Scheduled',
+          scheduled_date: '2025-06-10',
+          scheduled_time: '09:00',
+          frequency: 'Monthly',
+          inspector_name: 'John Inspector',
+          description: 'Monthly routine inspection',
+          created_at: '2025-06-04 10:00:00'
+        },
+        {
+          id: 2,
+          drainage_point_id: 2,
+          drainage_point_name: 'Park Avenue Culvert',
+          inspection_type: 'Safety Inspection',
+          priority: 'High',
+          status: 'Scheduled',
+          scheduled_date: '2025-06-08',
+          scheduled_time: '14:00',
+          frequency: 'Quarterly',
+          inspector_name: 'John Inspector',
+          description: 'Safety inspection for structural integrity',
+          created_at: '2025-06-03 14:30:00'
+        }
+      ];
+    }
+
+    function getSampleDrainagePoints() {
+      return [
+        { id: 1, name: 'Main Street Drain A1' },
+        { id: 2, name: 'Park Avenue Culvert' },
+        { id: 3, name: 'Industrial Zone Pipe' }
+      ];
+    }
+
+    function getSampleUsers() {
+      return [
+        { id: 1, first_name: 'System', last_name: 'Administrator', role: 'Admin' },
+        { id: 4, first_name: 'John', last_name: 'Inspector', role: 'Inspector' },
+        { id: 5, first_name: 'Sarah', last_name: 'Operator', role: 'Operator' }
+      ];
+    }
+
+    // Populate dropdowns
+    function populateDropdowns() {
+      // Populate drainage points dropdowns
+      const pointSelects = ['modal-maintenance-point', 'modal-inspection-point'];
+      pointSelects.forEach(selectId => {
+        const select = document.getElementById(selectId);
+        if (select) {
+          select.innerHTML = '<option value="">Select drainage point</option>';
+          drainagePoints.forEach(point => {
+            const option = document.createElement('option');
+            option.value = point.id;
+            option.textContent = point.name;
+            select.appendChild(option);
+          });
+        }
+      });
+
+      // Populate user dropdowns
+      const assignedToSelect = document.getElementById('modal-maintenance-assigned');
+      if (assignedToSelect) {
+        assignedToSelect.innerHTML = '<option value="">Select team member</option>';
+        users.forEach(user => {
+          if (user.role === 'Operator' || user.role === 'Admin') {
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = `${user.first_name} ${user.last_name} (${user.role})`;
+            assignedToSelect.appendChild(option);
+          }
+        });
+      }
+
+      const inspectorSelect = document.getElementById('modal-inspection-inspector');
+      if (inspectorSelect) {
+        inspectorSelect.innerHTML = '<option value="">Select inspector</option>';
+        users.forEach(user => {
+          if (user.role === 'Inspector' || user.role === 'Admin') {
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = `${user.first_name} ${user.last_name} (${user.role})`;
+            inspectorSelect.appendChild(option);
+          }
+        });
+      }
+    }
+
+    // Event listeners
+    function setupEventListeners() {
+      // Maintenance form submission
+      document.getElementById('saveMaintenanceBtn').addEventListener('click', saveMaintenanceRequest);
+      
+      // Inspection form submission
+      document.getElementById('saveInspectionBtn').addEventListener('click', saveInspectionSchedule);
+      
+      // Filter inputs
+      document.getElementById('maintenance-search').addEventListener('input', debounce(applyMaintenanceFilters, 300));
+      document.getElementById('inspection-search').addEventListener('input', debounce(applyInspectionFilters, 300));
+    }
+
+    // Statistics updates
+    function updateMaintenanceStatistics() {
+      const total = maintenanceRequests.length;
+      const pending = maintenanceRequests.filter(r => r.status === 'Pending').length;
+      const inProgress = maintenanceRequests.filter(r => r.status === 'In Progress').length;
+      const completed = maintenanceRequests.filter(r => r.status === 'Completed').length;
+
+      document.getElementById('maintenance-total').textContent = total;
+      document.getElementById('maintenance-pending').textContent = pending;
+      document.getElementById('maintenance-in-progress').textContent = inProgress;
+      document.getElementById('maintenance-completed').textContent = completed;
+    }
+
+    function updateInspectionStatistics() {
+      const total = inspectionSchedules.length;
+      const scheduled = inspectionSchedules.filter(s => s.status === 'Scheduled').length;
+      const overdue = inspectionSchedules.filter(s => s.status === 'Overdue').length;
+      const completed = inspectionSchedules.filter(s => s.status === 'Completed').length;
+
+      document.getElementById('inspection-total').textContent = total;
+      document.getElementById('inspection-scheduled').textContent = scheduled;
+      document.getElementById('inspection-overdue').textContent = overdue;
+      document.getElementById('inspection-completed').textContent = completed;
+    }
+
+    // Render tables
+    function renderMaintenanceTable() {
+      const tbody = document.getElementById('maintenance-table-body');
+      tbody.innerHTML = '';
+
+      filteredMaintenanceRequests.forEach(request => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${request.id}</td>
+          <td>${request.drainage_point_name || 'N/A'}</td>
+          <td>${request.request_type}</td>
+          <td><span class="badge priority-${request.priority.toLowerCase()}">${request.priority}</span></td>
+          <td><span class="badge status-${request.status.toLowerCase().replace(' ', '-')}">${request.status}</span></td>
+          <td>${request.assigned_to_name || 'Unassigned'}</td>
+          <td>${request.scheduled_date || 'Not scheduled'}</td>
+          <td>${request.estimated_cost ? 'RM ' + parseFloat(request.estimated_cost).toFixed(2) : 'N/A'}</td>
+          <td>${formatDate(request.created_at)}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn btn-sm btn-primary" onclick="editMaintenanceRequest(${request.id})" title="Edit">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-sm btn-info" onclick="viewMaintenanceRequest(${request.id})" title="View">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn btn-sm btn-danger" onclick="deleteMaintenanceRequest(${request.id})" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      document.getElementById('maintenance-count').textContent = filteredMaintenanceRequests.length;
+    }
+
+    function renderInspectionTable() {
+      const tbody = document.getElementById('inspection-table-body');
+      tbody.innerHTML = '';
+
+      filteredInspectionSchedules.forEach(schedule => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${schedule.id}</td>
+          <td>${schedule.drainage_point_name || 'N/A'}</td>
+          <td>${schedule.inspection_type}</td>
+          <td><span class="badge priority-${schedule.priority.toLowerCase()}">${schedule.priority}</span></td>
+          <td><span class="badge status-${schedule.status.toLowerCase().replace(' ', '-')}">${schedule.status}</span></td>
+          <td>${schedule.inspector_name || 'Unassigned'}</td>
+          <td>${schedule.scheduled_date}${schedule.scheduled_time ? ' ' + schedule.scheduled_time : ''}</td>
+          <td>${schedule.frequency}</td>
+          <td>${formatDate(schedule.created_at)}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn btn-sm btn-primary" onclick="editInspectionSchedule(${schedule.id})" title="Edit">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-sm btn-info" onclick="viewInspectionSchedule(${schedule.id})" title="View">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn btn-sm btn-danger" onclick="deleteInspectionSchedule(${schedule.id})" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      document.getElementById('inspection-count').textContent = filteredInspectionSchedules.length;
+    }
+
+    // Filter functions
+    function applyMaintenanceFilters() {
+      const search = document.getElementById('maintenance-search').value.toLowerCase();
+      const status = document.getElementById('maintenance-status-filter').value;
+      const priority = document.getElementById('maintenance-priority-filter').value;
+      const type = document.getElementById('maintenance-type-filter').value;
+
+      filteredMaintenanceRequests = maintenanceRequests.filter(request => {
+        const matchesSearch = !search || 
+          request.drainage_point_name?.toLowerCase().includes(search) ||
+          request.description?.toLowerCase().includes(search) ||
+          request.request_type?.toLowerCase().includes(search);
+        
+        const matchesStatus = !status || request.status === status;
+        const matchesPriority = !priority || request.priority === priority;
+        const matchesType = !type || request.request_type === type;
+
+        return matchesSearch && matchesStatus && matchesPriority && matchesType;
+      });
+
+      renderMaintenanceTable();
+    }
+
+    function applyInspectionFilters() {
+      const search = document.getElementById('inspection-search').value.toLowerCase();
+      const status = document.getElementById('inspection-status-filter').value;
+      const priority = document.getElementById('inspection-priority-filter').value;
+      const frequency = document.getElementById('inspection-frequency-filter').value;
+
+      filteredInspectionSchedules = inspectionSchedules.filter(schedule => {
+        const matchesSearch = !search || 
+          schedule.drainage_point_name?.toLowerCase().includes(search) ||
+          schedule.description?.toLowerCase().includes(search) ||
+          schedule.inspection_type?.toLowerCase().includes(search);
+        
+        const matchesStatus = !status || schedule.status === status;
+        const matchesPriority = !priority || schedule.priority === priority;
+        const matchesFrequency = !frequency || schedule.frequency === frequency;
+
+        return matchesSearch && matchesStatus && matchesPriority && matchesFrequency;
+      });
+
+      renderInspectionTable();
+    }
+
+    // Modal functions
+    function showAddMaintenanceModal() {
+      document.getElementById('maintenanceModalTitle').innerHTML = '<i class="fas fa-wrench me-2"></i>Add Maintenance Request';
+      document.getElementById('saveMaintenanceBtn').innerHTML = '<i class="fas fa-save me-1"></i>Save Request';
+      document.getElementById('maintenanceForm').reset();
+      document.getElementById('maintenance-id').value = '';
+      
+      const modal = new bootstrap.Modal(document.getElementById('maintenanceModal'));
+      modal.show();
+    }
+
+    function showAddInspectionModal() {
+      document.getElementById('inspectionModalTitle').innerHTML = '<i class="fas fa-clipboard-check me-2"></i>Add Inspection Schedule';
+      document.getElementById('saveInspectionBtn').innerHTML = '<i class="fas fa-save me-1"></i>Save Schedule';
+      document.getElementById('inspectionForm').reset();
+      document.getElementById('inspection-id').value = '';
+      
+      const modal = new bootstrap.Modal(document.getElementById('inspectionModal'));
+      modal.show();
+    }
+
+    function editMaintenanceRequest(id) {
+      const request = maintenanceRequests.find(r => r.id === id);
+      if (!request) return;
+
+      document.getElementById('maintenanceModalTitle').innerHTML = '<i class="fas fa-wrench me-2"></i>Edit Maintenance Request';
+      document.getElementById('saveMaintenanceBtn').innerHTML = '<i class="fas fa-save me-1"></i>Update Request';
+      
+      // Populate form
+      document.getElementById('maintenance-id').value = request.id;
+      document.getElementById('modal-maintenance-point').value = request.drainage_point_id;
+      document.getElementById('modal-maintenance-type').value = request.request_type;
+      document.getElementById('modal-maintenance-priority').value = request.priority;
+      document.getElementById('modal-maintenance-status').value = request.status;
+      document.getElementById('modal-maintenance-cost').value = request.estimated_cost;
+      document.getElementById('modal-maintenance-assigned').value = request.assigned_to;
+      document.getElementById('modal-maintenance-scheduled').value = request.scheduled_date;
+      document.getElementById('modal-maintenance-description').value = request.description;
+      document.getElementById('modal-maintenance-notes').value = request.notes || '';
+
+      const modal = new bootstrap.Modal(document.getElementById('maintenanceModal'));
+      modal.show();
+    }
+
+    function editInspectionSchedule(id) {
+      const schedule = inspectionSchedules.find(s => s.id === id);
+      if (!schedule) return;
+
+      document.getElementById('inspectionModalTitle').innerHTML = '<i class="fas fa-clipboard-check me-2"></i>Edit Inspection Schedule';
+      document.getElementById('saveInspectionBtn').innerHTML = '<i class="fas fa-save me-1"></i>Update Schedule';
+      
+      // Populate form
+      document.getElementById('inspection-id').value = schedule.id;
+      document.getElementById('modal-inspection-point').value = schedule.drainage_point_id;
+      document.getElementById('modal-inspection-type').value = schedule.inspection_type;
+      document.getElementById('modal-inspection-priority').value = schedule.priority;
+      document.getElementById('modal-inspection-status').value = schedule.status;
+      document.getElementById('modal-inspection-date').value = schedule.scheduled_date;
+      document.getElementById('modal-inspection-time').value = schedule.scheduled_time;
+      document.getElementById('modal-inspection-frequency').value = schedule.frequency;
+      document.getElementById('modal-inspection-inspector').value = schedule.inspector_id;
+      document.getElementById('modal-inspection-description').value = schedule.description || '';
+      document.getElementById('modal-inspection-findings').value = schedule.findings || '';
+      document.getElementById('modal-inspection-recommendations').value = schedule.recommendations || '';
+
+      const modal = new bootstrap.Modal(document.getElementById('inspectionModal'));
+      modal.show();
+    }
+
+    // Save functions
+    async function saveMaintenanceRequest() {
+      const formData = {
+        drainage_point_id: parseInt(document.getElementById('modal-maintenance-point').value),
+        request_type: document.getElementById('modal-maintenance-type').value,
+        priority: document.getElementById('modal-maintenance-priority').value,
+        status: document.getElementById('modal-maintenance-status').value,
+        estimated_cost: document.getElementById('modal-maintenance-cost').value || null,
+        assigned_to: document.getElementById('modal-maintenance-assigned').value || null,
+        scheduled_date: document.getElementById('modal-maintenance-scheduled').value || null,
+        description: document.getElementById('modal-maintenance-description').value,
+        notes: document.getElementById('modal-maintenance-notes').value
+      };
+
+      const id = document.getElementById('maintenance-id').value;
+      const isEdit = !!id;
+
+      if (isEdit) {
+        formData.id = parseInt(id);
+      }
+
+      try {
+        const response = await fetch('../api/maintenance-requests.php', {
+          method: isEdit ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showNotification(isEdit ? 'Maintenance request updated successfully' : 'Maintenance request created successfully', 'success');
+          loadMaintenanceRequests();
+          bootstrap.Modal.getInstance(document.getElementById('maintenanceModal')).hide();
+        } else {
+          throw new Error(result.message);
+        }
+      } catch (error) {
+        console.error('Error saving maintenance request:', error);
+        showNotification('Error saving maintenance request: ' + error.message, 'danger');
+      }
+    }
+
+    async function saveInspectionSchedule() {
+      const formData = {
+        drainage_point_id: parseInt(document.getElementById('modal-inspection-point').value),
+        inspection_type: document.getElementById('modal-inspection-type').value,
+        priority: document.getElementById('modal-inspection-priority').value,
+        status: document.getElementById('modal-inspection-status').value,
+        scheduled_date: document.getElementById('modal-inspection-date').value,
+        scheduled_time: document.getElementById('modal-inspection-time').value || null,
+        frequency: document.getElementById('modal-inspection-frequency').value,
+        inspector_id: document.getElementById('modal-inspection-inspector').value || null,
+        description: document.getElementById('modal-inspection-description').value,
+        findings: document.getElementById('modal-inspection-findings').value,
+        recommendations: document.getElementById('modal-inspection-recommendations').value
+      };
+
+      const id = document.getElementById('inspection-id').value;
+      const isEdit = !!id;
+
+      if (isEdit) {
+        formData.id = parseInt(id);
+      }
+
+      try {
+        const response = await fetch('/DrainageInventory/api/inspection-schedules.php', {
+          method: isEdit ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showNotification(isEdit ? 'Inspection schedule updated successfully' : 'Inspection schedule created successfully', 'success');
+          loadInspectionSchedules();
+          bootstrap.Modal.getInstance(document.getElementById('inspectionModal')).hide();
+        } else {
+          throw new Error(result.message);
+        }
+      } catch (error) {
+        console.error('Error saving inspection schedule:', error);
+        showNotification('Error saving inspection schedule: ' + error.message, 'danger');
+      }
+    }
+
+    // Delete functions
+    async function deleteMaintenanceRequest(id) {
+      if (!confirm('Are you sure you want to delete this maintenance request?')) return;
+
+      try {
+        const response = await fetch(`/DrainageInventory/api/maintenance-requests.php?id=${id}`, {
+          method: 'DELETE'
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showNotification('Maintenance request deleted successfully', 'success');
+          loadMaintenanceRequests();
+        } else {
+          throw new Error(result.message);
+        }
+      } catch (error) {
+        console.error('Error deleting maintenance request:', error);
+        showNotification('Error deleting maintenance request: ' + error.message, 'danger');
+      }
+    }
+
+    async function deleteInspectionSchedule(id) {
+      if (!confirm('Are you sure you want to delete this inspection schedule?')) return;
+
+      try {
+        const response = await fetch(`/DrainageInventory/api/inspection-schedules.php?id=${id}`, {
+          method: 'DELETE'
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showNotification('Inspection schedule deleted successfully', 'success');
+          loadInspectionSchedules();
+        } else {
+          throw new Error(result.message);
+        }
+      } catch (error) {
+        console.error('Error deleting inspection schedule:', error);
+        showNotification('Error deleting inspection schedule: ' + error.message, 'danger');
+      }
+    }
+
+    // View functions (basic implementation)
+    function viewMaintenanceRequest(id) {
+      const request = maintenanceRequests.find(r => r.id === id);
+      if (!request) return;
+      
+      alert(`Maintenance Request Details:\n\nID: ${request.id}\nPoint: ${request.drainage_point_name}\nType: ${request.request_type}\nPriority: ${request.priority}\nStatus: ${request.status}\nDescription: ${request.description}`);
+    }
+
+    function viewInspectionSchedule(id) {
+      const schedule = inspectionSchedules.find(s => s.id === id);
+      if (!schedule) return;
+      
+      alert(`Inspection Schedule Details:\n\nID: ${schedule.id}\nPoint: ${schedule.drainage_point_name}\nType: ${schedule.inspection_type}\nPriority: ${schedule.priority}\nStatus: ${schedule.status}\nScheduled: ${schedule.scheduled_date}\nDescription: ${schedule.description}`);
+    }
+
+    // Refresh functions
+    function refreshMaintenanceData() {
+      loadMaintenanceRequests();
+      showNotification('Maintenance data refreshed', 'info');
+    }
+
+    function refreshInspectionData() {
+      loadInspectionSchedules();
+      showNotification('Inspection data refreshed', 'info');
+    }
+
+    // Utility functions
+    function formatDate(dateString) {
+      if (!dateString) return 'N/A';
+      return new Date(dateString).toLocaleDateString();
+    }
+
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
+    function showNotification(message, type) {
+      const notification = document.createElement('div');
+      notification.className = `alert alert-${type} alert-dismissible fade show notification`;
+      notification.innerHTML = `
+        <i class="fas fa-${getNotificationIcon(type)} me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      
+      document.body.appendChild(notification);
+      setTimeout(() => {
+        if (notification.parentNode) notification.remove();
+      }, 5000);
+    }
+
+    function getNotificationIcon(type) {
+      const icons = {
+        success: "check-circle",
+        danger: "exclamation-triangle",
+        warning: "exclamation-triangle",
+        info: "info-circle",
+      };
+      return icons[type] || "info-circle";
+    }
+  </script>
+</body>
+</html>

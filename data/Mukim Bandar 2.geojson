@@ -1,0 +1,582 @@
+{
+  "type": "FeatureCollection",
+  "name": "Mukim Bandar 2",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PSA 1",
+        "description": null,
+        "Type": "Concrete Drain",
+        "Depth": "1.7",
+        "IL": "-0.417",
+        "RL": 1.283,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKubBnCZt6HmeVzxkEM6738aAVNa-tkM1ISq2s6Mkms7eT7ioSjXzgdcYOVMMeVSPfrD3hHZnOep2bRUigrVtMZWILeahtCNI8qASTPjQo0Ps-W09PYNdQKYlBEr7kuFmjPNWs0FuHIKGXGtcnTYt-L4l0WsMMT6GtdkQbl4yAzmuSQxdvm5y6o9e0Lc6nV5T06PBjje82lj2bezmQQQMMGdPc3q8eLudmZkjZbcNYylFl7U1wlVQMkKhx8?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKuTXyPO5CXu8VG81qkbQ-83984WoPv4I39jh6xFkEZ2_nvDiSAI7jaFL1NKaAR_4preHsOzT26kBujXCAp8Ad0v9vsYIvlF0t1BHVNBSoku4JlhI4tt1tuuM7x2IpOkvlGejxZOhXILn4VuQP0-axnf3PehoXHR0XjecJ0sSYb6c_x1awfkXria2hl7Csi0ZogfCsWDcokA6I270K8ftMyGsGiw120BaoN2yKUiYUtXoy01M4577-pFGcY?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5644198, 2.0806295, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PSA 2",
+        "description": null,
+        "Type": "Concrete Drain",
+        "Depth": "1.7",
+        "IL": "-0.3",
+        "RL": 1.4,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKv1z2IA4-3gvWUc-4mUMcC6-UkTSrW1PEoHRf6WLojIyWyFI-IAaUx1dxm3cdYoiXlILJasK8fI8NGkismTIafHPDlJjYaPyuuWEx0kt9qw9jFzz0tYt04jiVRIkGogIP3dZY4izhUYYSOqpkgKqQoGkvkVVfpt7cb5gmfeplegFMQQ0v2B7420514KnQqIAGwaCU5mOO-rizsz5TSFmywSW4uwrUKMB6xn6FDBh9wVJoAkWRheDcLICaI?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtAjoz9YhAsvZPvIN8KfvnepYO8dDOk-TKUYN1iHhyI-geWX7_-_Qj-WmQCTBKnXhDl0fN0pWO6O24A3P9xB-zRlXGSoJXYSc7PQJjMrhi_zQ8Yp2ZKGKxEVgm4_-COP8-5lc0E2f2kOy10mByp17X0hItMPCoO85Ck3xMEPXJk21O37RVPketxWp-TXUcYzLrEmMrmok-ipkF6SPbH1aL0B6J6HHNnrx2HMRsiMjR6HcC7uWgG7Q_O23Y?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5646146, 2.080388, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PSA 3",
+        "description": null,
+        "Type": "Concrete Drain",
+        "Depth": "1.7",
+        "IL": "0.486",
+        "RL": 2.168,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKssYnbqlKZ-XfdqWwwUf0waPDerONveGDDH8TZJgornqEIeE6m0P18gPOvOGlGd26cgOD2oEDh-pmMFuhcxZbdyDKwrW5AmmFeK0vfEpv-f7gUy4Ne2AwUcyvAbUKylmxgTJAFpoeYL23HDeYw_Xog-AO1Jqt_Bnd_ZXLzgPvmv3pSruVX22kRqfIivcraozriHMxkiU0dPfvW8YhuudZVQoUesVqYbtmCxv9PJFTgWdzdFTAXPnWomKGE?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKu1ixLBNMndi2GxfeutnUvwpv28x2yhJ-n4TK0BJVfgcAq6d1zYVCLQq0MLk_PrSr4YUIPwH5JlPLYkPml6lCoPO7WcsCLczsDL8nE-uJdQB9FNMURfTd_B3ZiyAvhCrmWsxgjhJtGmBF-svbMqHcunL-5tXGxPPxNH5bRnrEML5e5tusC_1-e0nyirc-IB4BlGNpQw-xOBbr6TB5bZWlCwFfcpVDe9IdVm1vn8lRLN1MCZ3Ftm6CV_noQ?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5654135, 2.0796986, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PSA 4",
+        "description": null,
+        "Type": "Concrete Drain",
+        "Depth": "1.7",
+        "IL": "0.054",
+        "RL": 1.304,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtkSc26CXlPXgnLgb1kTC3J5pAsvBWzRQGXPod7eQhETqboWPsmWSYlvgmDsstYQ8ocMFADav6Jcz1z9XlWt3boojDh3bEafo7qJcZLmw_Hu7JjYwkPjL3-8Rs4DZTi5-co2L4IhS7BVFkf81V5lC9y1F4m0Qy3OnrZqVsWXYj387rLbJyGnXMyZKgkaRl1Jo8r85PnyP9xa8JnNDa-SU4sePJ_FD5yj19h8NlQ3d2iJ29Ep-WrJUxuco4?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKvf-CESXlMBzNopJAPl0XOUhDVwaiadJJOX1l5_DCylzHZPDzAyZDPlgUNj1S3oAIKOkOMEoAXY-Wb5tYG2wSkEQ1mZ0o4COMAkl4dmCiaUaX-Dhj7NzdD7sk1PHzzMAfnG6Zpw7fmYGKEDl4fsP5MRMAqAdPfNkqXHeCF0xJN2ScHwVymgDDqeQMEKMqAZgaIbvxe-FSpfLH2X0KjGz4deV6T4l5YCdELSOxYLqFwhAjX1JXtEXLL90sY?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5659975, 2.0791581, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PSA 5 ",
+        "description": "culvert",
+        "Type": "Concrete Drain",
+        "Depth": "1.25",
+        "IL": "0.518",
+        "RL": 1.618,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtAYyxGYFkmK1eZtBLTQnS2rQw7F83PhEysLJTovEfVfGx8gsd32G53pzWuTxmrpebgKZODpugZL4ti_g_pmJPhJy3fh6RyHFiBTN2RFS5voQxDxqpMJhTFR9ACFjeDGwnJsAWjr0h49fMZlI9HOftzMMmA6NMjpecLh57j2vazIh1C91x5y-ZC7gXVePHFrqxZcW9K7lPUSyT6CxwQMlLb9nYDEse8QAADTcXTB0OJfDkExlovI0N7QLw?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKvU3zSA_x9DVuw7yMzvnowLYJg22WWN7sILnvYUE9rzPu1JCAF35RPy891_aREdOKmWs7Jhr7dLmo5lMdo0hCBZLJO6Bh-wke3m7jmUeGdyErP-5kEXPTXXTMLXkUc2kLBeop1bVOLh-xms1wZbFqx2JJHBQz-c4ovFNtJRluwOBLfa5f0ibJx8-RGFkVjgr88HVQiugcXkRbcv2CcVNW6vB4OVIBTO2o9hW9Mgvu_Sv6XcRZevn7_F04M?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsgLv9CIYlmxGVzbVMNDt4aH6lYJiajxj74kzfTZweTDl9FhSSTPK_sO3In29lWffXeDlmBfKrAb__XDXJ1YswzvaQ9grsLK173RRJie0Wk981t68_to-jwMNqMJN6bDbY8-v8EARHvH2wh5hxVt1xXcBD3WUeRUULJMkMIcxD2k17HcvRlBM8xvZFuKCNe8_fl4sXqzyezdxHNwSDP7pNO5Lc2UXcuIWsNeJes-62KKhwoMRw03rRiqs0?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5666887, 2.0792869, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PSA 6",
+        "description": null,
+        "Type": "Concrete Drain",
+        "Depth": "1.1",
+        "IL": "2.04",
+        "RL": 2.44,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKvSxGmuWZ_dElVCRIHy0YOSXU2HIxCQ2Q6l-wkNFkuFh7h5iuS-ZKX39mhYDMglh1MwanBK3GN65Uqc9tbSTyURZHdfJPI2pYgNVyYmolhvLaqVS1XL1O-XuEOEn6HlfTWWqhFkEURk6PfDrkEbJWZgsAdJvyzShT5VfAO1AWnu_ufy1Tr10xfkbeN44iH5zxC_xtVso2ZcGOOZ8cGlezNDOh10cucMhEHd2h3U_hlk96ZySHmowAlEpJo?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsoLzqIhGYWgGf-4lhaDr4EJV7suHUMyyZGTG3gQzbY8nP50EtjcZvhhmsjl7bKgvpxa3pbx60iDWFx-Hj6aWYFivxO-ffTsLcSvfVd6yCfyZDQ1meUwkiuEH2v1UmJDINj-DC0xKGLcpT7P_KCLnlWjWjTYzG5iKHCsyQvVwOp91MM4QXwvzqwhcx74wlmbZ4nt6rboANPYAd3RxhJDBveNTFDf1v2KGuD4gcVx36zg0ZKfCefI_ytkuk?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5673735, 2.0798129, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PSA 7",
+        "description": null,
+        "Type": "Earth Drain",
+        "Depth": "0.4",
+        "IL": "3.181",
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtiONg6Ktp1TqR7FWYeIklMhWAAeLvQBCpDY3aAghJ3ch6dlVwJMGaBYQ2zN1QvThpRgXTxd_EftEmoq4rOaoJYLpTNYseJIFsOmMaz7G8d4CfGLAWmuZYOgl82gCcYTCtSqHFaSlfIdcf9_5HtEbqj2E2a0x86QCazL3fOtTKsEh_7J7nUNK1AQDpO08x8yNqXWD-1qYCjk5Qp_naFqbp2zqr33obSQ6FVnwRX4DbPhIh5bRa5gCaM8Lg?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKvsd0eEYQ3ImED2GGeCWwarzrP_-74tWHN0r1zNy6rll21flnJSCnQyWgkNi7wYn1pzyHqswuX_e7XIB0e6Cr73GimHHY6iK8_m5nOCkA4Cx-_GEkpr5L5BrtSMl9NF8L3fTgkwNwdrmEg4c4JfvJcT9-htR396ln79VDOMP9NIKu2TYXSSDXDtIsz9V0AvBdTZXOPL-gwIAhgJcFCiu64a4CVQ4SrHu7qj9oZlKAb7Io_YE3KH5w2aHYk?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5676674, 2.0800135, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PPB 1",
+        "description": null,
+        "Type": "Concrete Drain",
+        "Depth": "1.2",
+        "IL": "3.078",
+        "RL": 3.361,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsgNjcC50d4F_Zn9mhB3wd4gc3driNIP8_s1JyAnDUsnUx2ddwCHZar9q9R03yyGDi57Vd0E04w31ZlPlkO0yxAWGkNHWsm8arOpI-3XEdehY7tC31atv3CnlIXNCFOqaaB3oMxwYL1xihOlXzZe0uJcyiSjZMUEIiJ2C3hewjm67YxVIVE2R1FNzg2xNI84d-mLRY0V4zGZ1GwL00E0IVcb9W9yAqLabLrpWSuottsQTIwZk6jfRZYERk?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKuR-E2Po2apFfPIatFWBfUCQzz8tQUy-ZXzzeIe47p_XYRDkIhT1-tdCZ_1yA_NVv6SROb0ZV7JI9LLq4BSi-f2FOw89T0pBhMJbL42T5TX3R61kwYxWp3j3NUnDtFRghKMged-U35SmBrVxN2RID9qDXd1Sa_pq85hUwygAP2S43dViV5WK3AXdNqmiMziqBpqT-aWR67GGr9asMuNOtpkJJQHK0eg7DlBP8O3eigNTf0x3gB3GsnIBFw?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsHNcjCQ4O9PculFjslWDuZBYhYbgAaPlTNFPzjHrBGC2QEerSIP7986T3fiut-bYV67bp9FBcnROWOcRQXqs9-Dgnd6-FxDBZUQuXgXaoTtEiY-nmIJZh8YAo4TiwSj6e2Cc7G3Ou9Av-fyupFvZ4vQssl39PF2nYKUuVz0iKA4CoGBxgdJTQ1zfH_t26ht_FatDOxyRQuh9BgbgLxPfIMop-cHsrFj_Otac_RvmRqTGGRgqrhzUrmuX8?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKulbSSE9Zl12dXj_7m5YPqPKN6knz98vqucARTnJu-oaSiBfiwHdeeBjPkvT37zejtUe4i3kZfv2INVjlm09pFpHaT1By6CN4SPAYm74DnAHAgf4kGnBWG4wyo0hbnWsxrqzsZ7b5sCcJ-IEZjmxYtJ35OxSgs5egmtufZrmPjaIvQ3fNCsoAaxe9k3MWcjIw_9zeA8Z5sG0mGotBCSurhn7NHy9G8laTfP3z4ef6HjQpL-nA-O3NXbJKs?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5975209, 2.0755981, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PPB 2",
+        "description": null,
+        "Type": "Concrete Drain",
+        "Depth": "1.2",
+        "IL": "2.309",
+        "RL": 3.259,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKu0uZCPGJ87IoHP0tPr7OURe19MND43F0aebdVIte3As4_mARJSnE4oRvycZVJ7bgUB6FjmN0gAMlgmQmPtPFBdZ-nUImQAgKo5-K4B5X5h_6RW142W4uC_zfDQmFm91uigFRvlGEJwjcBt7IkjGZpCqO4O6R4M1mq_QTp95-ugbbbaaA4lfscrGBXT6emSuoH_ckFHOqxd5vOUW9bATJXVZlZQcL1pG2cRcMMYf2Xwxo1GdZJhdQQev94?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsSdHRkIINB-6UUlSsNV0cCOgHPqDijJsZTgkqJ5ow7K23MlcCw0HWVfiJGkIjmacr7L3RMzxOGhfWCeXBidQ0iWABzDLq0SiRRcReJJxpm3pKmSls2zVmh6J7rBgCWbTovTJcjAhRTSwzLZdY-MfBmmj3-d-rpcQsZPDwv1eBeVVZJFK_VdRAtcdUP9KgAfax3stEvS9URKkPd9xZaBp_lvh9RN0ayKDOjqJ5EjP6g20kk5xc2chiNfDE?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5977823, 2.0741382, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PPB 3",
+        "description": null,
+        "Type": "Concrete Drain",
+        "Depth": "0.9",
+        "IL": "2.508",
+        "RL": 3.408,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsoD9EAEDHYnKyAEJGpGrSUnV5U1xOHh-hpGbLDrpgd3HZm5FU23nHVB1JSYQ1AlHU7O6C7htPKYjJTLCFZZSmXxEWPID5t4linY8vvS3JgBHqblg7fianpsHo1Xq5d4mofhXAgHISPLKJntB-V1TCnTshS8AkdXcIX58p_zlWrpTkGoLKwVDS3sZkbdwORoZ_zpHXM-2bqNAeBMsW_WE5FeoKiLlgubtFsSopX9bIe0mE0cchyhXCTp-s?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKswB75AI5W2V6Z6MTFFGnSpMBbvE3_cFwjI_NmLxhXR2vkIwmNC7sEHVIuligTNmzBzz2-Ps5TVR8IwE_ngg-Wo0yJeE0OZj4H-tbuzryoZc8ie8VOKUG-yNNeU754BGd06oo7T8na48PQwuSY8q5K4xGrXQev55XUhBCC4yWJwrBFRFprNImLtNtYpHzlrJ6BsGBgQmXSbRR7O9WLOa6wxjthpf9RJHqx5KJ9J1QNaKV_iyvZ-Qhzstj8?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5978577, 2.0729128, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PPB 4",
+        "description": "sump",
+        "Type": "Concrete Drain",
+        "Depth": "0.9",
+        "IL": "2.508",
+        "RL": 3.877,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKufmI91s0hKtNP30-vkAwni8EtjnLTs8CQuCDQK0CJ0FJ784chxiVJiLeDOQpiomK6fY1u9FJz-ereygi7EhhM9sxjREJNPgBTYMLXttEZcboZjLYl2c8UM2Dt3ZK-eRwPDuo_oWl1KSpLVyci-AnhW-zDHY6fhBSfQJ0RDIYCDuDRdByCW_TTLTZThWtKRLDtL3K1taQ_Pxpvq-hhKJTyZi6TAismR-anyg8SVcIv4pIGb1mWNNY_5EkI?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKv5H2OO0rkWnVy1FjrhN34WV5V54KHHtb-6NapwMEbI5jTY4XynDTQturB1bxX4YciNKZ-9MyXjKN2QWM6_LuWjlClQWwMi3jandkoIQJecDG-U64h5_JyjUCz2qiMEx7ZJGI6_y46Cdxz9u-mUW2QGcCIikmrkPcCjIXkj9t7RLL7_k5AqXHe-CWkSzQ6yL0Oj-DuFX_xa-SMIShgSPpd6xI8fv0RzeLnMrEl3-haftuQVjTNH4rPHskk?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKuC8QooyGLkU6Ne_fS1f_cC9iW4Iy1bgDkx8Xg00_rK_gl3T8uR6PzKJ1JtfFTXo-HhyjVeOnE_cGGcYquZZNIAmoUPQNFntuK8bzJ0Nwm38vIn2Ki4imRTcS861OerB_aETgeFSeEBTFLW7d_MgoHRt-ajZ-AH0tSGCSBXevPpxO88CKM4D8y4rbBfve9h-P1VGOJIe6aoIibcDQ2ygMSnCjn8bPkSWArPbkAR__PwuZdddQzk7m7fTv0?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKvgf1BDTdesyxPHE8GHkFCaAhsZQo9K8lRLEP4d-TIdWAFczFcqWdNL_Yaqc0Po_aO7nPsomcXBX5r6IJR3fbmebGdWI4m9wPImAhf0-DzAvrHkXf1HC4N2Rv81qCOVl1WAlqB186VpOEEhmkpINy63oPqQqb8tK8DZi-OcJ62jskDzSVfDOA7T6ObckjKz0hdNX90pdkcloiQqQmivZnuztDdtl7Urf7SpMhfEdZMS_tw5uJSjN7xjvSU?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5982151, 2.0708646, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PPB 5",
+        "description": null,
+        "Type": "Concrete Drain",
+        "Depth": "0.6",
+        "IL": "3.078",
+        "RL": 4.277,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsLwrDuVUnMXTD1Z53XPIePhEb3WMdmOCag_okWmd6iUNGE4bB2AdedDMSGMlXCBmVh0KNOoSGeM2iw_Bt0gSDt9oj36EeEjNZU0I7Y5t63dLtKHgvWONS8s4yxo1o2Ri4ryOPgjJJIu3-Mw5RbDsOfX6lnlzA-hYlJ8Wr-zjFgQ8TXNVMqxZ6YSv6wpUANBMsENAJRb2uxM6buOR6wBsEtxtbFY3keG3Xe47aIZ-AKD5dvqHstkhj-k58?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtXTkfDeZiD8dBVB9ibl38vp5exwUnlrmr8L8Stmnr4KUjPeMMt1zDO_FV4OuDaUaI3rYb_yTXxGEvgtHUH9uQmX84Trfe1YDA0OcMXuMviERITlWTIQd-5lDybcvCcvhY0v6Hz8h8ZTKHbEZd7lmWYi70j5AlOER8FKNczGJrOF4LtcV3w8ODJ3TMKAtHlNVEceRK8G6nlHkBn9ZTCi5aoU3UDCmmuCLPtMoehWTTkYSZvjTJZYHx2dGw?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5979349, 2.0682455, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PPB 6",
+        "description": null,
+        "Type": "Concrete Drain",
+        "Depth": "1.2",
+        "IL": "3.181",
+        "RL": 4.381,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKt_bzd8CTpfEclwiCl7BJS99Yv8H79je8La-jlJuIjhb4N0MByLNRoVe2gRnOdHk1mO3vY3dqtJ-t8gIADcTZeqFlESpIuRB0aXf4WrH0Wx2yczkP1o83rauUVbkscelnYVc_1_-hkpGNQDIbIpNLk4TVqHo80URwntwCnm0dGzprS6-IPZtgqso6mHw5IGk41MewXyQIqwvoKPsNqte1zI56xRhAu6orGPzr4ncteJonefdHRo-bh7bgo?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKvv9iNO-1qyhmz07N9kSrOvNUL6PqpM-JIjNBlUXyq60cS7iycAHpQSeadgAeTGSfIg2_QTxZoTNwV9oUo0pjThTKgd_eou6NL2_H-a5dU09L4nPeLb-SgUlzBOCwVQ_KXiks5YRheYWspEkNBbxVn4a9WRm5cT4JP0RCfL9LTo6IBxyuZpJCHnVEkI3Q9W-DhAo9n4OQlMQuC-Wu0rWHDMbZXgE6RzVyd4O_CdvKjRiaVyNOrUo6IleLE?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5961034, 2.0668941, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PKK1",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKvab7IHU8PbPe-RR_udrC1Pm_x-8qwdloe4Sqodfbygcgv3Y7VdEqOU54g9Bj8jp2tldwMyc2Xi-4p_QR1yeXJHvQBx4WnPTFv5aFYfl32B6AkhqMxmFWhX14nBW4quLmaIHAviI5k4g67qyqVVohkkkJHQ-_a-bU5IGqRuFog-a9L3OkyXQ_DW1-4QkQscohsPexydP02LNJN5DYCfx3OJifnx8NdRWu9ktCi_utrKEPWNcazSVUMxHF8?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKuBqQ4fD2ziQBmROyINi_VYk-Y1dx_1ajHrVyhvt1Z0qTkQtdEIdEJxwV1v9NtoyTDFKtHxMUnM_7ZwR1ZdijvJ5oHd7S0GXIP6vddjL0Q9T2Y78iXZ4BStY6zeBIDJv5XngqEqH2QfktHGLX3Q1qN7_wxAVvkrFrzf5nbVk6iratbM0b79ZI_E9AtLE52-sZB-bM5ezNZOB7enYlxlvZ3xgLq_brxdREzaqkDQfqa9Uz0VXKpt7BdLYT8?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsSpt_PkZh0FI68aeDRaoLzHqMYvlNqX-e1eUiKK8_SNu95MldkuzYH4koKhYv6R_ACxxjeovXrGtRXgvHu2h4_LVo1kLex32wAfXFng5qwPKgdsaEuB_d-Z7zZmvbbEwdIY3IVThgpEts8rgl87fXRrBn0fvOq2-D3ctJ9g7M5_jLUpoEXDqsX7BNHqRzN1nWXPrxRaQDO6a5Vla8v3FpwCqsRbQRa5P1upu99NIshmkqv2s6GbnoWiV8?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKvBQTAnN1h0-aAoxTc8sqIlZZHGiWl2ciCnJox7L-lYzBr2cVnTJ5-dsEs7X1si_fqAlQMsYftES_9jPdZVhF9C3r495RhSQulfRt7hetNDtLlNh08DBhSFgpZa4zkTa9H0R224c_eWxcp-6pM9zXTl-IDnG4n8J5QyXeCCkc7kdcaIdKa8KvRNVYJHB3ZHuT410Gzx2_noKxyZRi9Tzeye8uT2rFEpErpONuKP2V5rwWNI_qfmSZGFUD4?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtk4aTOIG-oQADmHvITP89njGLy8Oe4VuQ459UWO1er_hmZ_DUXB72jWy94TUh7LU7wTAgc-eUOtjGGK-XACHuk2YL6a9VTWdtgG4CXi6beWFRGWwIvvJpd5lCA7Pgz3-ltT6gqLI7e3mUJoA1_XMTm5_KnW5pT2Pkvm8eq5D8oynHHKNEvhUUVZ6ocBGKi1Q39oW_Sk4eIXUFKQj1IVlRx8VOgjrIpSRcIl8p72nPviTyW_FKf70eXG40?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKt3mud6fJ15TsOIz-ZO66GbJlltKe23nLamTATtaeBcKRDDw4u_uKlKETirrebj-v3VSgHLSDpKoZXrg3pvHFECGIy7qIiZWUBui9I0ya6i1IH743M4OFc2EecXFhQVmP7-2BQQA8C0mw39x2i3zPRkfNu5tQKrrZ0YJrkDotAFIW7w_udCGhOjqk0vlNtp3jTD_6Lod875SCgeefPcjtPqevNqZlB6OdFet7MNYUOp2_xs0JolxN78g7U?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5974912, 2.0768498, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PKK2",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsBVs_eYkmogV1GN9O6XFZStkPnZF_aIsNXM-WRyJifjxaS9L7EHAn6CtVk0_30hKBSyNtSKDfDUSexG_Dz_1qkxVoV5BlW7B76MCQGabYafvQno3WQOWGhfsSJcYQF7jh1QYpWHSioCm9jYYw4yu5rouzQH6AFTwtWPkRsqRyywR1vMYFp7Rw-d7L27E8Trbu11lf_AwqYE1vx2fHFQjw9gWiuQzlwUiDIVSH4-TbyMeCY7vJZWGt9MEQ?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsxIP7wP2zTNoYK25KuasNGJU3vWHUip4ITCAOOffFCGCtWIFpaGQoI6eP1-K4rpRHLdUaV35d_8rw2I86TarYfjUEtQSbkWHfQdoRUiZVpTd6QQ79DyJBZrBOlAmpznkdCINjaJ1n9ewFRECsN76R44KF4rmvd7gsB8U9QtaTZvHG1CrdNNCvkVRad3n4fS85oNPJnCVQA2qRR5uXRL_pPh5hfrpYfX6i1U0oqRFVdUBPKHxVvYgzqvCY?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5951738, 2.0767039, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PKK3",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKso3EoAxki5oYNW4Zzi9j4CFFzNh3-o5sYyPubBXJPxAiVpsyqLP9KNoUi7n1ddUGXzoZGfdFuAzdx8PlKp6s5W4exLfVWw8L-2mNdBN7lqv3a6WZpOXtFTy8YUwLEL8gEWb48aKaovLIenzM-8g-jtj0cdbDBZ2res2kop9gu_WV6rVXBdKTdShj0P-yie2F_MKy6iVYVIGe-eqmEcPzpLGJ5qB9lzeQN88Bhuo6S1CyWAoJB_yU-KhNg?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKvS-Nn6EttjxdCrfRIrWDT2KX9SDwZkYLkhyeQEO7MArhMugs1uWc56Tr77I4VxWcixpGZnCnPi3rtTMg_z00jVrY_FlxBDRx6gvSTQElwvcflOMZyBwySWYszZXjrKdCdQEHFdgDshqAKipVdbXc2rdR0AH6Rik6kB2_n13PGSN0vOKy3ErE4_qPnvOlqyB_cy3ZUZDMoM7Y0i2LQvu1sqHz3IWUisxudIPRnCmHVKUEWelK7C0neyWnY?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5923811, 2.0773732, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PKK4",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKuDfnS5kncwxnq5Tz7gWLy3Kj2VjYpt91JJ3wQUE4OJv7sfuec62CIqrVcj9wnyCpdivg3QTy7Tquo864n3uxLWoDATCi3NR6TXAqFIINS-OUAoyD_dq9TCxDIYg5Cct6QteD7t7ARXZzRLnk1iMIV7utni7Abqj3mUjCr9eFdvcQOga9bhYwWpqJgWO89Pdia4PTpYKoDc1_vVOP0F5A7vDJOkNMZofKGN5bl0snNrWEMFgAGFb3PgAtk?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsKn54-AeYItBOe34V0YpOYBWPsEEfqe76_rqF2p32aov1IaPfKqAwvihKntrso58aIFLdq1GH2zu83zyNDsLezg7gYwH9Z9dj-ZloNfCvItvFMcR1pTYCobfWFOEEv_p4nfzMockmu4FuXKlSm682ua4JkRHWvC_yRMnihltb-1pleRuUN5upCY0HvHzsJUyPuEOjzSYWWjC_B6I3hohA5IZjXzCDsRbNnI4hQfOxlkC95FvEUGlIjlF8?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5856906, 2.0797631, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PPK5",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtI1xfFiEwbACr3YZ5XegVzhBdlQQRWjsM4G8BE_-ahB6xM1dbMlUFHl_9oRl41jCkpgDDuXz1s4DoU0ySGIq8LtCFJTR2tD0UMNGb-g4PJ6NTWV5cxj3LSi1ETv0iuUbHx_geWXCA2YAD63hdDkq1NOFnTxngc8S5e5jvHprXtPu-Q1WjAvn3LwwJXBjeZmiJyn47QtJBpx30ERBbIgc_EtBkndrA2z776XqDoM-__oqXcS5x4tkUe-LU?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKvL7lbriLM8k82vB0SV9Ix69vTHX5Erpd5IukTD3hDCD8E4TpEqNVcddUIjx8v5pDgoo-lVboMQQfp6LR9Uvl2WDzE5FjwkGn5N9_-8PLigMeigtGbf0cChb1QsPrBieKGj_XIGLu9gC3r8od2uw-qvrphC7PglC414emP57OfE0H_se-2w4K0amWC5fmx3yG94nm80exwUV5SL9Rnjq7uX9IhlVAcbt2Y821f6-B99u-lqcXMXAcaCMwQ?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKvIFJiJST-s_O2UvKmUObIcaYfX728M7ceqkwXmyEH_b_lSirwjA5ab7Puyx3YY3fEX7Q-6TVSOzb7ToVqnD-rHM9tAZAyNoiQbllfcGrDZF7smN8z0KD6molqCAJGaCdYnQx27KEGqF8Jq6UsyHaG0E9g0f7zaMR5Va4d4HehnI2K8Kw4Y-gi18kiyO8oClbetUqEX6niRKoFrOSGGvZtsn8MmLkn0bzwTTn0wof_u3f4ExCYVKHeRA0U?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5808903, 2.0817339, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PJM prt tnh",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKunAX5MGe8BE-KDoC7JN_PtwVFj0zshUkrcpq30mxwlaQyZPuABlG2ifJV0y95WuPU8hi9f1p2Zyu5Rfg6CkInte_A3KNdIGlQBc8hy1dDJT5r-HkeX5V3gPsR-9_rJW4kvdx2uVPFlxQkkrlmOpIG3XkwiFgZqS3qH0IFA8m7uq2KUY8UvgA8coZp_ht9nBIzFQvpszSokbR4Qq0sdlPE9iwl_9Wlv_shANdoO10hlpdBDIbX3wi4gpnM?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKt6wl-cg5W0w3wZy8nG7abC1zB0bo9uMY2bY82uIyva6I8abm3BGJU7HVYEGem0Sd55WB0_lR1Hzx9v-FhhA4ofOoSzAJ8r67LiRD6evVpjqaXnOTn_E54DUeZ7cmv2snCoTt7otbuvADo_-TChXD0XpJdd10_RQ2y_U0iNNMkkxprgSGP7sNrL3oIuiVp7mk6MtvBCfMOEBKZfyddY-HJ19RDwV73kr7cdbztWU38M_9JUkUzxdsB4Rec?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5612278, 2.0704854, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PJM 3",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKszHSwGlFp8uw87WWX1Oh_sKIv1EBqfyViu0HXf5gEiNAyKVuK9Cha8t6O8KsDMwlBII1gq3HZkBep1Ene50uo0N4irrDEpGkvbLeZiYxH-0Wh--drfrJ3f2TnTmOLES78e36dpvhF6c_IgjCuBdyszj5ekgte6s8oIbAiT_LFnvBPaW9WuI-goNpCea0Ggxh-n1x0SIcm3KOjV7sl14q3wPEa7eq0vfQr8LXyG5xNkp6Gm17P6gnBsP3A?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKveaf-Lhy8C_oVUrs7LBLhqJdLHOnwKC1ZOTVP6732d_ihjsbECAdR9vh3487hRDGlxIOj5qER3CNotVyYIhu72g73Yak24a_YjgG0icOLDb3NLeoqtPcHCqBARiSDBhRubAJghNvh_1Qb39hppr3qASGEdzR6VhSAYNh55GzmhT2WXoNVcDHncVeqiPoKfR0me3thBODjsVnswzIp70w8j9up3RJD8ekzmt9beGorLZlUJbPkt5k4kZ5s?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5635019, 2.0720122, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PJM 2",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsHOo5piqiWFvsAQwTzr6YemRNN9x2GXvnRb0FcuY2KzGeORYymIRmshCYGxMx8hFJxkHNaTQZqSC6yA4mjoZRuvh4bbIkxEO6zUQBQ3SuJmTyU-noHzubF3IZX8T3OhWu_rYFyvCzwhcT1yEPWhSd1pmkF353swZXuKxeUnr-Wa3BobNaA4-JaAOYxMUXdLOj5STbfxSRHAXxELXJl_nYErfBpU8P8LB2LaXChX4zsDsntrI-DWNfuWpY?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtKiKeCoAVG3xkpdjhaM7FfuRAb0UDYuB9q21MUfCkA-BxMciBLkHJtobD2p0h4SeffIy2xewPNAnsBpYYl2EzP54kydChFWhrHkbRaI2VLM6ad6-d9iVOUBWIcMGv8QpGSp1DV5sB1Wy97kNHfwriFTyBJ2NElYCnpwU1_fezHznLN8UxAsmJFdW7rfAgkAJylQ0Yd_lxqI2z7Cvsy_suXZv3VIaBkqYOR_j0SHpkGcyOUcvESQDL46Zs?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5652457, 2.0732399, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PJM 1",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsYBRovrMPDo5SczWv3v-sExd3Bi_MRAawzdP1OWu9qElcel3iJx6wv65TuHUHbl8gYMXNoGfyddcdudr9evJ-rV1k6VxIsv7oWkojknP-56CMb6LWjiJ4EOsqZ8gqxfdi60KcylUvK7Yxovt_04Uoa4LWyy7ZNLCKo_7abGYjXoibKpQu_G7gOJwcogvu1LTbx2EKnn4hKLrldWi8u2oCStBf9yLZLefiw_VJSrC8xpyBe52s195SImPg?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKuB4rjLr4oNRL_NBmVGRUC3kLjiG9fyKqgoYiEalRyH0iYLluIK6oclFMzHRoUlnCi76ekl74zZ2IY5lPea_9sLz51ngHWV_13d8KeDt66G_BDBLfLy_KPvLAVgoInbyHfcMc1hdiu_OgsSmZ9NDyHmu45K7k32mm1QOlnjL3YpepA2a8dCrzSqKVyDVpvA9QUH9r5TDSi9BNZB6dZHiSXARSmGW7IDDJlQIi4-0Br_ygW2HndzLZma4zg?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsPRrh1-G1NEB17epOvBYtLutBl4V8tj8Wgu9KEMCv0UTiAlV-OlV3qE4oQJZ5fCPdcyVSPDzZBgqC5XagIPGvY6BxeCA8bFqTvtaAYM1lDfsj3_78Er5XZwjfrI1PJ-zVLdsXJf6FeoykPCSMF9Vf6R1A8M1QU6Vm2QOhKNbOao0eufn79DD7fqHVNz2gc99AP2sJ9zyD1s2fpIkWCn7SGO8NcERoMyrRJkutxuRuzu-vYbRORVZfaMwU?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtP905GNmEKs3w_RCwePSxn3Vj-GMw0WIeOOkRUTxqT7fJaWIUSOrBa1ifuLu8b7S1TFFlJuVBSWocWrZEP-Y4MIwBj2rjsapZ66WxWAcc5OnufL1mmCQ57XazdgjZjHLZ_VfNVpv5rt5r5gzN-e_DRp_xbDikmF97-0pApWpV5JQnnQ7AROdtyxoMPePXxEliKdgiP6JuUgIv2NzEWptmgd8GB0LMyXhK1rmG6zBW9tFH6bP8OK7-sO7Y?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5679837, 2.0746281, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PJI 1",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKv-w06GBXN3xYX-xgq107N-TuXcGFkSNTHJHbkgzCUAyjHkYT3t9YGRxtBdRr1q6UfvxeuZKvpol-V6FMhDd4M98tUopk66vHK7SYZG-kG3bZU-PpgHsRV3BAysCwr7CIhJyRZfgKbFebjnPpxBw4Av7DbRJ1jtqoO2EglvJIFiOJusYUX0650GKBzMd3LFDQinL9m5T8E3-1LxD_gBTvJ1iZARwqdOzW7amFm_l4cYXi_rUioNhNK1e1I?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKs4X9ySBQ36_ugReMK2ojRlswZvuG8JDhKY-3Ghk-lOBdbG_p5vtxB0aO1lMlin8nGxyzk4Mtf8v7v8rLQfC-n3ClMD_MQYMevDuU1fH01S6toPqb2sPhq-1_MgAeAQffqgDN7rc8NDB8DQ2cWTHFChl2oBtMvzDsnLJ5Dh2Jvc1gwObahTC_6NDgHSPsegTuikUY60AoteCmYtK76xIx6g06Zkl-F-wD_RnrVE3JkMiLEZWjfeijo2ibE?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKteWQmTxH6Z2UP60H9reiIMtYOiS0becvG-B_MH8FV1MpNGtLGjBRJrEqykx44SGY7swuFUMjqzps3Ds4gGQmMx_i3HUpxsB41XVIyVLwxKSORiD5LQgPFoyor8fa0xftpt1R4TpSMPIRajUdhBjbiv7ZdpDeQBXE3TtMtKitRBGz-Yt3H1qUaJuUEnpAcr1RZVRTYCiVIcmPF4D_9H7UoqkT5gIfTV6uwL00FaNDLpeGVxV39XHYra-D4?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5713655, 2.0637842, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PJI 2",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsowfRE2cMLJUkOSQfcnzyf2TXUoOsA9xtKkMcFNoIJs4UhZKL2dbhujs8q__mv6fyO1QZCAIPLX_Nw-qsVBI0aK8G885p24wZVz7B1TKfYl5EJKqfFXrtAmi726qwxYeFnMKwA5nAydI1qUvZREHDSgUUpDjUoptgV_0etQS6sOodX5CiPynNKSPQAD0jzwfEaDCh0tbqkZyULEn9WuTazN3KjPYxDMi6mfeXasXwxJQxfPD3MsGfDELo?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKvLqwnSIGACw6OB8knAj67FrdfHkoQv74bkmtB-ckwMnG1DGObEcQkI4TROUOJvErrx7RPhqFGDHFOlx4E_N1JxM0PBM8MH15whfmQsYnvetxt0VTANgmQQddDp8wv54Aovjsj38jDwDvNULWvLZrhP6ocsUtzYCsETsFfidTm_m5XqFFvCqmYQO0FgfI1CvqsYibg-6UMt-oUEyesk8vBlSPEtIesHpsPg961GnBvCPBhh_G3hR5B5U1k?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKst1Hb3pSt1VqXNLY5UsBW4EN30QBbNaqVz-CX-3u43PAR4N--un8OO-boCrzmO6tsooeuFqB_PzeJBXPKeUZp_Nv6NJPfHsN3pMHJE8wO7MgIeTsISM8BxuBEUhcUdY-efvzuPcE_A_TyJYuAD36PBiiU-2T-1Fy4zubfq0f-aajQyZK_AvhhkzYaQFmC0yg8T6mAFrStvn779RNq60w6FJThPy1L8bl94m5E-Ri3J1oyw9dRhhkyro4M?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKuuspUkoF-wZYThvVMbnvqUUvczeDGgArqzkLbm6jH_WRgqr7ZWq6jBMLcKsEEnThgcIbXwhoBGIwH87V3XZgWo7FxBqpuzod3UGbXy5JnEeVN_A1GmT0WnA0C9uk9pQXBYpAZqlYSM9RKK-KgUEo45jFSiZat_0qYA9r_yMRsOAcdtNovERMx12agAQKv2kj8Twk89DZGvYWHtb6Zc5j1hep7aSylQuQtI3HAJdBjA3GTCVgJBHoMIqYM?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5662877, 2.0669935, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PJI 3",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtPiHZ1PxF2pZgHMgJJJMB2sEH45zSsEEAVFquoAqOLYdGqsLYm2o8c0mZRqyL75jrHzJdDPsXYfrx4cX3Wlcg2Mz_jeQqDMC2Nc0AYGU5825_5lFHWxs4bLZzm3VO0CYImZqqR1OcaM__14grz-nB_SEiiCNKHexiYS8Rh4LI8vSBB5CihgOJhqCk3ObcmtymbOdrWnq59MbqaALenHXYAAhyJ7A61DMnIHtzeEJWYJ4ffScdXhvLUDuY?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtsrFp9IU8uy5E_z3Z6ypl8qhpKQGN2pfXLghsBt5Qs3igCX4ydIKNMlgdUOxNfbVu5bHRraJTPi7LF2HAC6Wa5pA7rzCaHgfgsVQ-w9qw16L2mJ786CB3NSFq0ZZbEis2lmqh8SlWKHMgSnQPoOw2b-F0QydaLHDhnXc6-g9_CmlbG1Ecd1tZ5sKQB2IDfq2_XaQeNsjIv3H3ClmyyO1Wh9CMvV7qghQiW9SydxAqrgh036wtdKUVO-_o?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5662307, 2.0670424, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PJI 4",
+        "description": "sump",
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKuWk0AKEzm_jWmKg5xfqSH4ERyrYiOCGG5lutY4V1Dp2qut8u1LlPZ6vFvenw-svLOWGFq-azwT1NeOAA635DghRovDjAAfM7D6gvfCR9iH9AHvUrjO573FBjnFiMCu0Y8HGV5S5GHfrFiu6G6_cHtgLgA6fJmxh_bLcArXdh0xAg_93rWEZSAICx7ccD3CURXmESEduI0mtqEG1V0_OmHnzO4lKMI07z7f3DBuMa4uXBH3REkQfwY1zxM?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKs6wgFmR6BN4Ft8oVHQbWDJby76Or5qSLy7xe2Sf8p4HSxg59-ZMeoh-lb3_BEmDEpkl7Ut1c34dG8bY6zRPjVe3l4VFXnFm7NtFxP3SEvDCBm7kRHlPhqh7ooxAIQ6qroOSIcISvwB0yz-hxG58ofbhuwur9mF-5bv74GbsO2N-ecKo7tRSjfch1dFfwcPDDXFTCbw8alCTintyG6X8V7gZ4gp4s4zw0u1RN2vY1kNlSvcrOzlx2IpAAA?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtppMBDq0ZRE8XsPOl6TrXK7XZiVd3HiwxXWW7oVvXaUCeab-jVpFu4FX2Xx43q_kQd7tQytEJ35MWiyujDbGIw_oV9E68rGo7m24oa15UgabHngJ8Q8oTeVE-oTuhi52rVECjA5jAn1XgXeT8XYRlrq3Wb-Noz_Svg1DbeezXC2H3KgmQO-vvth0xK0CXuUtliaCxoYFmeR5ak6CUrwK5KbYVaXn2JKKCbMPkRNqiM0ZNhFzkArWxJ2Vo?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKuGk_NRC0OrOZE508lK5kSe_8CGVOILtu0bfq2jabJU2WR6yUmCXdtw-5IImP2xZckYs7qsuhcVaw0CiDRxjUyHYVtcmMI-_NCguzMHfI13cyx5A2DQyvVJkvTRDrPFsfpqipy8dY9a4Fh7naN7CAmph4ySq6DI4rvCweepbhk5ELO9u4pGG0W79V77z3Ew9kossaXgUw2u3DNIsahHi_EMX7bMUTRoAmwmt0ERI5R0M25PNFXTKxjklh0?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5651992, 2.0680305, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PJI 5",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKv3AzWYoh68aJEJzhZLk5e_N5wLijdnUIaJuWJ-ghaGG9bKZRTyb3eD02aEcy-B_JHP46VGAoXpB_T4sc89uku-YgV1Q-XJ8JQgkBbIAEIBFb9NVZ1XyaQNCIdhDyARCt74vBZw7FMEyA9EZkzyRlCmuSvLPg9n6tprHfnZCCBy45gjA-f7ZynNeS12gH6SWKCKKvxICbieK7ZKXgzscORTKZqMFLEf51L9gc49K-6yeXFB5-7SVBja2Kc?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKuPgzYDsGLOJkHWlgg_118AOF6zQ5OQOq_AwZj9egcyxrgfxHy4b3tHtVPhh6vb26RhsBkHaIhSDxP8YdioYGa95jkyC4JQScSrLBz4mUWx0h4bvYavAOXnwjoGMfglzJ_kagikiyzkubR-bOX4B22TSvwM5-JGWLkhisyf4VYqr8MAbVblsMEl-qqeSnbccgc5R40m_gq07MfOA23ieU4hRSFMgdpbkmdU7w7EG9WXwFCjH8F0wNSppdk?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5624704, 2.0712274, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "Pintu air PBeting",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsBcydqvShK2_5A37lhWdKz2oNxt5K1ez15lhth2YvIgmKJ4MM0mD7X0QgZmUtE7bicu4RCm-Q5h46qidwVl9EzoMI-17XwZcYO_uWies8QEMePL36l90Xk8utdUNa2QCXq4jLzP6DlLfTv270yKWeUJpMHS21C9csO9P6k6mgy44tUy8idCWW_gMHum_Ivpf0HsOi9l6H9Rxm7yCTiaBCfL79BTxZNySefnvccB6nN1aoHiqZHnddqtg0?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKuAeX8l7_yyaxxPw2KNjYWILW_z1dn32R3EV5jIbB-oGLKOGHpEk0hLvwFjMVDcn4Rwc2JFUVRzy8hdeAuZ9xw6DDc4ZGAyODBWFVsUFSKzSKMVBKO-JkDcD3AcJtbvtzyuaNa2HqM_eJSx7Wkfc2wbpZUp2TIMJEApiGyKb3VwZnIzvaWUqJcXnoNmx6qX1opyCvC5InD7PLjiECpHS-9tL7z8oSPk3AejNnoadYTjhymbFuh47uZZ4Ps?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5643367, 2.0667747, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PS 1",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKuyFLucZ8ChWKr5On0ro9J2R9dzmWzPVqeaVZBhjUrut5HWhQT6LkzDNUJFHVpuryZAstU6imGiIEa2TFcv-aw9E4AwRWkX093kTlHB1kS6BSqSBfpNxH8moU-oNyREhPQfkyrjMVIgeLNohLG8uit_RqIfVUHqtPx_qlOFcjG5qQzBbSpbhYL_b3dCLEM_tanLqp3xBTWPocEXkl_F-fGeO8IazaAIXaJX2HYm5XD7FdSxaG66g_0ye7Y?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsYrK8sD5TPv7RZh04gRNjp0hNH1tQiMijp3vkhDkV7h-ruviBsHYdpaE6pLZJlh75wRdXIFGk30fwO7XqwpRoRe8skQxmOL6b8NzVZ9BKnPeQRfkcxrpoyJsJiVjFvPfhJqG2zXTisEunbGTaZ-H_ijtlmsKrMj-Q4M21OUvbw_v82aenLrOn_9vtvWHPQ8I-iskbU6Gf-wuOS9JZUGbZdA49Y6sVoq-gyVgfeT3Yeh1vsgO-1fGzlYnk?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5955682, 2.0665998, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PS 2",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKt7_XAsXIpxziaK7sVoxnpagkW0y82FGU-Q8d9CTjYmEOI8DK5XKSQUMfA6059fkI7Ii6nM9FXs3IfVYL6KluMYr7N_pFw_WWh4AiGrS6kowNbDGM0gfQ6ZFfHvbhEB5e0l4MafKzeItslBdHSknsOZhZgQFUOv0xoBhkK68FEapStKXWT_7QDrhWNtVYyTK8o8Nn3PZ27Iq3wYsmuaStKDAsLyrJO3N52rLP4EsKM9GiAg4oBKXSFuqj0?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtu3uBDMrtklx8gR_XfeblMUNBoS_B5yxyvNBYP4IEfLP3fj-W7wa9Yjp7dHzAA-bvwGaKhb1RDOu62cCUuo_GaeLLhOhLF1cchJSYc-bpIOFopHyAZIGW4OHXk2PxLm7b06Sk6z9_c4t0Id_OLF6BiI6crUtAdZVe0MpHYkhabtPgipvjLDbiIZHUYMuXu90x9XXdM0Os-XLkLDcTXJLKPWnvjI1f6xuxhbRDKX7TyOh4ktiHLvenf4r8?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.592712, 2.0666276, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PS 3",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKv0d2Vm21rPX6QIqk0sdUrXHpgxv6pg_y-dljDdOf25oSOi24SvtsH14ifNU4CHWsBvpX-PfoukUI1irQ9_5pl0iOp0opuxztE592nDoW3jg1cTMANF72QXzJWRyjJz4WjPB00q0x0M7box7oSI6bQgmMdcuWFFRcayHBmHApPvIIZnYgdOYjcIMxmdGzSOvxy4VSx-o3bZmMqfrmtb_RBgpO60TK5N9400z1rOfYA631715jiPSVZC56E?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtQg7ySaenui3ETCPeesZ0tkmqAUWQi6SVqWl6Dyy60HlXzgYps8LDbW8qzR-sdGtg5mylqo_OFb2-lOX8-u0D_DhkXDVjETuoy9sDGM2Gn3DsU4eVjB5b-4jrWrs2dUo8XFMK_jE9iSyqgmMTL8rat7sBOInYBwqjocAc_MJJe8HEvM2wXjUgOnrwUO-ykoS2ioLUn6WVtfVtWKSMI8ZWAvpWMDqih52XND_1nK3a8VfIkrBdabICPXN8?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5873054, 2.0665168, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PS 4",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtE1eJf_U-VxP_1rQkYPCIpCwFV6s6NXVYSDvf9B6FdMv9t0jNPlvH019-_D20axkLpVDHG2xnXNIx9JnZY7vxi_Taepdw8RoNaisEx07Dlplt6Q_0z5NNTRcfsoRDgaFUuweEtiG5U_7QB-TLRonNPHdCJf1knqC7Gpn-q9oF11wdJlOxo7hZGTj3R9Qi4w3eIYruFkovgvq2q-YXrdtmxgYdBdx2ueaap_L4OicuQCdkA9jvz-ye17_Y?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKtbkLI8idfg6AgMs_L6KGu0hriUszHrRT-V8s5mWqdk8CA0PIc7YAlksnb6GMv64dyfJvf6thW9pcFFETy3RdJxU4p0ZuPbTugwgxGnlOP2rXOODyVxCbnW6hQPrLCepxzy7Ln4fuuKgWgiXvnwanGShnltYwVGgZ1T26Istt8UGrxCqBlZFNuJPeLNdW_x0M4XBejfT2ZgCbw6rkjViXanYDctZb2-iyn7eigcFH8ofeSZSgLA5TItuGc?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5842206, 2.0667138, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PS 5",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKt7Ok_hS_x64s4BUXoyKquSO3P7jqtVFV367KwbN7SdDpTq0qj8EtctpLdaOKSDI3ok4H7NIOJ-Nx1wjpE9tUyciR9ATHui25BWezKMzAqDLl66Jn7UCzhaEHpcb-lWeDvUOK7zP99FTEH1GVqmGvY6_gdt5zOC9DP28K0fRydJIinUlroR1anIDIanHRCJYynlI59TkT1sl_Fp687bbaBOFh1tz_pUT6irsgE_Gsk2zcW0_C0Z7ZWFEzg?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKt02EIltRW4I0ztw8oRVbAI3H2neVb5uYPOT8DID9SnHRLF1kGGreIiEJfNXdtffe6m-rQfxT5Ehm0A5WyD7_57cPY669zWVwtAD7c6ymyr_kObw6h0MEjpRV6TxpA6EELQHnI7Jwi83uF3dsBwZa13GmGMw3BoBJpXd5RzqL90kzMdfad-CFVzPUwGotoO6JQlKMXep3ozy217t906nLVKIlo09P3vu65oMpwQACyl4mXLQ3saFg2SW0s?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5807664, 2.0663861, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "PS 6",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsRkwMHrpwvYcUooV9_j0fzKwkg4R6SRVr9rWso2-zyKlaNRcw0fb13-bvesJ-iCHWM3IcS_9FA0ZnEMbO4pnRja90-auufZtG779VtApuNGwSUsOV7Izox3BzL5BU1Brgfr4tvI3WlWt4R3D6ChSJALSgSM4ZHSB2o-qEFXnkYnrilA2w8H-4OWgx_8tCQBOCJkiEDO9DY4FyAJM7thCErf-97rGLbzMf7jUQb2JyVnnWY2xbMjsQHzzA?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKsy_BFzh4lzVzuDmM9i4bH6hTXzjdX6SBHohIXF5s33DpDdsvNEcyGCXYem-dgSXmVSFZ4quJW5efcUWHdMSCJjekefY7DXfU5NtoIzZkHuDOpaR8rDMVBmJa11NZk-ut-Mgnmx5mz9rQ-VW9INPtf9BINF0LMuqksqiRnbki0JH_mkXoSCFO4B0rQmt1nSyjpXG3xsEYUIiUM5_9qSSqVdShqTDr-wpPBYpqSLIat0juUEU0X6NfjGp-o?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5738121, 2.0649154, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "Parit Saga Tambahan 1",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKvEodM2tKK8B6JuZ0aw6vKzK0RljvDg766UdPaDA7xM9paLP1xXPRqz-BZxOgRcZ92C78OvB-0B_4gl-6v_FRRaRTrZaeOB2v6uS5Ccth-cqRD11Dn5CRWU6mnrNzTUcKKo5IJOxbyCx_Z8aCmTXKNBQ1wPrLssvmWkTVsn2NTcwQjKxOJhYUBMr1MBfE_SCII8-XyrhkOghucJVVS-i5FF49EIwvLk1YVd7VvQqnJESWidA8rohlESX0U?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKshmqRTmUYttFONZjpzS2LKbNlyvj0U-nHsFNUPlplVHLyY0RHaWoGYS4X_X1VUAVaZC7QMPORq07iCpKg6Nk5J4qkOD92qHQQWKxauXKzhbGNNVS4NiHGTeSzgY8mEgwP6lO9Q6Tb08HOhGhovY2Fa_DgsdyiLggACWman9uk2rGrFjCE7vTNIZB34Jjv5hRRT8JdLGL7Zqp_kpqMbDs4qoqz0pIyHeuSSFgMOR1vtjHt_FQs9si49dss?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.596459, 2.0604036, 0.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Name": "Parit Saga Tambahan 2",
+        "description": null,
+        "Type": null,
+        "Depth": null,
+        "IL": null,
+        "RL": null,
+        "gx_media_links": "https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKvoEnHVNhrhBfSzByIF86P_Fyw408_P-wAIMsu5uhmyEyCgsoVej5Vvqf77N0MWcfC1qsQajvURlUipARKE2ACw1hdHlRcclXkFk8zl5PbC858__i_8-FrisiA8ko4bkV4_g5UwlWbJcY38iDoxi0dzhMHPTwWxK7dOyuE7QksssxRfoktSyksUwd67Z9yRc-pcjUd7yuPCiPrRSE1cGmzsDhG6V17pGdcP2wN85et3WTDoFjpkZqtHQ9o?authuser=0&fife=s16383 https://mymaps.usercontent.google.com/hostedimage/m/*/3ADbDBKt5a9jtdSX6lTgxyc8txf_caGt-PVmg4clPquVjhmOhAbmBjbKbg8037FHQWBYY8txUuOSy3JcANMtDLSFgus5EHOuTC4DoChcqAZpz5IXwsbMAYrjKeBMXebCNkL12hGUVj4u9AR4CkvHPECGEmg7rQVYI9lW0ektskrRfbxS4DxDMeB0bIpOE04IAReiZzueIxFPOUQ913RrpGyWmxnKaETwQWfkRDHb1Jx3yOZiaUlKP0cxTMKfLyyQ?authuser=0&fife=s16383"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.5970664, 2.0538529, 0.0]
+      }
+    }
+  ]
+}

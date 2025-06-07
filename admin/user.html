@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DrainTrack - User Management</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Common DrainTrack Styles -->
+  <link href="../css/common.css" rel="stylesheet">
+  
+  <style>
+    /* Page-specific styles for user management */
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+
+    .role-badge {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 12px;
+    }
+
+    .loading-spinner {
+      display: none;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--secondary-color);
+    }
+
+    .bulk-actions {
+      background: var(--light-color);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid #dee2e6;
+    }
+
+    .btn-action {
+      padding: 0.25rem 0.5rem;
+      margin: 0 0.1rem;
+      border-radius: 5px;
+    }
+
+    .user-row {
+      transition: all 0.3s ease;
+    }
+
+    .user-row:hover {
+      background-color: rgba(13, 110, 253, 0.05);
+      transform: translateY(-1px);
+    }
+
+    .pagination {
+      justify-content: center;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .user-details {
+      margin-left: 1rem;
+    }
+
+    .user-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .user-role {
+      font-size: 0.8rem;
+      color: var(--secondary-color);
+    }
+
+    .status-active {
+      color: var(--success-color);
+    }
+
+    .status-inactive {
+      color: var(--warning-color);
+    }
+
+    .action-dropdown {
+      min-width: 150px;
+    }
+
+    .table-hover tbody tr:hover {
+      background-color: rgba(13, 110, 253, 0.05);
+    }
+
+    /* Loading overlay styles */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.3s ease;
+    }
+
+    .loading-content {
+      text-align: center;
+      color: var(--primary-color);
+    }
+
+    .loading-spinner {
+      width: 3rem;
+      height: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Notification styles */
+    .notification {
+      position: fixed;
+      top: 100px;
+      right: 20px;
+      z-index: 9999;
+      max-width: 400px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="spinner-border loading-spinner" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <h4>Loading User Management...</h4>
+      <p>Please wait while we prepare your workspace</p>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="admin.html">
+        <i class="fas fa-water"></i>
+        DrainTrack
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="admin.html">
+              <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="map.html">
+              <i class="fas fa-map me-1"></i>Interactive Map
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="flood-report.html">
+              <i class="fas fa-exclamation-triangle me-1"></i>Flood Reports
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="maintanance-inspection.html">
+              <i class="fas fa-tools me-1"></i>Management
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="user.html">
+              <i class="fas fa-users me-1"></i>User Management
+            </a>
+          </li>
+        </ul>
+        <div class="ms-3">
+          <div class="dropdown">
+            <a class="btn btn-outline-light dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown">
+              <i class="fas fa-user-circle me-1"></i> <span id="userName">Admin</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+              <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="container-fluid">
+      <!-- Page Header -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <h1 class="h2 mb-3 text-gradient">
+            <i class="fas fa-users me-2"></i>
+            User Management
+          </h1>
+          <p class="text-muted">Manage system users, roles, and permissions</p>
+        </div>
+      </div>
+
+      <!-- Statistics Cards -->
+      <div class="row mb-4">
+        <div class="col-xl-3 col-md-6">
+          <div class="card stats-card position-relative animate-slide-in">
+            <div class="stats-number" id="total-users">0</div>
+            <div class="stats-label">Total Users</div>
+            <i class="fas fa-users stats-icon"></i>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="card stats-card success position-relative animate-slide-in">
+            <div class="stats-number" id="active-users">0</div>
+            <div class="stats-label">Active Users</div>
+            <i class="fas fa-user-check stats-icon"></i>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="card stats-card info position-relative animate-slide-in">
+            <div class="stats-number" id="admin-users">0</div>
+            <div class="stats-label">Administrators</div>
+            <i class="fas fa-user-shield stats-icon"></i>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="card stats-card warning position-relative animate-slide-in">
+            <div class="stats-number" id="inactive-users">0</div>
+            <div class="stats-label">Inactive Users</div>
+            <i class="fas fa-user-times stats-icon"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search and Controls -->
+      <div class="search-controls animate-fade-in">
+        <div class="row align-items-center">
+          <div class="col-md-4">
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-search"></i></span>
+              <input type="text" class="form-control" id="searchInput" placeholder="Search users...">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <select class="form-select" id="roleFilter" title="Filter by role">
+              <option value="">All Roles</option>
+              <option value="Admin">Admin</option>
+              <option value="Inspector">Inspector</option>
+              <option value="Operator">Operator</option>
+              <option value="Viewer">Viewer</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <select class="form-select" id="statusFilter" title="Filter by status">
+              <option value="">All Status</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#addUserModal">
+              <i class="fas fa-plus me-1"></i> Add User
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bulk Actions (Hidden by default) -->
+      <div class="bulk-actions d-none animate-fade-in" id="bulkActions">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <span class="fw-bold">
+              <span id="selectedCount">0</span> user(s) selected
+            </span>
+          </div>
+          <div class="col-md-4 text-end">
+            <button class="btn btn-outline-success btn-sm me-2" onclick="bulkAction('activate')">
+              <i class="fas fa-check me-1"></i> Activate
+            </button>
+            <button class="btn btn-outline-warning btn-sm me-2" onclick="bulkAction('deactivate')">
+              <i class="fas fa-pause me-1"></i> Deactivate
+            </button>
+            <button class="btn btn-outline-danger btn-sm" onclick="bulkAction('delete')">
+              <i class="fas fa-trash me-1"></i> Delete
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Table -->
+      <div class="card dashboard-card animate-fade-in">
+        <div class="card-header card-header-custom">
+          <i class="fas fa-table"></i>
+          Users List
+          <div class="float-end">
+            <button class="btn btn-outline-light btn-sm" onclick="refreshUsers()">
+              <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <!-- Loading Spinner -->
+          <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Loading users...</p>
+          </div>
+
+          <!-- Users Table -->
+          <div class="table-responsive" id="usersTableContainer">
+            <table class="table table-hover mb-0" id="usersTable">
+              <thead>
+                <tr>
+                  <th width="40">
+                    <label for="selectAll" class="visually-hidden">Select all users</label>
+                    <input type="checkbox" class="form-check-input" id="selectAll" title="Select all users">
+                  </th>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Last Login</th>
+                  <th>Created</th>
+                  <th width="120">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <!-- Users will be populated here -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Empty State -->
+          <div class="empty-state d-none" id="emptyState">
+            <i class="fas fa-users fa-3x mb-3"></i>
+            <h5>No users found</h5>
+            <p class="text-muted">Try adjusting your search filters or add a new user.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <nav aria-label="Users pagination">
+        <ul class="pagination" id="pagination">
+          <!-- Pagination will be generated here -->
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Add User Modal -->
+  <div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>Add New User</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="addUserForm">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">First Name *</label>
+                <input type="text" class="form-control" name="firstName" required placeholder="Enter first name" title="First Name">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Last Name *</label>
+                <input type="text" class="form-control" name="lastName" required placeholder="Enter last name" title="Last Name">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email *</label>
+              <input type="email" class="form-control" name="email" required placeholder="Enter email address" title="Email">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-control" name="phone" placeholder="Enter phone number" title="Phone">
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Role *</label>
+                <select class="form-select" name="role" required title="Role">
+                  <option value="">Select Role</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Inspector">Inspector</option>
+                  <option value="Operator">Operator</option>
+                  <option value="Viewer">Viewer</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Status *</label>
+                <select class="form-select" name="status" required title="Status">
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Password *</label>
+              <input type="password" class="form-control" name="password" required minlength="6" title="Password" placeholder="Enter password">
+              <div class="form-text">Minimum 6 characters</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Confirm Password *</label>
+              <input type="password" class="form-control" name="confirmPassword" required title="Confirm Password" placeholder="Re-enter password">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save me-1"></i> Add User
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div class="modal fade" id="editUserModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fas fa-user-edit me-2"></i>Edit User</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" title="Close"></button>
+        </div>
+        <form id="editUserForm">
+          <input type="hidden" name="userId" id="editUserId">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">First Name *</label>
+                <input type="text" class="form-control" name="firstName" id="editFirstName" required title="First Name" placeholder="Enter first name">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Last Name *</label>
+                <input type="text" class="form-control" name="lastName" id="editLastName" required title="Last Name" placeholder="Enter last name">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email *</label>
+              <input type="email" class="form-control" name="email" id="editEmail" required title="Email" placeholder="Enter email address">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Phone</label>
+              <input type="tel" class="form-control" name="phone" id="editPhone" title="Phone" placeholder="Enter phone number">
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Role *</label>
+                <select class="form-select" name="role" id="editRole" required title="Role">
+                  <option value="Admin">Admin</option>
+                  <option value="Inspector">Inspector</option>
+                  <option value="Operator">Operator</option>
+                  <option value="Viewer">Viewer</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Status *</label>
+                <select class="form-select" name="status" id="editStatus" required title="Status">
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">New Password (leave blank to keep current)</label>
+              <input type="password" class="form-control" name="password" minlength="6" title="Password" placeholder="Enter new password">
+              <div class="form-text">Minimum 6 characters</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save me-1"></i> Update User
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-danger">
+          <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Confirm Delete</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" title="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this user?</p>
+          <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Warning:</strong> This action cannot be undone. The user will lose access to the system immediately.
+          </div>
+          <div id="deleteUserInfo"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+            <i class="fas fa-trash me-1"></i> Delete User
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Complete corrected JavaScript - replace the entire <script> section with this:
+
+// Global variables
+let currentPage = 1;
+const itemsPerPage = 10;
+let allUsers = [];
+let filteredUsers = [];
+let selectedUsers = [];
+let currentUser = null; // Added for authentication
+
+// Configuration
+const API_BASE_URL = '/DrainageInventory/api'; // Adjust this to your API path
+
+// Initialize the page with authentication
+document.addEventListener('DOMContentLoaded', function() {
+  checkAuthentication();
+});
+
+/**
+ * Check if user is authenticated and has appropriate role
+ */
+async function checkAuthentication() {
+  try {
+    const response = await fetch('../api/session-check.php');
+    const result = await response.json();
+    
+    if (result.success && result.authenticated) {
+      // Check if user has Admin role (User Management is Admin-only)
+      if (result.user.role !== 'Admin') {
+        showSecurityNotification('Access denied. User management is for administrators only.', 'danger');
+        setTimeout(() => {
+          window.location.href = '../login.html?unauthorized=1';
+        }, 2000);
+        return;
+      }
+      
+      currentUser = result.user;
+      document.getElementById('userName').textContent = currentUser.name || (currentUser.first_name + ' ' + currentUser.last_name);
+      hideAuthLoadingOverlay();
+      
+      // Continue with original initialization
+      initializeUserManagement();
+    } else {
+      // Redirect to login page
+      window.location.href = '../login.html?unauthorized=1';
+    }
+  } catch (error) {
+    console.error('Authentication check failed:', error);
+    showSecurityNotification('Authentication check failed. Redirecting to login...', 'danger');
+    setTimeout(() => {
+      window.location.href = '../login.html?error=1';
+    }, 2000);
+  }
+}
+
+/**
+ * Hide the authentication loading overlay
+ */
+function hideAuthLoadingOverlay() {
+  const overlay = document.getElementById('loadingOverlay');
+  if (overlay) {
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+      overlay.style.display = 'none';
+    }, 300);
+  }
+}
+
+/**
+ * Initialize user management after authentication
+ */
+function initializeUserManagement() {
+  loadUsers();
+  setupEventListeners();
+  
+  // Update dashboard every 5 minutes
+  setInterval(loadUsers, 300000);
+}
+
+/**
+ * Logout function - redirect to centralized login
+ */
+async function logout() {
+  try {
+    showSecurityNotification('Logging out...', 'info');
+    
+    // Clear session on server
+    await fetch('../api/logout.php', { method: 'POST' });
+    
+    // Redirect to login page
+    window.location.href = '../login.html?logout=1';
+  } catch (error) {
+    console.error('Logout failed:', error);
+    // Still redirect even if logout request fails
+    window.location.href = '../login.html?logout=1';
+  }
+}
+
+/**
+ * Show security-related notifications
+ */
+function showSecurityNotification(message, type) {
+  const notification = document.createElement('div');
+  notification.className = `alert alert-${type} alert-dismissible fade show notification`;
+  notification.innerHTML = `
+    <i class="fas fa-${getSecurityNotificationIcon(type)} me-2"></i>
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  `;
+  
+  document.body.appendChild(notification);
+  setTimeout(() => {
+    if (notification.parentNode) notification.remove();
+  }, 5000);
+}
+
+function getSecurityNotificationIcon(type) {
+  const icons = {
+    success: "check-circle",
+    danger: "exclamation-triangle",
+    warning: "exclamation-triangle",
+    info: "info-circle",
+  };
+  return icons[type] || "info-circle";
+}
+
+// Setup event listeners
+function setupEventListeners() {
+  // Search input
+  document.getElementById('searchInput').addEventListener('input', debounce(filterUsers, 300));
+  
+  // Filters
+  document.getElementById('roleFilter').addEventListener('change', filterUsers);
+  document.getElementById('statusFilter').addEventListener('change', filterUsers);
+  
+  // Select all checkbox
+  document.getElementById('selectAll').addEventListener('change', toggleSelectAll);
+  
+  // Form submissions
+  document.getElementById('addUserForm').addEventListener('submit', handleAddUser);
+  document.getElementById('editUserForm').addEventListener('submit', handleEditUser);
+  
+  // Delete confirmation
+  document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
+}
+
+// Load users data from API (FIXED)
+async function loadUsers() {
+  showLoading(true);
+  
+  try {
+    const searchTerm = document.getElementById('searchInput').value || '';
+    const roleFilter = document.getElementById('roleFilter').value || '';
+    const statusFilter = document.getElementById('statusFilter').value || '';
+    
+    const params = new URLSearchParams({
+      page: currentPage,
+      limit: itemsPerPage
+    });
+    
+    if (searchTerm) params.append('search', searchTerm);
+    if (roleFilter) params.append('role', roleFilter);
+    if (statusFilter) params.append('status', statusFilter);
+    
+    const response = await fetch(`${API_BASE_URL}/users-api.php?${params}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (!data.success) {
+      throw new Error(data.error || 'Failed to load users');
+    }
+    
+    // Ensure data structure is correct
+    allUsers = data.data || [];
+    filteredUsers = [...allUsers];
+    
+    updateStatistics();
+    renderUsers();
+    renderPagination(data.pagination);
+    
+  } catch (error) {
+    console.error('Error loading users:', error);
+    showNotification('API not available. Using demo data.', 'info');
+    // Fallback to sample data for demo
+    loadSampleData();
+  } finally {
+    showLoading(false);
+  }
+}
+
+// Load sample data (fallback) - FIXED
+function loadSampleData() {
+  try {
+    allUsers = getSampleUsers();
+    filteredUsers = [...allUsers];
+    updateStatistics();
+    renderUsers();
+    renderPagination();
+  } catch (error) {
+    console.error('Error loading sample data:', error);
+    allUsers = [];
+    filteredUsers = [];
+    showNotification('Failed to load sample data', 'danger');
+  }
+}
+
+// Get sample users data
+function getSampleUsers() {
+  return [
+    {
+      id: 1,
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@draintrack.com',
+      phone: '+60123456789',
+      role: 'Admin',
+      status: 'Active',
+      lastLogin: '2025-06-03 09:30:00',
+      createdAt: '2025-01-15 10:00:00'
+    },
+    {
+      id: 2,
+      firstName: 'Sarah',
+      lastName: 'Ahmad',
+      email: 'sarah.ahmad@draintrack.com',
+      phone: '+60198765432',
+      role: 'Inspector',
+      status: 'Active',
+      lastLogin: '2025-06-03 14:15:00',
+      createdAt: '2025-02-20 14:30:00'
+    },
+    {
+      id: 3,
+      firstName: 'Muhammad',
+      lastName: 'Rahman',
+      email: 'muhammad.rahman@draintrack.com',
+      phone: '+60187654321',
+      role: 'Operator',
+      status: 'Active',
+      lastLogin: '2025-06-02 16:45:00',
+      createdAt: '2025-03-10 09:15:00'
+    },
+    {
+      id: 4,
+      firstName: 'Lisa',
+      lastName: 'Wong',
+      email: 'lisa.wong@draintrack.com',
+      phone: '+60176543210',
+      role: 'Inspector',
+      status: 'Inactive',
+      lastLogin: '2025-05-28 11:20:00',
+      createdAt: '2025-04-05 13:45:00'
+    },
+    {
+      id: 5,
+      firstName: 'David',
+      lastName: 'Tan',
+      email: 'david.tan@draintrack.com',
+      phone: '+60165432109',
+      role: 'Viewer',
+      status: 'Active',
+      lastLogin: '2025-06-03 08:00:00',
+      createdAt: '2025-05-12 16:20:00'
+    },
+    {
+      id: 6,
+      firstName: 'Siti',
+      lastName: 'Abdullah',
+      email: 'siti.abdullah@draintrack.com',
+      phone: '+60154321098',
+      role: 'Inspector',
+      status: 'Active',
+      lastLogin: '2025-06-03 13:20:00',
+      createdAt: '2025-04-22 11:30:00'
+    },
+    {
+      id: 7,
+      firstName: 'Ahmad',
+      lastName: 'Hassan',
+      email: 'ahmad.hassan@draintrack.com',
+      phone: '+60143210987',
+      role: 'Operator',
+      status: 'Inactive',
+      lastLogin: '2025-05-30 15:45:00',
+      createdAt: '2025-03-28 14:15:00'
+    },
+    {
+      id: 8,
+      firstName: 'Jennifer',
+      lastName: 'Lim',
+      email: 'jennifer.lim@draintrack.com',
+      phone: '+60132109876',
+      role: 'Viewer',
+      status: 'Active',
+      lastLogin: '2025-06-03 10:30:00',
+      createdAt: '2025-05-18 09:45:00'
+    }
+  ];
+}
+
+// Enhanced updateStatistics with better error handling
+async function updateStatistics() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users-api.php?action=stats`);
+    const data = await response.json();
+    
+    if (data.success) {
+      const stats = data.data;
+      animateCounter('total-users', stats.total_users || 0);
+      animateCounter('active-users', stats.active_users || 0);
+      animateCounter('admin-users', stats.admin_users || 0);
+      animateCounter('inactive-users', stats.inactive_users || 0);
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error('Error loading statistics:', error);
+    // Fallback to local calculation
+    calculateLocalStatistics();
+  }
+}
+
+// Helper function for local statistics calculation
+function calculateLocalStatistics() {
+  try {
+    const totalUsers = allUsers.length;
+    const activeUsers = allUsers.filter(user => (user.status || '') === 'Active').length;
+    const adminUsers = allUsers.filter(user => (user.role || '') === 'Admin').length;
+    const inactiveUsers = allUsers.filter(user => (user.status || '') === 'Inactive').length;
+    
+    animateCounter('total-users', totalUsers);
+    animateCounter('active-users', activeUsers);
+    animateCounter('admin-users', adminUsers);
+    animateCounter('inactive-users', inactiveUsers);
+  } catch (error) {
+    console.error('Error calculating local statistics:', error);
+    // Set zeros if calculation fails
+    animateCounter('total-users', 0);
+    animateCounter('active-users', 0);
+    animateCounter('admin-users', 0);
+    animateCounter('inactive-users', 0);
+  }
+}
+
+// Animate counter (MISSING FUNCTION - NOW ADDED)
+function animateCounter(elementId, targetValue) {
+  const element = document.getElementById(elementId);
+  if (!element) {
+    console.error(`Element with ID '${elementId}' not found`);
+    return;
+  }
+  
+  const startValue = 0;
+  const duration = 1000;
+  const startTime = performance.now();
+  
+  function updateCounter(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const currentValue = Math.floor(startValue + (targetValue - startValue) * progress);
+    
+    element.textContent = currentValue;
+    
+    if (progress < 1) {
+      requestAnimationFrame(updateCounter);
+    }
+  }
+  
+  requestAnimationFrame(updateCounter);
+}
+
+// Modified filter function (FIXED)
+function filterUsers() {
+  try {
+    // For API mode: Reset to first page when filtering and reload
+    if (API_BASE_URL) {
+      currentPage = 1;
+      loadUsers();
+      return;
+    }
+    
+    // For local mode: Filter locally
+    const searchTerm = (document.getElementById('searchInput').value || '').toLowerCase();
+    const roleFilter = document.getElementById('roleFilter').value || '';
+    const statusFilter = document.getElementById('statusFilter').value || '';
+    
+    filteredUsers = allUsers.filter(user => {
+      // Safe property access
+      const firstName = user.firstName || user.first_name || '';
+      const lastName = user.lastName || user.last_name || '';
+      const email = user.email || '';
+      const role = user.role || '';
+      const status = user.status || '';
+      
+      const matchesSearch = 
+        firstName.toLowerCase().includes(searchTerm) ||
+        lastName.toLowerCase().includes(searchTerm) ||
+        email.toLowerCase().includes(searchTerm);
+      
+      const matchesRole = !roleFilter || role === roleFilter;
+      const matchesStatus = !statusFilter || status === statusFilter;
+      
+      return matchesSearch && matchesRole && matchesStatus;
+    });
+    
+    currentPage = 1;
+    renderUsers();
+    renderPagination();
+  } catch (error) {
+    console.error('Error filtering users:', error);
+    showNotification('Error filtering users', 'danger');
+  }
+}
+
+// Render users table (FIXED with better error handling)
+function renderUsers() {
+  const tbody = document.getElementById('usersTableBody');
+  
+  if (!tbody) {
+    console.error('Table body not found');
+    return;
+  }
+  
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const pageUsers = filteredUsers.slice(startIndex, endIndex);
+  
+  if (pageUsers.length === 0) {
+    document.getElementById('usersTableContainer').classList.add('d-none');
+    document.getElementById('emptyState').classList.remove('d-none');
+    return;
+  }
+  
+  document.getElementById('usersTableContainer').classList.remove('d-none');
+  document.getElementById('emptyState').classList.add('d-none');
+  
+  tbody.innerHTML = pageUsers.map(user => {
+    // Safely get user properties with fallbacks
+    const firstName = user.firstName || user.first_name || '';
+    const lastName = user.lastName || user.last_name || '';
+    const email = user.email || '';
+    const role = user.role || 'Viewer';
+    const status = user.status || 'Active';
+    const lastLogin = user.lastLogin || user.last_login || 'Never';
+    const createdAt = user.createdAt || user.created_at || '';
+    const userId = user.id || 0;
+    
+    // Safe initials generation
+    const firstInitial = firstName.charAt(0).toUpperCase() || 'U';
+    const lastInitial = lastName.charAt(0).toUpperCase() || 'U';
+    
+    return `
+      <tr class="user-row">
+        <td>
+          <input type="checkbox" class="form-check-input user-checkbox" value="${userId}">
+        </td>
+        <td>
+          <div class="user-info">
+            <div class="avatar">
+              ${firstInitial}${lastInitial}
+            </div>
+            <div class="user-details">
+              <div class="user-name">${firstName} ${lastName}</div>
+              <div class="user-role">${role}</div>
+            </div>
+          </div>
+        </td>
+        <td>${email}</td>
+        <td>
+          <span class="badge role-badge ${getRoleBadgeClass(role)}">
+            ${role}
+          </span>
+        </td>
+        <td>
+          <span class="badge badge-status ${getStatusBadgeClass(status)}">
+            ${status}
+          </span>
+        </td>
+        <td>
+          <small>${formatDateTime(lastLogin)}</small>
+        </td>
+        <td>
+          <small>${formatDateTime(createdAt)}</small>
+        </td>
+        <td>
+          <div class="dropdown">
+            <button class="btn btn-sm btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
+              <i class="fas fa-cog"></i>
+            </button>
+            <ul class="dropdown-menu action-dropdown">
+              <li><a class="dropdown-item" href="#" onclick="editUser(${userId})">
+                <i class="fas fa-edit me-2"></i>Edit
+              </a></li>
+              <li><a class="dropdown-item" href="#" onclick="deleteUser(${userId})">
+                <i class="fas fa-trash me-2"></i>Delete
+              </a></li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+  
+  // Add event listeners to checkboxes
+  document.querySelectorAll('.user-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', updateSelectedUsers);
+  });
+}
+
+// Get role badge class
+function getRoleBadgeClass(role) {
+  const classes = {
+    'Admin': 'bg-danger',
+    'Inspector': 'bg-primary',
+    'Operator': 'bg-info',
+    'Viewer': 'bg-secondary'
+  };
+  return classes[role] || 'bg-secondary';
+}
+
+// Get status badge class
+function getStatusBadgeClass(status) {
+  return status === 'Active' ? 'bg-success' : 'bg-warning';
+}
+
+// Enhanced formatDateTime function (FIXED)
+function formatDateTime(dateString) {
+  try {
+    if (!dateString || dateString === 'Never' || dateString === null || dateString === undefined) {
+      return 'Never';
+    }
+    
+    const date = new Date(dateString);
+    
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return 'Invalid Date';
+    }
+    
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return 'Invalid Date';
+  }
+}
+
+// Modified pagination rendering for API response
+function renderPagination(paginationData) {
+  const pagination = document.getElementById('pagination');
+  let totalPages;
+  
+  if (paginationData) {
+    // API response
+    totalPages = paginationData.pages;
+  } else {
+    // Local calculation
+    totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  }
+  
+  if (totalPages <= 1) {
+    pagination.innerHTML = '';
+    return;
+  }
+  
+  let paginationHtml = '';
+  
+  // Previous button
+  paginationHtml += `
+    <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+      <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Previous</a>
+    </li>
+  `;
+  
+  // Page numbers
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+      paginationHtml += `
+        <li class="page-item ${i === currentPage ? 'active' : ''}">
+          <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+        </li>
+      `;
+    } else if (i === currentPage - 3 || i === currentPage + 3) {
+      paginationHtml += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+    }
+  }
+  
+  // Next button
+  paginationHtml += `
+    <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+      <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Next</a>
+    </li>
+  `;
+  
+  pagination.innerHTML = paginationHtml;
+}
+
+// Modified change page function
+function changePage(page) {
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  if (page < 1 || page > totalPages) return;
+  
+  currentPage = page;
+  
+  if (API_BASE_URL) {
+    loadUsers(); // Reload with new page for API
+  } else {
+    renderUsers(); // Re-render for local data
+    renderPagination();
+  }
+}
+
+// Toggle select all
+function toggleSelectAll() {
+  const selectAll = document.getElementById('selectAll');
+  const checkboxes = document.querySelectorAll('.user-checkbox');
+  
+  checkboxes.forEach(checkbox => {
+    checkbox.checked = selectAll.checked;
+  });
+  
+  updateSelectedUsers();
+}
+
+// Update selected users
+function updateSelectedUsers() {
+  const checkboxes = document.querySelectorAll('.user-checkbox:checked');
+  selectedUsers = Array.from(checkboxes).map(cb => parseInt(cb.value));
+  
+  const bulkActions = document.getElementById('bulkActions');
+  const selectedCount = document.getElementById('selectedCount');
+  
+  if (selectedUsers.length > 0) {
+    bulkActions.classList.remove('d-none');
+    selectedCount.textContent = selectedUsers.length;
+  } else {
+    bulkActions.classList.add('d-none');
+  }
+  
+  // Update select all checkbox
+  const selectAll = document.getElementById('selectAll');
+  const totalCheckboxes = document.querySelectorAll('.user-checkbox').length;
+  const checkedCheckboxes = document.querySelectorAll('.user-checkbox:checked').length;
+  
+  selectAll.indeterminate = checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes;
+  selectAll.checked = checkedCheckboxes === totalCheckboxes && totalCheckboxes > 0;
+}
+
+// Handle add user form with API
+async function handleAddUser(e) {
+  e.preventDefault();
+  
+  const formData = new FormData(e.target);
+  const userData = Object.fromEntries(formData);
+  
+  // Validate password confirmation
+  if (userData.password !== userData.confirmPassword) {
+    showNotification('Passwords do not match', 'danger');
+    return;
+  }
+  
+  // Remove confirmPassword from data sent to API
+  delete userData.confirmPassword;
+  
+  try {
+    // Try API first
+    const response = await fetch(`${API_BASE_URL}/users-api.php`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData)
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || 'Failed to add user');
+    }
+    
+    // Reload users list
+    await loadUsers();
+    
+  } catch (error) {
+    console.error('Error adding user:', error);
+    
+    // Fallback to local data for demo
+    const newUser = {
+      id: Math.max(...allUsers.map(u => u.id), 0) + 1,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
+      phone: userData.phone,
+      role: userData.role,
+      status: userData.status,
+      lastLogin: 'Never',
+      createdAt: new Date().toISOString()
+    };
+    
+    allUsers.push(newUser);
+    filterUsers();
+    updateStatistics();
+    
+    showNotification('API not available. Added to demo data only.', 'warning');
+  }
+  
+  // Close modal and reset form
+  bootstrap.Modal.getInstance(document.getElementById('addUserModal')).hide();
+  e.target.reset();
+  
+  showNotification('User added successfully', 'success');
+}
+
+// Enhanced edit user function (FIXED)
+function editUser(userId) {
+  try {
+    const user = allUsers.find(u => u.id === userId);
+    if (!user) {
+      showNotification('User not found', 'danger');
+      return;
+    }
+    
+    // Safely populate edit form with fallbacks
+    document.getElementById('editUserId').value = user.id || '';
+    document.getElementById('editFirstName').value = user.firstName || user.first_name || '';
+    document.getElementById('editLastName').value = user.lastName || user.last_name || '';
+    document.getElementById('editEmail').value = user.email || '';
+    document.getElementById('editPhone').value = user.phone || '';
+    document.getElementById('editRole').value = user.role || 'Viewer';
+    document.getElementById('editStatus').value = user.status || 'Active';
+    
+    // Show modal
+    new bootstrap.Modal(document.getElementById('editUserModal')).show();
+  } catch (error) {
+    console.error('Error editing user:', error);
+    showNotification('Error opening user edit form', 'danger');
+  }
+}
+
+// Handle edit user form with API
+async function handleEditUser(e) {
+  e.preventDefault();
+  
+  const formData = new FormData(e.target);
+  const userData = Object.fromEntries(formData);
+  
+  // Convert userId to id for API
+  userData.id = userData.userId;
+  delete userData.userId;
+  
+  try {
+    // Try API first
+    const response = await fetch(`${API_BASE_URL}/users-api.php`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData)
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || 'Failed to update user');
+    }
+    
+    // Reload users list
+    await loadUsers();
+    
+  } catch (error) {
+    console.error('Error updating user:', error);
+    
+    // Fallback to local data for demo
+    const userIndex = allUsers.findIndex(u => u.id === parseInt(userData.id));
+    if (userIndex !== -1) {
+      allUsers[userIndex] = {
+        ...allUsers[userIndex],
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        phone: userData.phone,
+        role: userData.role,
+        status: userData.status
+      };
+    }
+    
+    filterUsers();
+    updateStatistics();
+    
+    showNotification('API not available. Updated demo data only.', 'warning');
+  }
+  
+  // Close modal
+  bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
+  
+  showNotification('User updated successfully', 'success');
+}
+
+// Enhanced delete user function (FIXED)
+function deleteUser(userId) {
+  try {
+    const user = allUsers.find(u => u.id === userId);
+    if (!user) {
+      showNotification('User not found', 'danger');
+      return;
+    }
+    
+    // Safe property access for display
+    const firstName = user.firstName || user.first_name || 'Unknown';
+    const lastName = user.lastName || user.last_name || 'User';
+    const email = user.email || 'No email';
+    
+    // Show user info in delete modal
+    document.getElementById('deleteUserInfo').innerHTML = `
+      <strong>${firstName} ${lastName}</strong><br>
+      <span class="text-muted">${email}</span>
+    `;
+    
+    // Store user ID for deletion
+    document.getElementById('confirmDeleteBtn').setAttribute('data-user-id', userId);
+    
+    // Show modal
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    showNotification('Error opening delete confirmation', 'danger');
+  }
+}
+
+// Confirm delete with API
+async function confirmDelete() {
+  const userId = parseInt(document.getElementById('confirmDeleteBtn').getAttribute('data-user-id'));
+  
+  try {
+    // Try API first
+    const response = await fetch(`${API_BASE_URL}/users-api.php`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: userId })
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || 'Failed to delete user');
+    }
+    
+    // Reload users list
+    await loadUsers();
+    
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    
+    // Fallback to local data for demo
+    allUsers = allUsers.filter(u => u.id !== userId);
+    filterUsers();
+    updateStatistics();
+    
+    showNotification('API not available. Deleted from demo data only.', 'warning');
+  }
+  
+  // Close modal
+  bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+  
+  showNotification('User deleted successfully', 'success');
+}
+
+// Bulk actions with API
+async function bulkAction(action) {
+  if (selectedUsers.length === 0) return;
+  
+  const confirmMessage = {
+    'activate': 'Are you sure you want to activate the selected users?',
+    'deactivate': 'Are you sure you want to deactivate the selected users?',
+    'delete': 'Are you sure you want to delete the selected users? This action cannot be undone.'
+  };
+  
+  if (!confirm(confirmMessage[action])) return;
+  
+  try {
+    // Process each user individually
+    const promises = selectedUsers.map(async (userId) => {
+      if (action === 'delete') {
+        return fetch(`${API_BASE_URL}/users-api.php`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: userId })
+        });
+      } else {
+        const status = action === 'activate' ? 'Active' : 'Inactive';
+        return fetch(`${API_BASE_URL}/users-api.php`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: userId, status: status })
+        });
+      }
+    });
+    
+    const responses = await Promise.all(promises);
+    const failed = responses.filter(response => !response.ok);
+    
+    if (failed.length > 0) {
+      throw new Error(`${failed.length} operations failed`);
+    }
+    
+    // Reload users list
+    await loadUsers();
+    
+  } catch (error) {
+    console.error(`Error performing bulk ${action}:`, error);
+    
+    // Fallback to local data for demo
+    selectedUsers.forEach(userId => {
+      const userIndex = allUsers.findIndex(u => u.id === userId);
+      if (userIndex !== -1) {
+        if (action === 'delete') {
+          allUsers.splice(userIndex, 1);
+        } else if (action === 'activate') {
+          allUsers[userIndex].status = 'Active';
+        } else if (action === 'deactivate') {
+          allUsers[userIndex].status = 'Inactive';
+        }
+      }
+    });
+    
+    filterUsers();
+    updateStatistics();
+    
+    showNotification(`API not available. Bulk ${action} applied to demo data only.`, 'warning');
+  }
+  
+  // Reset selections
+  selectedUsers = [];
+  document.getElementById('selectAll').checked = false;
+  document.getElementById('bulkActions').classList.add('d-none');
+  
+  showNotification(`Bulk ${action} completed successfully`, 'success');
+}
+
+// Enhanced refresh function
+async function refreshUsers() {
+  // Reset filters
+  document.getElementById('searchInput').value = '';
+  document.getElementById('roleFilter').value = '';
+  document.getElementById('statusFilter').value = '';
+  currentPage = 1;
+  
+  // Clear selections
+  selectedUsers = [];
+  document.getElementById('selectAll').checked = false;
+  document.getElementById('bulkActions').classList.add('d-none');
+  
+  // Reload data
+  await loadUsers();
+}
+
+// Show loading
+function showLoading(show) {
+  const spinner = document.getElementById('loadingSpinner');
+  const tableContainer = document.getElementById('usersTableContainer');
+  
+  if (show) {
+    spinner.style.display = 'block';
+    tableContainer.classList.add('d-none');
+  } else {
+    spinner.style.display = 'none';
+    tableContainer.classList.remove('d-none');
+  }
+}
+
+// Show success message
+function showNotification(message, type) {
+  // Use the security notification system for consistency
+  showSecurityNotification(message, type);
+}
+
+// Create toast notification (kept for compatibility)
+function createToast(type, message) {
+  const toast = document.createElement('div');
+  toast.className = `position-fixed top-0 end-0 m-3 alert alert-${type === 'success' ? 'success' : type === 'info' ? 'info' : type === 'warning' ? 'warning' : 'danger'} alert-dismissible notification`;
+  toast.style.zIndex = '9999';
+  toast.innerHTML = `
+    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'info' ? 'info-circle' : type === 'warning' ? 'exclamation-triangle' : 'exclamation-circle'} me-2"></i>
+    ${message}
+    <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+  `;
+  return toast;
+}
+
+// Debounce function
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+DATABASE NEED TO CREATE
+
+1. drainage_points Table
+This table will store information about drainage points.
+
+Columns:
+
+id (Primary Key, Auto Increment)
+name (VARCHAR) - Name of the drainage point
+type (VARCHAR) - Type of drainage (e.g., Concrete Drain, Earth Drain)
+status (VARCHAR) - Status of the drainage (e.g., Good, Needs Maintenance, Critical)
+depth (FLOAT) - Depth of the drainage
+invert_level (VARCHAR) - Invert level of the drainage
+reduced_level (VARCHAR) - Reduced level of the drainage
+latitude (FLOAT) - Latitude of the drainage point
+longitude (FLOAT) - Longitude of the drainage point
+description (TEXT) - Description of the drainage point
+last_updated (DATE) - Last updated date
+2. flood_reports Table
+This table will store information about flood reports submitted by users.
+
+Columns:
+
+id (Primary Key, Auto Increment)
+location (VARCHAR) - Location of the flood
+severity (VARCHAR) - Severity of the flood (e.g., Minor, Moderate, Severe, Extreme)
+water_depth (FLOAT) - Approximate water depth in cm
+description (TEXT) - Description of the flood
+images (TEXT) - Paths to uploaded images (comma-separated or JSON)
+reporter_contact (VARCHAR) - Contact information of the reporter
+latitude (FLOAT) - Latitude of the flood location
+longitude (FLOAT) - Longitude of the flood location
+reported_at (DATETIME) - Timestamp of when the report was submitted
+3. maintenance_records Table
+This table will store maintenance history for drainage points.
+
+Columns:
+
+id (Primary Key, Auto Increment)
+drainage_point_id (Foreign Key) - ID of the related drainage point
+date (DATE) - Date of the maintenance
+type (VARCHAR) - Type of maintenance (e.g., Cleaning, Repair)
+description (TEXT) - Description of the maintenance
+status (VARCHAR) - Status after maintenance (e.g., Completed, Pending)
+4. users Table
+This table will store user information for authentication and profile management.
+
+Columns:
+
+id (Primary Key, Auto Increment)
+username (VARCHAR) - Username of the user
+password (VARCHAR) - Hashed password
+email (VARCHAR) - Email address of the user
+role (VARCHAR) - Role of the user (e.g., Admin, Viewer)
+created_at (DATETIME) - Timestamp of when the user was created
+5. export_logs Table
+This table will store logs of data exports performed by users.
+
+Columns:
+
+id (Primary Key, Auto Increment)
+user_id (Foreign Key) - ID of the user who performed the export
+export_format (VARCHAR) - Format of the export (e.g., CSV, Excel, GeoJSON)
+filters (TEXT) - Applied filters during export (e.g., JSON or serialized data)
+exported_at (DATETIME) - Timestamp of when the export was performed
+6. map_layers Table
+This table will store information about map layers and their visibility.
+
+Columns:
+
+id (Primary Key, Auto Increment)
+layer_name (VARCHAR) - Name of the map layer (e.g., Drainage Points, Flood-prone Areas)
+is_visible (BOOLEAN) - Whether the layer is visible by default
+created_at (DATETIME) - Timestamp of when the layer was added
+7. media_gallery Table
+This table will store media files (e.g., images) associated with drainage points or flood reports.
+
+Columns:
+
+id (Primary Key, Auto Increment)
+related_id (Foreign Key) - ID of the related drainage point or flood report
+type (ENUM) - Type of related entity (e.g., drainage_point, flood_report)
+file_path (VARCHAR) - Path to the media file
+uploaded_at (DATETIME) - Timestamp of when the file was uploaded
+8. activity_logs Table
+This table will store logs of recent activities displayed in the "Recent Activity" section.
+
+Columns:
+
+id (Primary Key, Auto Increment)
+activity_type (VARCHAR) - Type of activity (e.g., Maintenance, Inspection, New Point Added)
+description (TEXT) - Description of the activity
+timestamp (DATETIME) - Timestamp of the activity
+9. weather_data Table
+This table will store weather data for the "Current Weather" section.
+
+Columns:
+
+id (Primary Key, Auto Increment)
+temperature (FLOAT) - Current temperature
+condition (VARCHAR) - Weather condition (e.g., Partly Cloudy, Rainy)
+last_updated (DATETIME) - Timestamp of the last weather update
+10. layer_preferences Table
+This table will store user-specific preferences for map layers.
+
+Columns:
+
+id (Primary Key, Auto Increment)
+user_id (Foreign Key) - ID of the user
+layer_name (VARCHAR) - Name of the map layer
+is_visible (BOOLEAN) - Whether the layer is visible for the user
+updated_at (DATETIME) - Timestamp of the last update

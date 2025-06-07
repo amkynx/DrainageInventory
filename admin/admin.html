@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DrainTrack - Admin Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <link href="../css/common.css" rel="stylesheet">
+
+
+  
+  <style>
+    /* Page-specific styles for admin dashboard */
+    
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    
+
+    
+    
+
+    .stats-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .stats-card.success {
+      background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+    }
+
+    .stats-card.warning {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .stats-card.danger {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    }
+
+    .stats-card.info {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .stats-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .quick-action-btn {
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  padding: 1rem;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+  width: 100%; /* Add this */
+  cursor: pointer; /* Add this */
+  font-size: 1rem; /* Add this */
+  font-weight: 500; /* Add this */
+}
+
+.quick-action-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+  color: white;
+}
+    
+
+    .dashboard-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .card-header-custom {
+      background: var(--gradient-primary);
+      color: white;
+      border-radius: 15px 15px 0 0 !important;
+      padding: 1rem 1.5rem;
+      border: none;
+      font-weight: 600;
+    }
+
+    .activity-item {
+      padding: 1rem;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background-color 0.3s ease;
+    }
+
+    .activity-item:hover {
+      background-color: #f8f9fa;
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      margin-right: 1rem;
+    }
+
+    .activity-icon.success {
+      background-color: var(--success-color);
+    }
+
+    .activity-icon.warning {
+      background-color: var(--warning-color);
+    }
+
+    .activity-icon.danger {
+      background-color: var(--danger-color);
+    }
+
+    .activity-icon.info {
+      background-color: var(--accent-color);
+    }
+
+    .quick-action-btn {
+      background: var(--gradient-primary);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      padding: 1rem;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+    }
+
+    .quick-action-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+      color: white;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+      margin: 1rem 0;
+    }
+
+    .weather-widget {
+      background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+      color: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .weather-temp {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .system-health {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      margin: 0.5rem 0;
+      border-radius: 8px;
+      background-color: #f8f9fa;
+    }
+
+    .health-status {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+
+    .health-online {
+      background-color: var(--success-color);
+    }
+
+    .health-warning {
+      background-color: var(--warning-color);
+    }
+
+    .health-offline {
+      background-color: var(--danger-color);
+    }
+
+    .map-preview {
+      height: 200px;
+      background: linear-gradient(45deg, #e3f2fd, #bbdefb);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-color);
+      font-size: 3rem;
+      margin: 1rem 0;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.3s ease;
+    }
+
+    .loading-content {
+      text-align: center;
+      color: var(--primary-color);
+    }
+
+    .loading-spinner {
+      width: 3rem;
+      height: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .notification {
+      position: fixed;
+      top: 100px;
+      right: 20px;
+      z-index: 9999;
+      max-width: 400px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+   
+
+    .animate-slide-in {
+      animation: slideIn 0.6s ease-out;
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    
+
+    @media (max-width: 768px) {
+      .chart-container {
+        height: 250px;
+      }
+      
+      .stats-number {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="spinner-border loading-spinner" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <h4>Loading Dashboard...</h4>
+      <p>Please wait while we prepare your workspace</p>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="admin.html">
+        <i class="fas fa-water"></i>
+        DrainTrack
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="admin.html">
+              <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="map.html">
+              <i class="fas fa-map me-1"></i>Interactive Map
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="flood-report.html">
+              <i class="fas fa-exclamation-triangle me-1"></i>Flood Reports
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="maintanance-inspection.html">
+              <i class="fas fa-tools me-1"></i>Management
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="user.html">
+              <i class="fas fa-users me-1"></i>User Management
+            </a>
+          </li>
+        </ul>
+        <div class="ms-3">
+          <div class="dropdown">
+            <a class="btn btn-outline-light dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown">
+              <i class="fas fa-user-circle me-1"></i><span id="userName">Admin</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+              <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="container-fluid">
+      <!-- Page Header -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <h1 class="h2 mb-3 text-gradient">
+            <i class="fas fa-tachometer-alt me-2"></i>
+            Dashboard Overview
+          </h1>
+          <p class="text-muted">Welcome back! Here's what's happening with your drainage system today.</p>
+        </div>
+      </div>
+
+      <!-- Statistics Cards -->
+      <div class="row mb-4">
+        <div class="col-xl-3 col-md-6">
+          <div class="card stats-card position-relative animate-slide-in">
+            <div class="stats-number" id="total-points">0</div>
+            <div class="stats-label">Total Drainage Points</div>
+            <i class="fas fa-map-marker-alt stats-icon"></i>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="card stats-card success position-relative animate-slide-in">
+            <div class="stats-number" id="good-status">0</div>
+            <div class="stats-label">Good Condition</div>
+            <i class="fas fa-check-circle stats-icon"></i>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="card stats-card warning position-relative animate-slide-in">
+            <div class="stats-number" id="maintenance-needed">0</div>
+            <div class="stats-label">Need Maintenance</div>
+            <i class="fas fa-tools stats-icon"></i>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="card stats-card danger position-relative animate-slide-in">
+            <div class="stats-number" id="critical-status">0</div>
+            <div class="stats-label">Critical Issues</div>
+            <i class="fas fa-exclamation-triangle stats-icon"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Secondary Stats -->
+      <div class="row mb-4">
+        <div class="col-xl-3 col-md-6">
+          <div class="card stats-card info position-relative animate-slide-in">
+            <div class="stats-number" id="flood-reports">0</div>
+            <div class="stats-label">Flood Reports (7 days)</div>
+            <i class="fas fa-water stats-icon"></i>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="card stats-card position-relative animate-slide-in">
+            <div class="stats-number" id="flood-prone-areas">0</div>
+            <div class="stats-label">Flood-Prone Areas</div>
+            <i class="fas fa-exclamation-circle stats-icon"></i>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="card stats-card success position-relative animate-slide-in">
+            <div class="stats-number" id="total-users">0</div>
+            <div class="stats-label">Total Users</div>
+            <i class="fas fa-users stats-icon"></i>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="card stats-card info position-relative animate-slide-in">
+            <div class="stats-number" id="total-inspections">0</div>
+            <div class="stats-label">Inspections This Month</div>
+            <i class="fas fa-clipboard-check stats-icon"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Dashboard Content -->
+      <div class="row">
+        <!-- Left Column -->
+        <div class="col-xl-8">
+          <!-- Status Distribution Chart -->
+          <div class="card dashboard-card animate-fade-in">
+            <div class="card-header-custom">
+              <i class="fas fa-chart-pie"></i>
+              Drainage System Status Distribution
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas id="statusChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Drainage Points -->
+          <div class="card dashboard-card animate-fade-in">
+            <div class="card-header-custom">
+              <i class="fas fa-plus-circle"></i>
+              Recently Added Drainage Points
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-hover" id="recent-points-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Status</th>
+                      <th>Depth</th>
+                      <th>Added</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="6" class="text-center">
+                        <div class="spinner-border spinner-border-sm me-2" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                        Loading drainage points...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flood Reports -->
+          <div class="card dashboard-card animate-fade-in">
+            <div class="card-header-custom">
+              <i class="fas fa-exclamation-triangle"></i>
+              Recent Flood Reports
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-hover" id="flood-reports-table">
+                  <thead>
+                    <tr>
+                      <th>Location</th>
+                      <th>Severity</th>
+                      <th>Water Depth</th>
+                      <th>Reported</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="5" class="text-center">
+                        <div class="spinner-border spinner-border-sm me-2" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                        Loading flood reports...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-xl-4">
+          <!-- Quick Actions -->
+          <div class="card dashboard-card animate-fade-in">
+            <div class="card-header-custom">
+              <i class="fas fa-bolt"></i>
+              Quick Actions
+            </div>
+            <div class="card-body">
+              <a href="map.html" class="quick-action-btn">
+                <i class="fas fa-plus me-2"></i>
+                Add New Drainage Point
+              </a>
+              <button class="quick-action-btn" onclick="exportSystemReport()">
+                <i class="fas fa-file-export me-2"></i>
+                Export System Report
+              </button>
+              <a href="maintanance-inspection.html" class="quick-action-btn">
+                <i class="fas fa-calendar-check me-2"></i>
+                Schedule Maintenance
+              </a>
+              <button class="quick-action-btn" onclick="showAnalytics()">
+                <i class="fas fa-chart-line me-2"></i>
+                View Analytics
+              </button>
+            </div>
+          </div>
+
+          
+
+          <!-- Map Preview -->
+          <div class="card dashboard-card animate-fade-in">
+            <div class="card-header-custom">
+              <i class="fas fa-map"></i>
+              System Overview
+            </div>
+            <div class="card-body">
+              <div class="map-preview">
+                <i class="fas fa-map-marked-alt"></i>
+              </div>
+              <div class="text-center">
+                <a href="map.html" class="btn btn-primary">
+                  <i class="fas fa-external-link-alt me-2"></i>
+                  Open Full Map
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  
+  
+  <script>
+    // Global variables
+    let currentUser = null;
+    let statusChart = null;
+    
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      checkAuthentication();
+    });
+    
+    /**
+     * Check if user is logged in and is admin
+     */
+    async function checkAuthentication() {
+      try {
+        const response = await fetch('../api/session-check.php');
+        const result = await response.json();
+        
+        if (result.success && result.authenticated && result.user.role === 'Admin') {
+          currentUser = result.user;
+          document.getElementById('userName').textContent = currentUser.name;
+          hideLoadingOverlay();
+          loadDashboard();
+        } else {
+          window.location.href = '../login.html?unauthorized=1';
+        }
+      } catch (error) {
+        console.error('Auth failed:', error);
+        window.location.href = '../login.html?error=1';
+      }
+    }
+    
+    /**
+     * Hide loading screen
+     */
+    function hideLoadingOverlay() {
+      const overlay = document.getElementById('loadingOverlay');
+      overlay.style.opacity = '0';
+      setTimeout(() => overlay.style.display = 'none', 300);
+    }
+    
+    /**
+     * Logout user
+     */
+    async function logout() {
+      try {
+        await fetch('../api/logout.php', { method: 'POST' });
+        window.location.href = '../login.html?logout=1';
+      } catch (error) {
+        window.location.href = '../login.html?logout=1';
+      }
+    }
+    
+    /**
+     * Main dashboard loader
+     */
+    async function loadDashboard() {
+      try {
+        // Fetch all data at once - FIXED: All use same path format
+        const [drainageData, floodData, inspectionData, usersData] = await Promise.all([
+          fetchData('../api/drainage-points.php'),
+          fetchData('../api/flood-reports.php'),
+          fetchData('../api/inspection-schedules.php'),
+          fetchData('../api/users.php')
+        ]);
+        
+        // Update dashboard with real data
+        updateStats(drainageData, floodData, inspectionData, usersData);
+        updateTables(drainageData, floodData);
+        updateChart(drainageData);
+        
+        console.log('Dashboard loaded successfully');
+        
+      } catch (error) {
+        console.error('Error loading dashboard:', error);
+        showError();
+      }
+      
+      // Auto-refresh every 30 seconds
+      setTimeout(loadDashboard, 30000);
+    }
+    
+    /**
+     * Fetch data from API
+     */
+    async function fetchData(url) {
+      const response = await fetch(url);
+      if (response.ok) {
+        return await response.json();
+      }
+      return [];
+    }
+    
+    /**
+     * Update all statistics cards - FIXED
+     */
+    function updateStats(drainage, floods, inspections, users) {
+      // Ensure arrays
+      drainage = Array.isArray(drainage) ? drainage : [];
+      floods = Array.isArray(floods) ? floods : [];
+      inspections = Array.isArray(inspections) ? inspections : [];
+      users = Array.isArray(users) ? users : [];
+      
+      // Calculate stats - FIXED: Show total floods, not just recent
+      const stats = {
+        totalPoints: drainage.length,
+        goodStatus: drainage.filter(p => p.status === 'Good').length,
+        maintenanceNeeded: drainage.filter(p => p.status === 'Needs Maintenance').length,
+        criticalStatus: drainage.filter(p => p.status === 'Critical').length,
+        floodReports: floods.length, // FIXED: Show total, not just recent
+        floodProneAreas: floods.filter(f => f.severity === 'Severe' || f.severity === 'Extreme').length,
+        totalInspections: getMonthlyInspections(inspections),
+        totalUsers: users.length
+      };
+      
+      // Animate counters - FIXED: Use correct element IDs
+      animateCounter('total-points', stats.totalPoints);
+      animateCounter('good-status', stats.goodStatus);
+      animateCounter('maintenance-needed', stats.maintenanceNeeded);
+      animateCounter('critical-status', stats.criticalStatus);
+      animateCounter('flood-reports', stats.floodReports);
+      animateCounter('flood-prone-areas', stats.floodProneAreas);
+      animateCounter('total-inspections', stats.totalInspections);
+      animateCounter('total-users', stats.totalUsers);
+    }
+    
+    /**
+     * Get inspections for current month
+     */
+    function getMonthlyInspections(inspections) {
+      const now = new Date();
+      return inspections.filter(i => {
+        const date = new Date(i.scheduled_date);
+        return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+      }).length;
+    }
+    
+    /**
+     * Update data tables
+     */
+    function updateTables(drainage, floods) {
+      updateRecentPoints(drainage);
+      updateFloodReports(floods);
+    }
+    
+    /**
+     * Update recent drainage points table
+     */
+    function updateRecentPoints(drainage) {
+      const tbody = document.getElementById('recent-points-table').querySelector('tbody');
+      
+      if (!drainage.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No drainage points found</td></tr>';
+        return;
+      }
+      
+      const recent = drainage
+        .sort((a, b) => new Date(b.last_updated) - new Date(a.last_updated))
+        .slice(0, 5);
+      
+      tbody.innerHTML = recent.map(point => `
+        <tr>
+          <td>${point.name}</td>
+          <td>${point.type}</td>
+          <td><span class="badge ${getStatusClass(point.status)}">${point.status}</span></td>
+          <td>${point.depth || 0}m</td>
+          <td>${point.last_updated}</td>
+          <td>
+            <button class="btn btn-sm btn-primary" onclick="viewPoint('${point.id}')">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-sm btn-warning" onclick="editPoint('${point.id}')">
+              <i class="fas fa-edit"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    /**
+     * Update flood reports table
+     */
+    function updateFloodReports(floods) {
+      const tbody = document.getElementById('flood-reports-table').querySelector('tbody');
+      
+      if (!floods.length) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No flood reports found</td></tr>';
+        return;
+      }
+      
+      const recent = floods
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+        .slice(0, 5);
+      
+      tbody.innerHTML = recent.map(report => `
+        <tr>
+          <td>${report.location}</td>
+          <td><span class="badge ${getSeverityClass(report.severity)}">${report.severity}</span></td>
+          <td>${report.water_depth}cm</td>
+          <td>${new Date(report.timestamp).toLocaleDateString()}</td>
+          <td><span class="badge ${getReportStatusClass(report.status)}">${report.status || 'Under Review'}</span></td>
+        </tr>
+      `).join('');
+    }
+    
+    /**
+     * Update status chart
+     */
+    function updateChart(drainage) {
+      const statusCounts = {
+        'Good': 0,
+        'Needs Maintenance': 0,
+        'Critical': 0,
+        'Unknown': 0
+      };
+      
+      drainage.forEach(point => {
+        if (statusCounts.hasOwnProperty(point.status)) {
+          statusCounts[point.status]++;
+        } else {
+          statusCounts['Unknown']++;
+        }
+      });
+      
+      const ctx = document.getElementById('statusChart').getContext('2d');
+      
+      if (statusChart) statusChart.destroy();
+      
+      statusChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Good', 'Needs Maintenance', 'Critical', 'Unknown'],
+          datasets: [{
+            data: Object.values(statusCounts),
+            backgroundColor: ['#198754', '#ffc107', '#dc3545', '#6c757d'],
+            borderWidth: 0,
+            hoverOffset: 10
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { padding: 20, usePointStyle: true }
+            }
+          }
+        }
+      });
+    }
+    
+    /**
+     * Show error state
+     */
+    function showError() {
+      // Reset counters
+      ['total-points', 'good-status', 'maintenance-needed', 'critical-status', 
+       'flood-reports', 'flood-prone-areas', 'total-inspections', 'total-users'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '0';
+      });
+      
+      // Show error in tables
+      const errorMsg = '<tr><td colspan="100%" class="text-center text-danger">Error loading data</td></tr>';
+      document.getElementById('recent-points-table').querySelector('tbody').innerHTML = errorMsg;
+      document.getElementById('flood-reports-table').querySelector('tbody').innerHTML = errorMsg;
+      
+      updateChart([]);
+    }
+    
+    /**
+     * Animate number counters
+     */
+    function animateCounter(elementId, targetValue) {
+      const element = document.getElementById(elementId);
+      if (!element) return;
+      
+      const startValue = 0;
+      const duration = 1500;
+      const startTime = performance.now();
+      
+      function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const currentValue = Math.floor(startValue + (targetValue - startValue) * progress);
+        
+        element.textContent = currentValue;
+        
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        }
+      }
+      
+      requestAnimationFrame(update);
+    }
+    
+    /**
+     * Export System Report - FIXED API paths
+     */
+    function exportSystemReport() {
+      showNotification('Generating system report...', 'info');
+      
+      // Get current data - FIXED: Use consistent API paths
+      Promise.all([
+        fetchData('../api/drainage-points.php'),
+        fetchData('../api/flood-reports.php'),
+        fetchData('../api/maintenance-requests.php'),
+        fetchData('../api/inspection-schedules.php')
+      ]).then(([drainage, floods, maintenance, inspections]) => {
+        
+        // Generate report data
+        const reportData = generateReportData(drainage, floods, maintenance, inspections);
+        
+        // Create downloadable report
+        downloadReport(reportData);
+        
+        showNotification('Report exported successfully!', 'success');
+        
+      }).catch(error => {
+        console.error('Export failed:', error);
+        showNotification('Export failed. Please try again.', 'danger');
+      });
+    }
+    
+    /**
+     * Generate report data structure
+     */
+    function generateReportData(drainage, floods, maintenance, inspections) {
+      const now = new Date();
+      const reportDate = now.toLocaleDateString();
+      
+      return {
+        title: 'DrainTrack System Report',
+        generatedDate: reportDate,
+        summary: {
+          totalDrainagePoints: drainage.length,
+          goodCondition: drainage.filter(d => d.status === 'Good').length,
+          needsMaintenance: drainage.filter(d => d.status === 'Needs Maintenance').length,
+          critical: drainage.filter(d => d.status === 'Critical').length,
+          totalFloodReports: floods.length,
+          pendingMaintenance: maintenance.filter(m => m.status === 'Pending').length,
+          scheduledInspections: inspections.filter(i => i.status === 'Scheduled').length
+        },
+        details: {
+          drainage: drainage.slice(0, 20),
+          recentFloods: floods.slice(0, 10),
+          urgentMaintenance: maintenance.filter(m => m.priority === 'High' || m.priority === 'Critical')
+        }
+      };
+    }
+    
+    /**
+     * Download report as CSV
+     */
+    function downloadReport(data) {
+      let csvContent = `DrainTrack System Report\nGenerated: ${data.generatedDate}\n\n`;
+      
+      csvContent += "SYSTEM SUMMARY\n";
+      csvContent += `Total Drainage Points,${data.summary.totalDrainagePoints}\n`;
+      csvContent += `Good Condition,${data.summary.goodCondition}\n`;
+      csvContent += `Needs Maintenance,${data.summary.needsMaintenance}\n`;
+      csvContent += `Critical Issues,${data.summary.critical}\n`;
+      csvContent += `Total Flood Reports,${data.summary.totalFloodReports}\n`;
+      csvContent += `Pending Maintenance,${data.summary.pendingMaintenance}\n`;
+      csvContent += `Scheduled Inspections,${data.summary.scheduledInspections}\n\n`;
+      
+      csvContent += "DRAINAGE POINTS\n";
+      csvContent += "ID,Name,Type,Status,Depth,Last Updated\n";
+      data.details.drainage.forEach(point => {
+        csvContent += `${point.id},${point.name},${point.type},${point.status},${point.depth || 0},${point.last_updated}\n`;
+      });
+      
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `DrainTrack_Report_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }
+    
+    /**
+     * Show Analytics Modal
+     */
+    function showAnalytics() {
+      const modalHTML = `
+        <div class="modal fade" id="analyticsModal" tabindex="-1">
+          <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">
+                  <i class="fas fa-chart-line me-2"></i>
+                  System Analytics
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="card">
+                      <div class="card-header">
+                        <h6><i class="fas fa-calendar me-2"></i>Monthly Trends</h6>
+                      </div>
+                      <div class="card-body">
+                        <canvas id="monthlyTrendsChart" height="200"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card">
+                      <div class="card-header">
+                        <h6><i class="fas fa-exclamation-triangle me-2"></i>Issue Severity</h6>
+                      </div>
+                      <div class="card-body">
+                        <canvas id="severityChart" height="200"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mt-3">
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-header">
+                        <h6><i class="fas fa-map-marker-alt me-2"></i>Performance Metrics</h6>
+                      </div>
+                      <div class="card-body">
+                        <div class="row text-center">
+                          <div class="col-md-3">
+                            <h4 id="avgResponseTime">24</h4>
+                            <small>Avg Response Time (hours)</small>
+                          </div>
+                          <div class="col-md-3">
+                            <h4 id="completionRate">87%</h4>
+                            <small>Completion Rate</small>
+                          </div>
+                          <div class="col-md-3">
+                            <h4 id="maintenanceEfficiency">92%</h4>
+                            <small>Maintenance Efficiency</small>
+                          </div>
+                          <div class="col-md-3">
+                            <h4 id="systemUptime">98.5%</h4>
+                            <small>System Uptime</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="exportAnalytics()">
+                  <i class="fas fa-download me-2"></i>Export Analytics
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      const existingModal = document.getElementById('analyticsModal');
+      if (existingModal) {
+        existingModal.remove();
+      }
+      
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+      
+      const modal = new bootstrap.Modal(document.getElementById('analyticsModal'));
+      modal.show();
+      
+      setTimeout(() => {
+        loadAnalyticsData();
+      }, 500);
+    }
+    
+    /**
+     * Load analytics data and create charts
+     */
+    async function loadAnalyticsData() {
+      try {
+        const [drainage, floods, maintenance] = await Promise.all([
+          fetchData('../api/drainage-points.php'),
+          fetchData('../api/flood-reports.php'),
+          fetchData('../api/maintenance-requests.php')
+        ]);
+        
+        createMonthlyTrendsChart(floods);
+        createSeverityChart(floods);
+        updatePerformanceMetrics(maintenance);
+        
+      } catch (error) {
+        console.error('Failed to load analytics:', error);
+      }
+    }
+    
+    /**
+     * Create monthly trends chart
+     */
+    function createMonthlyTrendsChart(floods) {
+      const ctx = document.getElementById('monthlyTrendsChart');
+      if (!ctx) return;
+      
+      const monthlyData = processMonthlyData(floods);
+      
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: monthlyData.labels,
+          datasets: [{
+            label: 'Flood Reports',
+            data: monthlyData.counts,
+            borderColor: '#dc3545',
+            backgroundColor: 'rgba(220, 53, 69, 0.1)',
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+    
+    /**
+     * Create severity distribution chart
+     */
+    function createSeverityChart(floods) {
+      const ctx = document.getElementById('severityChart');
+      if (!ctx) return;
+      
+      const severityCounts = { 'Minor': 0, 'Moderate': 0, 'Severe': 0, 'Extreme': 0 };
+      
+      floods.forEach(flood => {
+        if (severityCounts.hasOwnProperty(flood.severity)) {
+          severityCounts[flood.severity]++;
+        }
+      });
+      
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(severityCounts),
+          datasets: [{
+            data: Object.values(severityCounts),
+            backgroundColor: ['#198754', '#ffc107', '#fd7e14', '#dc3545']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+    
+    /**
+     * Process monthly data for trends
+     */
+    function processMonthlyData(floods) {
+      const months = [];
+      const counts = [];
+      
+      for (let i = 5; i >= 0; i--) {
+        const date = new Date();
+        date.setMonth(date.getMonth() - i);
+        
+        const monthName = date.toLocaleDateString('en-US', { month: 'short' });
+        const monthCount = floods.filter(flood => {
+          const floodDate = new Date(flood.timestamp);
+          return floodDate.getMonth() === date.getMonth() && 
+                 floodDate.getFullYear() === date.getFullYear();
+        }).length;
+        
+        months.push(monthName);
+        counts.push(monthCount);
+      }
+      
+      return { labels: months, counts: counts };
+    }
+    
+    /**
+     * Update performance metrics
+     */
+    function updatePerformanceMetrics(maintenance) {
+      const completed = maintenance.filter(m => m.status === 'Completed').length;
+      const total = maintenance.length;
+      const completionRate = total > 0 ? Math.round((completed / total) * 100) : 87;
+      
+      document.getElementById('completionRate').textContent = completionRate + '%';
+    }
+    
+    /**
+     * Export analytics data
+     */
+    function exportAnalytics() {
+      showNotification('Exporting analytics...', 'info');
+      
+      const analyticsData = `DrainTrack Analytics Export
+    Generated: ${new Date().toLocaleDateString()}
+    
+    Performance Metrics:
+    - Average Response Time: 24 hours
+    - Completion Rate: ${document.getElementById('completionRate').textContent}
+    - Maintenance Efficiency: 92%
+    - System Uptime: 98.5%
+    
+    Note: Detailed analytics data exported from dashboard.
+    `;
+      
+      const blob = new Blob([analyticsData], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `DrainTrack_Analytics_${new Date().toISOString().split('T')[0]}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      
+      showNotification('Analytics exported successfully!', 'success');
+    }
+    
+    /**
+     * Utility functions
+     */
+    function getStatusClass(status) {
+      const classes = {
+        'Good': 'bg-success',
+        'Needs Maintenance': 'bg-warning',
+        'Critical': 'bg-danger'
+      };
+      return classes[status] || 'bg-secondary';
+    }
+    
+    function getSeverityClass(severity) {
+      const classes = {
+        'Minor': 'bg-success',
+        'Moderate': 'bg-warning',
+        'Severe': 'bg-danger',
+        'Extreme': 'bg-dark'
+      };
+      return classes[severity] || 'bg-secondary';
+    }
+    
+    function getReportStatusClass(status) {
+      const classes = {
+        'pending': 'bg-warning',
+        'investigating': 'bg-info',
+        'resolved': 'bg-success',
+        'dismissed': 'bg-secondary'
+      };
+      return classes[status] || 'bg-info';
+    }
+    
+    function viewPoint(id) {
+      window.location.href = `map.html?point=${id}`;
+    }
+    
+    function editPoint(id) {
+      window.location.href = `map.html?edit=${id}`;
+    }
+    
+    function showNotification(message, type) {
+      const notification = document.createElement('div');
+      notification.className = `alert alert-${type} alert-dismissible fade show notification`;
+      notification.innerHTML = `
+        <i class="fas fa-info-circle me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      
+      document.body.appendChild(notification);
+      setTimeout(() => {
+        if (notification.parentNode) notification.remove();
+      }, 4000);
+    }
+    </script>
+</body>
+</html>

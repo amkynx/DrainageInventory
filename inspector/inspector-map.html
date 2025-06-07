@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DrainTrack - Inspector Map View</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Leaflet CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.css" rel="stylesheet">
+  <!-- Leaflet MarkerCluster CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" rel="stylesheet">
+
+  <!-- Unified Design System CSS -->
+  <link href="../css/map-common.css" rel="stylesheet">
+  
+  <style>
+    /* Inspector-specific theme with Yellow/Amber colors */
+    :root {
+      --primary-color: #f59e0b; /* Amber-500 */
+      --secondary-color: #6c757d;
+      --accent-color: #fbbf24; /* Amber-400 */
+      --success-color: #198754;
+      --warning-color: #ff8c00; /* Dark orange */
+      --danger-color: #dc3545;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+      
+      /* Beautiful Yellow Gradients */
+      --gradient-primary: linear-gradient(135deg, #f59e0b, #fbbf24);
+      --gradient-warm: linear-gradient(135deg, #f59e0b 0%, #fcd34d 100%);
+      --gradient-sunset: linear-gradient(135deg, #ff9a56 0%, #fbbf24 100%);
+    }
+
+    /* Inspector-specific additional styles */
+    .inspector-features {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 1px solid var(--primary-color);
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .inspection-status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .inspection-status-indicator.scheduled {
+      background: rgba(23, 162, 184, 0.1);
+      color: #17a2b8;
+      border: 1px solid #17a2b8;
+    }
+
+    .inspection-status-indicator.in-progress {
+      background: rgba(255, 193, 7, 0.1);
+      color: #856404;
+      border: 1px solid #ffc107;
+      animation: pulse 2s infinite;
+    }
+
+    .inspection-status-indicator.completed {
+      background: rgba(40, 167, 69, 0.1);
+      color: #155724;
+      border: 1px solid #28a745;
+    }
+
+    .inspection-status-indicator.overdue {
+      background: rgba(220, 53, 69, 0.1);
+      color: #721c24;
+      border: 1px solid #dc3545;
+      animation: pulse 2s infinite;
+    }
+
+    /* Username styling in navbar */
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: white;
+      padding: 0.375rem 0.75rem;
+      border-radius: 0.375rem;
+      transition: background-color 0.15s ease-in-out;
+    }
+
+    .user-info:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      text-decoration: none;
+    }
+
+    .user-role-badge {
+      background: rgba(245, 158, 11, 0.2);
+      color: #f59e0b;
+      padding: 0.125rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .user-role-badge {
+        display: none;
+      }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="spinner-border loading-spinner" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <h4>Loading Map...</h4>
+      <p>Please wait while we prepare your workspace</p>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background: var(--gradient-primary) !important;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="inspector.html">
+        <i class="fas fa-water"></i>
+        DrainTrack
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="inspector.html">
+              <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="inspector-map.html">
+              <i class="fas fa-map me-1"></i>Map View
+            </a>
+          </li>
+        </ul>
+        <div class="ms-3">
+          <div class="dropdown d-inline">
+            <a class="btn btn-outline-light dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown">
+              <i class="fas fa-user-circle me-1"></i><span id="userName">Inspector</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+              <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="full-screen-container">
+    <div class="map-container">
+      <!-- Map Element -->
+      <div id="map"></div>
+      
+      <!-- Inspector Control Panel (same structure as map.html) -->
+      <div class="control-panel" id="controlPanel">
+        <div class="control-panel-header" style="background: var(--gradient-primary) !important;">
+          <h4><i class="fas fa-clipboard-check me-2"></i>Inspector Tools</h4>
+          <button type="button" class="panel-toggle" id="panelToggle" title="Toggle Control Panel" style="background: var(--gradient-primary) !important;">
+            <i class="fas fa-chevron-left" id="toggleIcon"></i>
+          </button>
+        </div>
+        
+        <div class="control-panel-body">
+          <!-- Search Container (same as map.html) -->
+          <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="form-control" id="search-input" placeholder="Search drainage points...">
+            <button class="clear-search" id="clear-search-btn" title="Clear search">
+              <i class="fas fa-times"></i>
+            </button>
+            <div class="search-dropdown" id="search-dropdown">
+              <!-- Dropdown items will be populated here -->
+            </div>
+          </div>
+
+          <!-- My Inspections Today -->
+          <div class="content-section">
+            <h6><i class="fas fa-calendar-day me-2"></i>Today's Inspections</h6>
+            <div id="today-inspections">
+              <!-- Will be populated by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Quick Filters -->
+          <div class="filter-section">
+            <h6><i class="fas fa-filter me-2"></i>Inspection Filters</h6>
+            
+            <div class="mb-3">
+              <label class="form-label mb-2">Status</label>
+              <div class="filter-badges">
+                <span class="filter-badge inspector active" data-filter="all" data-type="inspection-status">All</span>
+                <span class="filter-badge inspector" data-filter="scheduled" data-type="inspection-status">Scheduled</span>
+                <span class="filter-badge inspector" data-filter="in-progress" data-type="inspection-status">In Progress</span>
+                <span class="filter-badge inspector" data-filter="completed" data-type="inspection-status">Completed</span>
+                <span class="filter-badge inspector" data-filter="overdue" data-type="inspection-status">Overdue</span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label mb-2">Priority</label>
+              <div class="filter-badges">
+                <span class="filter-badge inspector active" data-filter="all" data-type="priority">All Priorities</span>
+                <span class="filter-badge inspector" data-filter="critical" data-type="priority">Critical</span>
+                <span class="filter-badge inspector" data-filter="high" data-type="priority">High</span>
+                <span class="filter-badge inspector" data-filter="medium" data-type="priority">Medium</span>
+                <span class="filter-badge inspector" data-filter="low" data-type="priority">Low</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Legend (same as map.html) -->
+          <div class="legend">
+            <h6><i class="fas fa-info-circle me-2"></i>Map Legend</h6>
+            <div class="legend-item">
+              <div class="legend-color" style="background-color: #28a745;"></div>
+              <span>Good Condition</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background-color: #ffc107;"></div>
+              <span>Needs Maintenance</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background-color: #dc3545;"></div>
+              <span>Critical Condition</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background-color: #17a2b8;"></div>
+              <span>Scheduled Inspection</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background-color: #ffc107; border: 2px solid #dc3545;"></div>
+              <span>Overdue Inspection</span>
+            </div>
+          </div>
+
+          <!-- My Inspections List -->
+          <div class="inspector-features">
+            <h6><i class="fas fa-list me-2"></i>My Recent Inspections</h6>
+            <div id="my-inspections-list">
+              <!-- Will be populated by JavaScript -->
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Map Controls (same positioning and styling as map.html) -->
+      <div class="map-controls">
+        <button class="map-control-btn" id="zoom-in-btn" title="Zoom In">
+          <i class="fas fa-plus"></i>
+        </button>
+        <button class="map-control-btn" id="zoom-out-btn" title="Zoom Out">
+          <i class="fas fa-minus"></i>
+        </button>
+        <button class="map-control-btn" id="locate-me-btn" title="My Location">
+          <i class="fas fa-location-arrow"></i>
+        </button>
+        <button class="map-control-btn" id="full-extent-btn" title="Full Extent">
+          <i class="fas fa-expand"></i>
+        </button>
+        <button class="map-control-btn" id="toggle-layers-btn" title="Layer Control">
+          <i class="fas fa-layer-group"></i>
+        </button>
+      </div>
+      
+      <!-- Action Buttons (same positioning as map.html) -->
+      <div class="action-buttons">
+        <button class="action-btn btn-danger-custom" onclick="showIssueReportModal()">
+          <i class="fas fa-exclamation-triangle"></i>
+          Report Issue
+        </button>
+        <button class="action-btn" onclick="showScheduleInspectionModal()" style="background: var(--gradient-primary); color: white;">
+          <i class="fas fa-calendar-plus"></i>
+          Schedule Inspection
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Inspection Details Modal -->
+  <div class="modal fade" id="inspectionDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="background: var(--gradient-primary) !important; color: white;">
+          <h5 class="modal-title">
+            <i class="fas fa-clipboard-check me-2"></i>Inspection Details
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" title="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="inspection-details-content">
+            <!-- Will be populated dynamically -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <div id="inspection-action-buttons">
+            <!-- Action buttons will be added dynamically based on status -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Start Inspection Modal -->
+  <div class="modal fade" id="startInspectionModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background: var(--gradient-primary) !important; color: white;">
+          <h5 class="modal-title">
+            <i class="fas fa-play me-2"></i>Start Inspection
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" title="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="start-inspection-form">
+            <input type="hidden" id="start-inspection-id">
+            
+            <div class="mb-3">
+              <label class="form-label">Inspection Details</label>
+              <div id="start-inspection-details" class="bg-light p-3 rounded">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="start-notes" class="form-label">Initial Notes</label>
+              <textarea class="form-control" id="start-notes" rows="3" placeholder="Any initial observations..."></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label for="start-images" class="form-label">Initial Photos</label>
+              <input type="file" class="form-control" id="start-images" multiple accept="image/*">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="startInspection()">
+            <i class="fas fa-play me-1"></i>Start Inspection
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complete Inspection Modal -->
+  <div class="modal fade" id="completeInspectionModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-success">
+          <h5 class="modal-title">
+            <i class="fas fa-check-circle me-2"></i>Complete Inspection
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" title="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="complete-inspection-form">
+            <input type="hidden" id="complete-inspection-id">
+            
+            <div class="mb-3">
+              <label class="form-label">Inspection Details</label>
+              <div id="complete-inspection-details" class="bg-light p-3 rounded">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="findings" class="form-label">Findings *</label>
+              <textarea class="form-control" id="findings" rows="4" required placeholder="Describe your inspection findings..."></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label for="recommendations" class="form-label">Recommendations</label>
+              <textarea class="form-control" id="recommendations" rows="3" placeholder="Any recommendations for maintenance..."></textarea>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="condition-rating" class="form-label">Overall Condition</label>
+                  <select class="form-select" id="condition-rating">
+                    <option value="Excellent">Excellent</option>
+                    <option value="Good" selected>Good</option>
+                    <option value="Fair">Fair</option>
+                    <option value="Poor">Poor</option>
+                    <option value="Critical">Critical</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="maintenance-required" class="form-label">Maintenance Required</label>
+                  <select class="form-select" id="maintenance-required">
+                    <option value="None">None Required</option>
+                    <option value="Routine">Routine Maintenance</option>
+                    <option value="Urgent">Urgent Repair</option>
+                    <option value="Emergency">Emergency Action</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="completion-images" class="form-label">Final Photos</label>
+              <input type="file" class="form-control" id="completion-images" multiple accept="image/*">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-success" onclick="completeInspection()">
+            <i class="fas fa-check me-1"></i>Complete Inspection
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schedule Inspection Modal -->
+  <div class="modal fade" id="scheduleInspectionModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background: var(--gradient-primary) !important; color: white;">
+          <h5 class="modal-title">
+            <i class="fas fa-calendar-plus me-2"></i>Schedule Inspection
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" title="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="schedule-inspection-form">
+            <input type="hidden" id="schedule-drainage-point-id">
+            
+            <div class="mb-3">
+              <label class="form-label">Drainage Point</label>
+              <div id="schedule-point-details" class="bg-light p-3 rounded">
+                <!-- Populated when clicking on map point -->
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="schedule-inspection-type" class="form-label">Inspection Type *</label>
+                  <select class="form-select" id="schedule-inspection-type" required>
+                    <option value="Routine Inspection">Routine Inspection</option>
+                    <option value="Safety Inspection">Safety Inspection</option>
+                    <option value="Structural Inspection">Structural Inspection</option>
+                    <option value="Emergency Inspection">Emergency Inspection</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="schedule-priority" class="form-label">Priority</label>
+                  <select class="form-select" id="schedule-priority">
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                    <option value="Critical">Critical</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="schedule-date" class="form-label">Date *</label>
+                  <input type="date" class="form-control" id="schedule-date" required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="schedule-time" class="form-label">Time</label>
+                  <input type="time" class="form-control" id="schedule-time" value="09:00">
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="schedule-description" class="form-label">Description</label>
+              <textarea class="form-control" id="schedule-description" rows="3" placeholder="Purpose and scope of inspection..."></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="scheduleInspection()">
+            <i class="fas fa-calendar-plus me-1"></i>Schedule
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Issue Report Modal -->
+  <div class="modal fade" id="issueReportModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-warning">
+          <h5 class="modal-title">
+            <i class="fas fa-exclamation-triangle me-2"></i>Report Issue
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" title="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="issue-report-form">
+            <div class="mb-3">
+              <label for="issue-location" class="form-label">Location *</label>
+              <input type="text" class="form-control" id="issue-location" required placeholder="Describe the location">
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="issue-type" class="form-label">Issue Type *</label>
+                  <select class="form-select" id="issue-type" required>
+                    <option value="">Select issue type</option>
+                    <option value="Blockage">Blockage</option>
+                    <option value="Structural Damage">Structural Damage</option>
+                    <option value="Equipment Failure">Equipment Failure</option>
+                    <option value="Safety Hazard">Safety Hazard</option>
+                    <option value="Environmental">Environmental</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="issue-priority" class="form-label">Priority *</label>
+                  <select class="form-select" id="issue-priority" required>
+                    <option value="Low">Low</option>
+                    <option value="Medium" selected>Medium</option>
+                    <option value="High">High</option>
+                    <option value="Critical">Critical</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="issue-description" class="form-label">Description *</label>
+              <textarea class="form-control" id="issue-description" rows="4" required placeholder="Describe the issue in detail..."></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label for="issue-images" class="form-label">Photos</label>
+              <input type="file" class="form-control" id="issue-images" multiple accept="image/*">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-warning" onclick="submitIssueReport()">
+            <i class="fas fa-paper-plane me-1"></i>Submit Report
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer Control Modal (same as map.html) -->
+  <div class="modal fade" id="layerControlModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background: var(--gradient-primary) !important; color: white;">
+          <h5 class="modal-title">
+            <i class="fas fa-layer-group me-2"></i>Layer Control
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <h6 class="mb-3">Overlay Layers</h6>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="layer-drainage" checked>
+            <label class="form-check-label" for="layer-drainage">
+              <i class="fas fa-map-pin me-2 text-primary"></i>Drainage Points
+            </label>
+          </div>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="layer-flood-prone" checked>
+            <label class="form-check-label" for="layer-flood-prone">
+              <i class="fas fa-water me-2 text-info"></i>Flood-prone Areas
+            </label>
+          </div>
+          
+          <hr>
+          <h6 class="mb-3">Base Maps</h6>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="basemap" id="basemap-street" checked>
+            <label class="form-check-label" for="basemap-street">
+              <i class="fas fa-road me-2"></i>Street Map
+            </label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="basemap" id="basemap-satellite">
+            <label class="form-check-label" for="basemap-satellite">
+              <i class="fas fa-satellite me-2"></i>Satellite Imagery
+            </label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="basemap" id="basemap-terrain">
+            <label class="form-check-label" for="basemap-terrain">
+              <i class="fas fa-mountain me-2"></i>Terrain
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+
+  <script>
+    // Global variables
+    let map;
+    let drainagePointsLayer, floodProneAreasLayer;
+    let osmTileLayer, satelliteTileLayer, terrainTileLayer;
+    let inspections = [];
+    let drainagePoints = [];
+    let currentInspectorId = 4; // John Inspector
+    let selectedDrainagePoint = null;
+    let currentUser = null;
+
+    // Initialize map
+    document.addEventListener('DOMContentLoaded', function() {
+      checkAuthentication();
+    });
+
+    /**
+     * Check if user is authenticated and has appropriate role
+     */
+    async function checkAuthentication() {
+      try {
+        const response = await fetch('../api/session-check.php');
+        const result = await response.json();
+        
+        if (result.success && result.authenticated) {
+          // Check if user has Inspector role
+          if (result.user.role !== 'Inspector') {
+            showNotification('Access denied. This dashboard is for inspectors only.', 'danger');
+            setTimeout(() => {
+              window.location.href = '../login.html?unauthorized=1';
+            }, 2000);
+            return;
+          }
+          
+          currentUser = result.user;
+          currentInspectorId = result.user.id || 4; // Use actual user ID or fallback
+          document.getElementById('userName').textContent = currentUser.name;
+          hideLoadingOverlay();
+          initializeMap();
+          loadData();
+          setupEventListeners();
+        } else {
+          // Redirect to login page
+          window.location.href = '../login.html?unauthorized=1';
+        }
+      } catch (error) {
+        console.error('Authentication check failed:', error);
+        showNotification('Authentication check failed. Redirecting to login...', 'danger');
+        setTimeout(() => {
+          window.location.href = '../login.html?error=1';
+        }, 2000);
+      }
+    }
+
+    /**
+     * Hide the loading overlay
+     */
+    function hideLoadingOverlay() {
+      const overlay = document.getElementById('loadingOverlay');
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+      }, 300);
+    }
+
+    /**
+     * Logout function - redirect to centralized login
+     */
+    async function logout() {
+      try {
+        showNotification('Logging out...', 'info');
+        
+        // Clear session on server
+        await fetch('../api/logout.php', { method: 'POST' });
+        
+        // Redirect to login page
+        window.location.href = '../login.html?logout=1';
+      } catch (error) {
+        console.error('Logout failed:', error);
+        // Still redirect even if logout request fails
+        window.location.href = '../login.html?logout=1';
+      }
+    }
+
+    function initializeMap() {
+      // Initialize map centered on Muar, Johor - DISABLE default zoom controls
+      map = L.map('map', {
+        zoomControl: false,
+        attributionControl: false,
+      }).setView([2.05788, 102.57471], 13);
+
+      // Initialize base layers
+      initializeBaseLayers();
+      
+      // Initialize overlay layers
+      initializeOverlayLayers();
+      
+      // Setup map event handlers
+      setupMapEventHandlers();
+    }
+
+    function initializeBaseLayers() {
+      osmTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      satelliteTileLayer = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        { maxZoom: 19 }
+      );
+
+      terrainTileLayer = L.tileLayer(
+        'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+        { maxZoom: 17 }
+      );
+    }
+
+    function initializeOverlayLayers() {
+      drainagePointsLayer = L.markerClusterGroup({
+        chunkedLoading: true,
+        spiderfyOnMaxZoom: true,
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: true,
+      }).addTo(map);
+
+      floodProneAreasLayer = L.layerGroup().addTo(map);
+    }
+
+    function setupMapEventHandlers() {
+      map.on('click', handleMapClick);
+      map.on('zoomend', updateZoomLevel);
+    }
+
+    function handleMapClick(e) {
+      // Handle any map click events here
+    }
+
+    function updateZoomLevel() {
+      const zoom = map.getZoom();
+      if (zoom > 15) {
+        drainagePointsLayer.options.disableClusteringAtZoom = 16;
+      }
+    }
+
+    async function loadData() {
+      try {
+        await Promise.all([
+          loadInspections(),
+          loadDrainagePoints(),
+          loadFloodProneAreas()
+        ]);
+        
+        renderMap();
+        renderTodayInspections();
+        renderMyInspectionsList();
+        
+      } catch (error) {
+        console.error('Error loading data:', error);
+        loadSampleData();
+      }
+    }
+
+    async function loadInspections() {
+      try {
+        const response = await fetch(`../api/inspection-schedules.php?inspector_id=${currentInspectorId}`);
+        if (response.ok) {
+          inspections = await response.json();
+        } else {
+          throw new Error('API not available');
+        }
+      } catch (error) {
+        inspections = getSampleInspections();
+      }
+    }
+
+    async function loadDrainagePoints() {
+      try {
+        const response = await fetch('../api/drainage-points.php');
+        if (response.ok) {
+          drainagePoints = await response.json();
+        } else {
+          throw new Error('API not available');
+        }
+      } catch (error) {
+        drainagePoints = getSampleDrainagePoints();
+      }
+    }
+
+    async function loadFloodProneAreas() {
+      try {
+        const response = await fetch('../api/flood-prone-areas.php');
+        if (response.ok) {
+          const data = await response.json();
+          renderFloodProneAreas(data);
+        } else {
+          throw new Error('API not available');
+        }
+      } catch (error) {
+        renderFloodProneAreas(getSampleFloodProneAreas());
+      }
+    }
+
+    function getSampleInspections() {
+      return [
+        {
+          id: 1,
+          drainage_point_id: 1,
+          drainage_point_name: 'Main Street Drain A1',
+          inspection_type: 'Routine Inspection',
+          scheduled_date: '2025-06-07',
+          scheduled_time: '09:00',
+          priority: 'Medium',
+          status: 'Scheduled',
+          description: 'Monthly routine inspection',
+          inspector_id: 4
+        },
+        {
+          id: 2,
+          drainage_point_id: 2,
+          drainage_point_name: 'Park Avenue Culvert',
+          inspection_type: 'Safety Inspection',
+          scheduled_date: '2025-06-07',
+          scheduled_time: '14:00',
+          priority: 'High',
+          status: 'Scheduled',
+          description: 'Safety inspection following report',
+          inspector_id: 4
+        },
+        {
+          id: 3,
+          drainage_point_id: 3,
+          drainage_point_name: 'Industrial Zone Pipe',
+          inspection_type: 'Structural Inspection',
+          scheduled_date: '2025-06-06',
+          scheduled_time: '10:30',
+          priority: 'Critical',
+          status: 'Completed',
+          description: 'Post-maintenance structural inspection',
+          inspector_id: 4,
+          findings: 'Structure shows good integrity after repair'
+        }
+      ];
+    }
+
+    function getSampleDrainagePoints() {
+      return [
+        {
+          id: 1,
+          name: 'Main Street Drain A1',
+          type: 'Concrete Drain',
+          status: 'Good',
+          depth: 2.5,
+          coordinates: [2.05788, 102.57471],
+          description: 'Main drainage point on Main Street'
+        },
+        {
+          id: 2,
+          name: 'Park Avenue Culvert',
+          type: 'Box Culvert',
+          status: 'Needs Maintenance',
+          depth: 3.2,
+          coordinates: [2.06, 102.576],
+          description: 'Box culvert under Park Avenue'
+        },
+        {
+          id: 3,
+          name: 'Industrial Zone Pipe',
+          type: 'Pipe Drain',
+          status: 'Critical',
+          depth: 1.8,
+          coordinates: [2.055, 102.578],
+          description: 'Large pipe drainage system'
+        }
+      ];
+    }
+
+    function getSampleFloodProneAreas() {
+      return [
+        {
+          name: 'Downtown Flood Zone',
+          risk_level: 'High',
+          last_flood: '2024-12-15',
+          coordinates: [
+            [
+              [2.055, 102.57],
+              [2.06, 102.575],
+              [2.055, 102.58],
+              [2.05, 102.575],
+              [2.055, 102.57],
+            ],
+          ],
+        },
+      ];
+    }
+
+    function loadSampleData() {
+      inspections = getSampleInspections();
+      drainagePoints = getSampleDrainagePoints();
+      renderMap();
+      renderTodayInspections();
+      renderMyInspectionsList();
+      renderFloodProneAreas(getSampleFloodProneAreas());
+    }
+
+    function renderMap() {
+      drainagePointsLayer.clearLayers();
+
+      drainagePoints.forEach(point => {
+        // Find if this point has any inspections
+        const pointInspections = inspections.filter(i => i.drainage_point_id === point.id);
+        let markerClass = 'marker-normal';
+        let status = 'normal';
+        
+        // Determine marker style based on inspection status
+        if (pointInspections.length > 0) {
+          const latestInspection = pointInspections.sort((a, b) => 
+            new Date(b.scheduled_date) - new Date(a.scheduled_date)
+          )[0];
+          
+          status = latestInspection.status.toLowerCase().replace(' ', '-');
+          markerClass = `marker-${status}`;
+        }
+
+        const marker = L.marker(point.coordinates, {
+          icon: createMarkerIcon(point.status), // Use same marker function as map.html
+          title: point.name
+        });
+
+        const popupContent = createPopupContent(point, pointInspections);
+        marker.bindPopup(popupContent, {
+          maxWidth: 350,
+          className: 'custom-popup'
+        });
+
+        marker.on('popupopen', () => {
+          setTimeout(() => setupPopupEventHandlers(point, pointInspections), 100);
+        });
+
+        drainagePointsLayer.addLayer(marker);
+      });
+    }
+
+    // Use same marker icon function as map.html
+    function createMarkerIcon(status) {
+      const colors = {
+        Good: "#28a745",
+        "Needs Maintenance": "#ffc107",
+        Critical: "#dc3545",
+      };
+
+      const color = colors[status] || "#6c757d";
+
+      return L.divIcon({
+        className: "custom-div-icon",
+        html: `
+          <div style="
+            background: ${color}; 
+            width: 14px; 
+            height: 14px; 
+            border-radius: 50%; 
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+          "></div>
+        `,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+      });
+    }
+
+    function createPopupContent(point, pointInspections) {
+      const statusClass = getStatusBadgeClass(point.status);
+      const latestInspection = pointInspections.length > 0 ? 
+        pointInspections.sort((a, b) => new Date(b.scheduled_date) - new Date(a.scheduled_date))[0] : null;
+
+      return `
+        <div class="popup-content">
+          <h5><i class="fas fa-map-pin me-2"></i>${point.name}</h5>
+          <div class="mb-2">
+            <span class="badge ${statusClass}">${point.status}</span>
+          </div>
+          <div class="property-row">
+            <div class="property-label">Type:</div>
+            <div>${point.type}</div>
+          </div>
+          <div class="property-row">
+            <div class="property-label">Depth:</div>
+            <div>${point.depth}m</div>
+          </div>
+          ${latestInspection ? `
+            <hr>
+            <div class="property-row">
+              <div class="property-label">Last Inspection:</div>
+              <div>${formatDate(latestInspection.scheduled_date)}</div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">Status:</div>
+              <div><span class="inspection-status-indicator ${latestInspection.status.toLowerCase().replace(' ', '-')}">${latestInspection.status}</span></div>
+            </div>
+          ` : '<hr><small class="text-muted">No inspections scheduled</small>'}
+          <div class="text-center mt-3">
+            <button class="btn btn-sm btn-primary me-1 view-point-btn" data-id="${point.id}">
+              <i class="fas fa-eye me-1"></i>View
+            </button>
+            <button class="btn btn-sm btn-success schedule-inspection-btn" data-id="${point.id}">
+              <i class="fas fa-calendar-plus me-1"></i>Schedule
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFloodProneAreas(data) {
+      floodProneAreasLayer.clearLayers();
+
+      data.forEach((area) => {
+        const polygon = L.polygon(area.coordinates, {
+          color: "#17a2b8",
+          fillColor: "#17a2b8",
+          fillOpacity: 0.3,
+          weight: 2,
+        }).addTo(floodProneAreasLayer);
+
+        const popupContent = `
+          <div class="popup-content">
+            <h5><i class="fas fa-water me-2"></i>${area.name}</h5>
+            <div class="property-row">
+              <div class="property-label">Risk Level:</div>
+              <div><span class="badge bg-warning">${area.risk_level}</span></div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">Last Flood:</div>
+              <div>${area.last_flood || "No record"}</div>
+            </div>
+          </div>
+        `;
+
+        polygon.bindPopup(popupContent);
+      });
+    }
+
+    function getStatusBadgeClass(status) {
+      const classes = {
+        'Good': 'bg-success',
+        'Needs Maintenance': 'bg-warning text-dark',
+        'Critical': 'bg-danger'
+      };
+      return classes[status] || 'bg-secondary';
+    }
+
+    function setupPopupEventHandlers(point, pointInspections) {
+      const viewBtn = document.querySelector('.view-point-btn');
+      const scheduleBtn = document.querySelector('.schedule-inspection-btn');
+      
+      if (viewBtn) {
+        viewBtn.addEventListener('click', () => showInspectionDetails(point, pointInspections));
+      }
+      
+      if (scheduleBtn) {
+        scheduleBtn.addEventListener('click', () => showScheduleInspectionModal(point));
+      }
+    }
+
+    function renderTodayInspections() {
+      const today = new Date().toISOString().split('T')[0];
+      const todayInspections = inspections.filter(i => i.scheduled_date === today);
+      
+      const container = document.getElementById('today-inspections');
+      
+      if (todayInspections.length === 0) {
+        container.innerHTML = '<p class="text-muted text-center">No inspections today</p>';
+        return;
+      }
+      
+      container.innerHTML = todayInspections.map(inspection => `
+        <div class="content-item inspection-item ${inspection.status.toLowerCase().replace(' ', '-')}" onclick="focusOnInspection(${inspection.drainage_point_id})">
+          <div class="inspection-name">${inspection.drainage_point_name}</div>
+          <div class="inspection-details">
+            ${inspection.scheduled_time || '09:00'} - ${inspection.inspection_type}
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="inspection-status-indicator ${inspection.status.toLowerCase().replace(' ', '-')}">${inspection.status}</span>
+            ${getInspectionActionButton(inspection)}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderMyInspectionsList() {
+      const recentInspections = inspections.slice(0, 8);
+      const container = document.getElementById('my-inspections-list');
+      
+      if (recentInspections.length === 0) {
+        container.innerHTML = '<p class="text-muted text-center">No inspections assigned</p>';
+        return;
+      }
+      
+      container.innerHTML = recentInspections.map(inspection => `
+        <div class="content-item inspection-item ${inspection.status.toLowerCase().replace(' ', '-')}" onclick="focusOnInspection(${inspection.drainage_point_id})">
+          <div class="inspection-name">${inspection.drainage_point_name}</div>
+          <div class="inspection-details">
+            ${formatDate(inspection.scheduled_date)} - ${inspection.inspection_type}
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="inspection-status-indicator ${inspection.status.toLowerCase().replace(' ', '-')}">${inspection.status}</span>
+            <span class="badge bg-${getPriorityColor(inspection.priority)}">${inspection.priority}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getInspectionActionButton(inspection) {
+      switch(inspection.status) {
+        case 'Scheduled':
+          return `<button class="btn btn-xs btn-primary" onclick="event.stopPropagation(); startInspectionModal(${inspection.id})">Start</button>`;
+        case 'In Progress':
+          return `<button class="btn btn-xs btn-success" onclick="event.stopPropagation(); completeInspectionModal(${inspection.id})">Complete</button>`;
+        default:
+          return '';
+      }
+    }
+
+    function focusOnInspection(drainagePointId) {
+      const point = drainagePoints.find(p => p.id === drainagePointId);
+      if (point) {
+        map.setView(point.coordinates, 17);
+        
+        // Find and open the popup for this point
+        drainagePointsLayer.eachLayer(layer => {
+          if (layer.getLatLng && 
+              Math.abs(layer.getLatLng().lat - point.coordinates[0]) < 0.0001 &&
+              Math.abs(layer.getLatLng().lng - point.coordinates[1]) < 0.0001) {
+            layer.openPopup();
+          }
+        });
+      }
+    }
+
+    function setupEventListeners() {
+      // Panel toggle
+      const panelToggle = document.getElementById('panelToggle');
+      const controlPanel = document.getElementById('controlPanel');
+      const toggleIcon = document.getElementById('toggleIcon');
+      
+      panelToggle.addEventListener('click', () => {
+        controlPanel.classList.toggle('collapsed');
+        toggleIcon.className = controlPanel.classList.contains('collapsed') ? 
+          'fas fa-chevron-right' : 'fas fa-chevron-left';
+      });
+
+      // Map controls (same as map.html)
+      document.getElementById('zoom-in-btn').addEventListener('click', () => map.zoomIn());
+      document.getElementById('zoom-out-btn').addEventListener('click', () => map.zoomOut());
+      document.getElementById('locate-me-btn').addEventListener('click', handleLocateMe);
+      document.getElementById('full-extent-btn').addEventListener('click', () => map.setView([2.05788, 102.57471], 13));
+      document.getElementById('toggle-layers-btn').addEventListener('click', () => showModal('layerControlModal'));
+
+      // Filter badges
+      document.querySelectorAll('.filter-badge').forEach(badge => {
+        badge.addEventListener('click', function() {
+          const filterType = this.getAttribute('data-type');
+          const filterValue = this.getAttribute('data-filter');
+          
+          // Update active state
+          document.querySelectorAll(`[data-type="${filterType}"]`).forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Apply filter
+          applyFilter(filterType, filterValue);
+        });
+      });
+
+      // Search functionality
+      setupEnhancedSearch();
+
+      // Layer controls
+      setupLayerControls();
+      setupBasemapControls();
+    }
+
+    function setupEnhancedSearch() {
+      const searchInput = document.getElementById('search-input');
+      const clearSearchBtn = document.getElementById('clear-search-btn');
+      
+      searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.trim();
+        if (searchTerm) {
+          clearSearchBtn.classList.add('show');
+          searchDrainagePoints(searchTerm);
+        } else {
+          clearSearchBtn.classList.remove('show');
+          renderMap(); // Show all points
+        }
+      });
+      
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        clearSearchBtn.classList.remove('show');
+        renderMap();
+      });
+    }
+
+    function setupLayerControls() {
+      document.getElementById('layer-drainage').addEventListener('change', (e) => {
+        if (e.target.checked) {
+          map.addLayer(drainagePointsLayer);
+        } else {
+          map.removeLayer(drainagePointsLayer);
+        }
+      });
+
+      document.getElementById('layer-flood-prone').addEventListener('change', (e) => {
+        if (e.target.checked) {
+          map.addLayer(floodProneAreasLayer);
+        } else {
+          map.removeLayer(floodProneAreasLayer);
+        }
+      });
+    }
+
+    function setupBasemapControls() {
+      document.getElementById('basemap-street').addEventListener('change', () => switchBasemap('street'));
+      document.getElementById('basemap-satellite').addEventListener('change', () => switchBasemap('satellite'));
+      document.getElementById('basemap-terrain').addEventListener('change', () => switchBasemap('terrain'));
+    }
+
+    function switchBasemap(type) {
+      [osmTileLayer, satelliteTileLayer, terrainTileLayer].forEach((layer) => {
+        map.removeLayer(layer);
+      });
+
+      const basemaps = {
+        street: osmTileLayer,
+        satellite: satelliteTileLayer,
+        terrain: terrainTileLayer,
+      };
+
+      if (basemaps[type]) {
+        map.addLayer(basemaps[type]);
+      }
+    }
+
+    function applyFilter(filterType, filterValue) {
+      if (filterValue === 'all') {
+        renderMap(); // Show all points
+        return;
+      }
+      
+      let filteredPoints = [...drainagePoints];
+      
+      if (filterType === 'inspection-status') {
+        filteredPoints = drainagePoints.filter(point => {
+          const pointInspections = inspections.filter(i => i.drainage_point_id === point.id);
+          if (pointInspections.length === 0) return filterValue === 'no-inspection';
+          
+          const latestInspection = pointInspections.sort((a, b) => 
+            new Date(b.scheduled_date) - new Date(a.scheduled_date)
+          )[0];
+          
+          return latestInspection.status.toLowerCase().replace(' ', '-') === filterValue;
+        });
+      } else if (filterType === 'priority') {
+        filteredPoints = drainagePoints.filter(point => {
+          const pointInspections = inspections.filter(i => i.drainage_point_id === point.id);
+          return pointInspections.some(i => i.priority.toLowerCase() === filterValue);
+        });
+      }
+      
+      renderFilteredMap(filteredPoints);
+    }
+
+    function renderFilteredMap(filteredPoints) {
+      drainagePointsLayer.clearLayers();
+      
+      filteredPoints.forEach(point => {
+        const pointInspections = inspections.filter(i => i.drainage_point_id === point.id);
+        let status = 'normal';
+        
+        if (pointInspections.length > 0) {
+          const latestInspection = pointInspections.sort((a, b) => 
+            new Date(b.scheduled_date) - new Date(a.scheduled_date)
+          )[0];
+          status = latestInspection.status.toLowerCase().replace(' ', '-');
+        }
+
+        const marker = L.marker(point.coordinates, {
+          icon: createMarkerIcon(point.status)
+        });
+
+        const popupContent = createPopupContent(point, pointInspections);
+        marker.bindPopup(popupContent, {
+          maxWidth: 350,
+          className: 'custom-popup'
+        });
+
+        marker.on('popupopen', () => {
+          setTimeout(() => setupPopupEventHandlers(point, pointInspections), 100);
+        });
+
+        drainagePointsLayer.addLayer(marker);
+      });
+    }
+
+    function searchDrainagePoints(searchTerm) {
+      const term = searchTerm.toLowerCase();
+      const filteredPoints = drainagePoints.filter(point =>
+        point.name.toLowerCase().includes(term) ||
+        point.type.toLowerCase().includes(term) ||
+        point.description.toLowerCase().includes(term)
+      );
+      
+      renderFilteredMap(filteredPoints);
+      
+      if (filteredPoints.length === 1) {
+        // If only one result, focus on it
+        const point = filteredPoints[0];
+        map.setView(point.coordinates, 17);
+      }
+    }
+
+    // Modal functions
+    function showModal(modalId) {
+      const modalElement = document.getElementById(modalId);
+      if (modalElement) {
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+      }
+    }
+
+    function showInspectionDetails(point, pointInspections) {
+      const modal = document.getElementById('inspectionDetailsModal');
+      const content = document.getElementById('inspection-details-content');
+      const actionButtons = document.getElementById('inspection-action-buttons');
+      
+      let contentHTML = `
+        <h6>Drainage Point Information</h6>
+        <div class="bg-light p-3 rounded mb-3">
+          <strong>${point.name}</strong><br>
+          Type: ${point.type}<br>
+          Status: <span class="badge ${getStatusBadgeClass(point.status)}">${point.status}</span><br>
+          Depth: ${point.depth}m
+        </div>
+      `;
+      
+      if (pointInspections.length > 0) {
+        contentHTML += `<h6>Inspection History</h6>`;
+        pointInspections.sort((a, b) => new Date(b.scheduled_date) - new Date(a.scheduled_date))
+          .forEach(inspection => {
+            contentHTML += `
+              <div class="border rounded p-3 mb-2">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <strong>${inspection.inspection_type}</strong><br>
+                    <small>Date: ${formatDate(inspection.scheduled_date)} ${inspection.scheduled_time || ''}</small><br>
+                    <small>Priority: <span class="badge bg-${getPriorityColor(inspection.priority)}">${inspection.priority}</span></small>
+                  </div>
+                  <span class="inspection-status-indicator ${inspection.status.toLowerCase().replace(' ', '-')}">${inspection.status}</span>
+                </div>
+                ${inspection.findings ? `<div class="mt-2"><strong>Findings:</strong> ${inspection.findings}</div>` : ''}
+                ${inspection.recommendations ? `<div><strong>Recommendations:</strong> ${inspection.recommendations}</div>` : ''}
+              </div>
+            `;
+          });
+        
+        // Add action buttons for latest inspection
+        const latestInspection = pointInspections[0];
+        if (latestInspection.status === 'Scheduled') {
+          actionButtons.innerHTML = `
+            <button class="btn btn-primary" onclick="startInspectionModal(${latestInspection.id})">
+              <i class="fas fa-play me-1"></i>Start Inspection
+            </button>
+          `;
+        } else if (latestInspection.status === 'In Progress') {
+          actionButtons.innerHTML = `
+            <button class="btn btn-success" onclick="completeInspectionModal(${latestInspection.id})">
+              <i class="fas fa-check me-1"></i>Complete Inspection
+            </button>
+          `;
+        } else {
+          actionButtons.innerHTML = '';
+        }
+      } else {
+        contentHTML += `<p class="text-muted">No inspections scheduled for this point.</p>`;
+        actionButtons.innerHTML = `
+          <button class="btn btn-success" onclick="showScheduleInspectionModal({id: ${point.id}, name: '${point.name}'})">
+            <i class="fas fa-calendar-plus me-1"></i>Schedule Inspection
+          </button>
+        `;
+      }
+      
+      content.innerHTML = contentHTML;
+      new bootstrap.Modal(modal).show();
+    }
+
+    function showScheduleInspectionModal(point = null) {
+      selectedDrainagePoint = point;
+      const modal = document.getElementById('scheduleInspectionModal');
+      
+      if (point) {
+        document.getElementById('schedule-drainage-point-id').value = point.id;
+        document.getElementById('schedule-point-details').innerHTML = `
+          <strong>${point.name}</strong><br>
+          <span class="text-muted">${point.type || 'Drainage Point'}</span>
+        `;
+      } else {
+        document.getElementById('schedule-point-details').innerHTML = 'Click on a drainage point on the map to select it.';
+      }
+      
+      // Set default date to tomorrow
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      document.getElementById('schedule-date').value = tomorrow.toISOString().split('T')[0];
+      
+      new bootstrap.Modal(modal).show();
+    }
+
+    function showIssueReportModal() {
+      new bootstrap.Modal(document.getElementById('issueReportModal')).show();
+    }
+
+    function startInspectionModal(inspectionId) {
+      const inspection = inspections.find(i => i.id === inspectionId);
+      if (!inspection) return;
+      
+      document.getElementById('start-inspection-id').value = inspectionId;
+      document.getElementById('start-inspection-details').innerHTML = `
+        <strong>${inspection.drainage_point_name}</strong><br>
+        <span class="text-muted">${inspection.inspection_type}</span><br>
+        <small>Priority: ${inspection.priority}</small>
+      `;
+      
+      new bootstrap.Modal(document.getElementById('startInspectionModal')).show();
+    }
+
+    function completeInspectionModal(inspectionId) {
+      const inspection = inspections.find(i => i.id === inspectionId);
+      if (!inspection) return;
+      
+      document.getElementById('complete-inspection-id').value = inspectionId;
+      document.getElementById('complete-inspection-details').innerHTML = `
+        <strong>${inspection.drainage_point_name}</strong><br>
+        <span class="text-muted">${inspection.inspection_type}</span><br>
+        <small>Started: ${formatDate(inspection.scheduled_date)}</small>
+      `;
+      
+      new bootstrap.Modal(document.getElementById('completeInspectionModal')).show();
+    }
+
+    // Action functions
+    async function startInspection() {
+      const inspectionId = document.getElementById('start-inspection-id').value;
+      const notes = document.getElementById('start-notes').value;
+      
+      try {
+        const response = await fetch('../api/inspection-schedules.php', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: inspectionId,
+            status: 'In Progress',
+            notes: notes
+          })
+        });
+        
+        if (response.ok) {
+          showNotification('Inspection started successfully', 'success');
+        } else {
+          throw new Error('API not available');
+        }
+      } catch (error) {
+        // Fallback for demo
+        const inspection = inspections.find(i => i.id == inspectionId);
+        if (inspection) {
+          inspection.status = 'In Progress';
+          showNotification('Inspection started (demo mode)', 'info');
+        }
+      }
+      
+      bootstrap.Modal.getInstance(document.getElementById('startInspectionModal')).hide();
+      renderMap();
+      renderTodayInspections();
+      renderMyInspectionsList();
+    }
+
+    async function completeInspection() {
+      const inspectionId = document.getElementById('complete-inspection-id').value;
+      const findings = document.getElementById('findings').value;
+      const recommendations = document.getElementById('recommendations').value;
+      
+      if (!findings.trim()) {
+        showNotification('Please provide inspection findings', 'warning');
+        return;
+      }
+      
+      try {
+        const response = await fetch('../api/inspection-schedules.php', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: inspectionId,
+            status: 'Completed',
+            findings: findings,
+            recommendations: recommendations,
+            completion_date: new Date().toISOString()
+          })
+        });
+        
+        if (response.ok) {
+          showNotification('Inspection completed successfully', 'success');
+        } else {
+          throw new Error('API not available');
+        }
+      } catch (error) {
+        // Fallback for demo
+        const inspection = inspections.find(i => i.id == inspectionId);
+        if (inspection) {
+          inspection.status = 'Completed';
+          inspection.findings = findings;
+          inspection.recommendations = recommendations;
+          showNotification('Inspection completed (demo mode)', 'info');
+        }
+      }
+      
+      bootstrap.Modal.getInstance(document.getElementById('completeInspectionModal')).hide();
+      renderMap();
+      renderTodayInspections();
+      renderMyInspectionsList();
+    }
+
+    async function scheduleInspection() {
+      const inspectionData = {
+        drainage_point_id: document.getElementById('schedule-drainage-point-id').value,
+        inspection_type: document.getElementById('schedule-inspection-type').value,
+        scheduled_date: document.getElementById('schedule-date').value,
+        scheduled_time: document.getElementById('schedule-time').value,
+        priority: document.getElementById('schedule-priority').value,
+        description: document.getElementById('schedule-description').value,
+        inspector_id: currentInspectorId,
+        status: 'Scheduled'
+      };
+      
+      if (!inspectionData.drainage_point_id) {
+        showNotification('Please select a drainage point', 'warning');
+        return;
+      }
+      
+      try {
+        const response = await fetch('../api/inspection-schedules.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(inspectionData)
+        });
+        
+        if (response.ok) {
+          showNotification('Inspection scheduled successfully', 'success');
+        } else {
+          throw new Error('API not available');
+        }
+      } catch (error) {
+        // Fallback for demo
+        const point = drainagePoints.find(p => p.id == inspectionData.drainage_point_id);
+        const newInspection = {
+          id: Math.max(...inspections.map(i => i.id)) + 1,
+          ...inspectionData,
+          drainage_point_name: point?.name || 'Unknown Point'
+        };
+        inspections.push(newInspection);
+        showNotification('Inspection scheduled (demo mode)', 'info');
+      }
+      
+      bootstrap.Modal.getInstance(document.getElementById('scheduleInspectionModal')).hide();
+      renderMap();
+      renderTodayInspections();
+      renderMyInspectionsList();
+    }
+
+    async function submitIssueReport() {
+      const reportData = {
+        operator_id: currentInspectorId,
+        location: document.getElementById('issue-location').value,
+        issue_type: document.getElementById('issue-type').value,
+        priority: document.getElementById('issue-priority').value,
+        description: document.getElementById('issue-description').value,
+        status: 'Open'
+      };
+      
+      if (!reportData.location || !reportData.issue_type || !reportData.description) {
+        showNotification('Please fill in all required fields', 'warning');
+        return;
+      }
+      
+      try {
+        const response = await fetch('../api/operator-issue-reports.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(reportData)
+        });
+        
+        if (response.ok) {
+          showNotification('Issue report submitted successfully', 'success');
+        } else {
+          throw new Error('API not available');
+        }
+      } catch (error) {
+        showNotification('Issue report submitted (demo mode)', 'info');
+      }
+      
+      bootstrap.Modal.getInstance(document.getElementById('issueReportModal')).hide();
+      document.getElementById('issue-report-form').reset();
+    }
+
+    // Utility functions
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString();
+    }
+
+    function getPriorityColor(priority) {
+      const colors = {
+        'Low': 'success',
+        'Medium': 'info',
+        'High': 'warning',
+        'Critical': 'danger'
+      };
+      return colors[priority] || 'secondary';
+    }
+
+    function showNotification(message, type) {
+      const notification = document.createElement('div');
+      notification.className = `alert alert-${type} alert-dismissible fade show notification`;
+      notification.style.cssText = `
+        position: fixed; top: 100px; right: 20px; z-index: 9999; 
+        max-width: 400px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      `;
+      notification.innerHTML = `
+        <i class="fas fa-${getNotificationIcon(type)} me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      
+      document.body.appendChild(notification);
+      setTimeout(() => {
+        if (notification.parentNode) notification.remove();
+      }, 5000);
+    }
+
+    function getNotificationIcon(type) {
+      const icons = {
+        success: "check-circle",
+        danger: "exclamation-triangle",
+        warning: "exclamation-triangle",
+        info: "info-circle",
+      };
+      return icons[type] || "info-circle";
+    }
+
+    function handleLocateMe() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            map.setView([lat, lng], 16);
+            showNotification('Location found', 'success');
+          },
+          (error) => {
+            showNotification('Could not get your location', 'warning');
+          }
+        );
+      } else {
+        showNotification('Geolocation is not supported', 'warning');
+      }
+    }
+  </script>
+</body>
+</html>

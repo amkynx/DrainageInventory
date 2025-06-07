@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DrainTrack - Login</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #0d6efd;
+      --secondary-color: #6c757d;
+      --accent-color: #0dcaf0;
+      --success-color: #198754;
+      --warning-color: #ffc107;
+      --danger-color: #dc3545;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 20px;
+      background-image: url('images/pexels-pok-rie-33563-14603097.jpg');
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 450px;
+    }
+
+    .login-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      border: none;
+      overflow: hidden;
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .login-header {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: white;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+      transform: rotate(45deg);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    .login-header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-header p {
+      margin: 0.5rem 0 0 0;
+      opacity: 0.9;
+      font-size: 1.1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: rgba(255,255,255,0.9);
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-body {
+      padding: 2.5rem;
+    }
+
+    .form-floating {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-control {
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      padding: 1rem 0.75rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background-color: #f8f9fa;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+      background-color: white;
+    }
+
+    .form-floating > label {
+      color: var(--secondary-color);
+      font-weight: 500;
+    }
+
+    .btn-login {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      border: none;
+      border-radius: 12px;
+      padding: 1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      width: 100%;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(13, 110, 253, 0.3);
+      color: white;
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+    .btn-login:disabled {
+      opacity: 0.7;
+      transform: none;
+    }
+
+    .loading-spinner {
+      display: none;
+    }
+
+    .btn-login.loading .loading-spinner {
+      display: inline-block;
+    }
+
+    .btn-login.loading .btn-text {
+      display: none;
+    }
+
+    .remember-forgot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.5rem 0;
+    }
+
+    .form-check {
+      margin: 0;
+    }
+
+    .form-check-input:checked {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .forgot-password {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .forgot-password:hover {
+      color: var(--accent-color);
+      text-decoration: underline;
+    }
+
+    .alert-custom {
+      border-radius: 12px;
+      border: none;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+
+    .alert-danger {
+      background: linear-gradient(135deg, #f8d7da, #f5c2c7);
+      color: #721c24;
+    }
+
+    .alert-success {
+      background: linear-gradient(135deg, #d1e7dd, #badbcc);
+      color: #0f5132;
+    }
+
+    .alert-info {
+      background: linear-gradient(135deg, #cce7ff, #b3d9ff);
+      color: #084298;
+    }
+
+    .login-footer {
+      text-align: center;
+      padding: 1.5rem;
+      background-color: #f8f9fa;
+      color: var(--secondary-color);
+      font-size: 0.9rem;
+    }
+
+    .version-info {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    .input-group-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--secondary-color);
+      cursor: pointer;
+      z-index: 10;
+      transition: color 0.3s ease;
+    }
+
+    .input-group-icon:hover {
+      color: var(--primary-color);
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .security-features {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--secondary-color);
+    }
+
+    .security-features ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    .security-features li {
+      margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .login-container {
+        max-width: 100%;
+        margin: 0 10px;
+      }
+      
+      .login-header h1 {
+        font-size: 2rem;
+      }
+      
+      .login-body {
+        padding: 2rem 1.5rem;
+      }
+    }
+
+    .spinner-border-sm {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .is-invalid {
+      animation: shake 0.5s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="card login-card">
+      <!-- Header -->
+      <div class="login-header">
+        <div class="brand-icon">
+          <i class="fas fa-water"></i>
+        </div>
+        <h1>DrainTrack</h1>
+        <p>Drainage Management System</p>
+      </div>
+
+      <!-- Login Form -->
+      <div class="login-body">
+        <!-- Alert Messages -->
+        <div id="alertContainer"></div>
+
+        <form id="loginForm">
+          <!-- Email Field -->
+          <div class="form-floating">
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+            <label for="email">
+              <i class="fas fa-envelope me-2"></i>Email Address
+            </label>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-floating password-wrapper">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+            <label for="password">
+              <i class="fas fa-lock me-2"></i>Password
+            </label>
+            <span class="input-group-icon" onclick="togglePassword()">
+              <i class="fas fa-eye" id="passwordToggle"></i>
+            </span>
+          </div>
+
+          <!-- Remember Me & Forgot Password -->
+          <div class="remember-forgot">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="1" id="remember" name="remember">
+              <label class="form-check-label" for="remember">
+                Remember me
+              </label>
+            </div>
+            <a href="#" class="forgot-password" onclick="showForgotPassword()">
+              Forgot Password?
+            </a>
+          </div>
+
+          <!-- Login Button -->
+          <button type="submit" class="btn btn-login" id="loginBtn">
+            <span class="loading-spinner">
+              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+              Authenticating...
+            </span>
+            <span class="btn-text">
+              <i class="fas fa-sign-in-alt me-2"></i>
+              Sign In
+            </span>
+          </button>
+        </form>
+
+        <!-- Security Features Info -->
+        <div class="security-features">
+          <strong><i class="fas fa-shield-alt me-2"></i>Security Features:</strong>
+          <ul>
+            <li>Encrypted password storage</li>
+            <li>Session management</li>
+            <li>Rate limiting protection</li>
+            <li>Secure authentication</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="login-footer">
+        <div>
+          <strong>DrainTrack</strong> - Drainage Inventory Management System
+        </div>
+        <div class="version-info">
+          Version 1.0 | © 2025 DrainTrack Systems
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    /**
+     * DrainTrack Login System
+     * Handles user authentication with secure form submission
+     */
+    
+    // Initialize login form when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeLoginForm();
+      handleURLParameters();
+      document.getElementById('email').focus();
+    });
+
+    /**
+     * Initialize the login form with event handlers
+     */
+    function initializeLoginForm() {
+      const loginForm = document.getElementById('loginForm');
+      
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        handleLoginSubmission();
+      });
+
+      // Add enter key support for form fields
+      document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+          handleLoginSubmission();
+        }
+      });
+    }
+
+    /**
+     * Handle the login form submission
+     */
+    function handleLoginSubmission() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      // Validate input
+      if (!validateLoginInput(email, password)) {
+        return;
+      }
+
+      // Show loading state
+      setLoadingState(true);
+
+      // Prepare form data
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+      formData.append('remember', document.getElementById('remember').checked ? '1' : '0');
+
+      // Submit login request - Updated path to point to login.php in root
+      fetch('api/login.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.text())
+      .then(responseText => {
+        try {
+          const data = JSON.parse(responseText);
+          handleLoginResponse(data);
+        } catch (parseError) {
+          console.error('Parse error:', parseError, 'Response:', responseText);
+          showAlert('Server error occurred. Please try again.', 'danger');
+        }
+      })
+      .catch(error => {
+        console.error('Network error:', error);
+        showAlert('Network error. Please check your connection and try again.', 'danger');
+      })
+      .finally(() => {
+        setLoadingState(false);
+      });
+    }
+
+    /**
+     * Validate login input fields
+     * @param {string} email - User email
+     * @param {string} password - User password
+     * @returns {boolean} - Validation result
+     */
+    function validateLoginInput(email, password) {
+      if (!email || !password) {
+        showAlert('Please fill in all fields', 'danger');
+        return false;
+      }
+
+      if (!isValidEmail(email)) {
+        showAlert('Please enter a valid email address', 'danger');
+        return false;
+      }
+
+      return true;
+    }
+
+    /**
+     * Handle the response from login API
+     * @param {Object} data - Response data from API
+     */
+    function handleLoginResponse(data) {
+      if (data.success) {
+        const userName = data.data?.user?.name || 'User';
+        const userRole = data.data?.user?.role || 'Unknown';
+        
+        showAlert(`Login successful! Welcome ${userName} (${userRole}). Redirecting...`, 'success');
+        
+        setTimeout(() => {
+          const redirectUrl = data.data?.redirect || 'admin/admin.html';
+          console.log('Redirecting to:', redirectUrl);
+          window.location.href = redirectUrl;
+        }, 1500);
+      } else {
+        showAlert(data.message || 'Login failed. Please try again.', 'danger');
+        
+        // Add shake animation to form
+        const form = document.getElementById('loginForm');
+        form.classList.add('is-invalid');
+        setTimeout(() => form.classList.remove('is-invalid'), 500);
+      }
+    }
+
+    /**
+     * Validate email format
+     * @param {string} email - Email to validate
+     * @returns {boolean} - Validation result
+     */
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    /**
+     * Toggle loading state on login button
+     * @param {boolean} isLoading - Loading state
+     */
+    function setLoadingState(isLoading) {
+      const btn = document.getElementById('loginBtn');
+      
+      if (isLoading) {
+        btn.classList.add('loading');
+        btn.disabled = true;
+      } else {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      }
+    }
+
+    /**
+     * Toggle password visibility
+     */
+    function togglePassword() {
+      const passwordField = document.getElementById('password');
+      const toggleIcon = document.getElementById('passwordToggle');
+
+      if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleIcon.className = 'fas fa-eye-slash';
+      } else {
+        passwordField.type = 'password';
+        toggleIcon.className = 'fas fa-eye';
+      }
+    }
+
+    /**
+     * Display alert messages to user
+     * @param {string} message - Message to display
+     * @param {string} type - Alert type (success, danger, info)
+     */
+    function showAlert(message, type) {
+      const container = document.getElementById('alertContainer');
+
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type} alert-custom alert-dismissible`;
+      alert.innerHTML = `
+        <i class="fas fa-${getAlertIcon(type)} me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+      `;
+
+      // Remove existing alerts and add new one
+      container.innerHTML = '';
+      container.appendChild(alert);
+
+      // Auto-remove after 5 seconds
+      setTimeout(() => {
+        if (alert.parentElement) {
+          alert.remove();
+        }
+      }, 5000);
+    }
+
+    /**
+     * Get appropriate icon for alert type
+     * @param {string} type - Alert type
+     * @returns {string} - Font Awesome icon class
+     */
+    function getAlertIcon(type) {
+      const icons = {
+        success: 'check-circle',
+        danger: 'exclamation-triangle',
+        info: 'info-circle',
+        warning: 'exclamation-triangle'
+      };
+      return icons[type] || 'info-circle';
+    }
+
+    /**
+     * Handle forgot password action
+     */
+    function showForgotPassword() {
+      showAlert('Please contact your system administrator to reset your password.', 'info');
+    }
+
+    /**
+     * Handle URL parameters for logout, session expired, etc.
+     */
+    function handleURLParameters() {
+      const urlParams = new URLSearchParams(window.location.search);
+
+      if (urlParams.get('logout') === '1') {
+        showAlert('You have been logged out successfully.', 'success');
+      } else if (urlParams.get('expired') === '1') {
+        showAlert('Your session has expired. Please log in again.', 'info');
+      } else if (urlParams.get('unauthorized') === '1') {
+        showAlert('You must log in to access that page.', 'info');
+      }
+
+      // Clean URL parameters
+      if (urlParams.toString()) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+  </script>
+</body>
+</html>

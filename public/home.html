@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DrainTrack - Muar District Drainage Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Custom CSS */
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/api/placeholder/1200/600') no-repeat center center;
+            background-size: cover;
+            color: white;
+            padding: 100px 0;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #0d6efd;
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard-preview {
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .testimonial-card {
+            border-radius: 8px;
+        }
+        
+        .footer {
+            background-color: #212529;
+        }
+        
+        .map-thumbnail {
+            border-radius: 8px;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .map-thumbnail:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stats-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .stats-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stats-icon {
+            font-size: 2.5rem;
+            color: #0d6efd;
+            margin-bottom: 1rem;
+        }
+        
+        .nav-tabs .nav-link {
+            color: #495057;
+            font-weight: 500;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: #0d6efd;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-water me-2"></i>
+                DrainTrack Muar
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Maps</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Data</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+                <div class="ms-3">
+                    <a href="#" class="btn btn-outline-light me-2">Log In</a>
+                    <a href="#" class="btn btn-primary">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-4">Muar District Drainage Inventory System</h1>
+            <p class="lead mb-5">Comprehensive geospatial platform for accessing, analyzing, and managing drainage infrastructure across Muar District.</p>
+            <div class="d-flex justify-content-center">
+                <a href="#" class="btn btn-primary btn-lg me-3">Access Maps</a>
+                <a href="#" class="btn btn-outline-light btn-lg">View Data</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Access Maps Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Featured Maps</h2>
+                <p class="text-muted">Explore our interactive drainage maps and data visualization tools</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="/api/placeholder/400/300" class="card-img-top map-thumbnail" alt="Drainage Network Map">
+                        <div class="card-body">
+                            <h4>Muar Drainage Network</h4>
+                            <p class="text-muted">Comprehensive view of drainage infrastructure across Muar District with detailed attributes.</p>
+                            <a href="#" class="btn btn-sm btn-outline-primary">View Map</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="/api/placeholder/400/300" class="card-img-top map-thumbnail" alt="Flood Risk Assessment">
+                        <div class="card-body">
+                            <h4>Flood Risk Assessment</h4>
+                            <p class="text-muted">Analysis of flood-prone areas with risk levels and historical flooding data.</p>
+                            <a href="#" class="btn btn-sm btn-outline-primary">View Map</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="/api/placeholder/400/300" class="card-img-top map-thumbnail" alt="Maintenance Status">
+                        <div class="card-body">
+                            <h4>Maintenance Status</h4>
+                            <p class="text-muted">Current status of drainage maintenance activities and upcoming scheduled work.</p>
+                            <a href="#" class="btn btn-sm btn-outline-primary">View Map</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="#" class="btn btn-primary">View All Maps</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Statistics Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Muar Drainage Infrastructure</h2>
+                <p class="text-muted">Key statistics about our drainage network and management efforts</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="stats-box">
+                        <i class="fas fa-route stats-icon"></i>
+                        <h3 class="fw-bold">324 km</h3>
+                        <p class="text-muted mb-0">Total Drainage Network</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="stats-box">
+                        <i class="fas fa-water stats-icon"></i>
+                        <h3 class="fw-bold">1,850+</h3>
+                        <p class="text-muted mb-0">Drainage Points</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="stats-box">
+                        <i class="fas fa-tools stats-icon"></i>
+                        <h3 class="fw-bold">92%</h3>
+                        <p class="text-muted mb-0">Maintenance Coverage</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="stats-box">
+                        <i class="fas fa-cloud-rain stats-icon"></i>
+                        <h3 class="fw-bold">14</h3>
+                        <p class="text-muted mb-0">Flood Mitigation Projects</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Services Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="fw-bold mb-4">Comprehensive Data Services</h2>
+                    <p class="mb-4">Access a wide range of drainage data services for Muar District, from basic drainage information to advanced analytics and reporting tools.</p>
+                    
+                    <ul class="nav nav-tabs mb-4" id="dataServicesTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="geospatial-tab" data-bs-toggle="tab" data-bs-target="#geospatial" type="button" role="tab">Geospatial Data</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="analytical-tab" data-bs-toggle="tab" data-bs-target="#analytical" type="button" role="tab">Analytical Tools</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab">Reports</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="dataServicesContent">
+                        <div class="tab-pane fade show active" id="geospatial" role="tabpanel">
+                            <p>Access comprehensive geospatial data including:</p>
+                            <ul>
+                                <li>Drainage network lines and points</li>
+                                <li>Catchment areas and watersheds</li>
+                                <li>Maintenance records with spatial references</li>
+                                <li>Historical flooding events</li>
+                            </ul>
+                            <a href="#" class="btn btn-primary mt-2">Access Data</a>
+                        </div>
+                        
+                        <div class="tab-pane fade" id="analytical" role="tabpanel">
+                            <p>Utilize our analytical tools for:</p>
+                            <ul>
+                                <li>Flow capacity analysis</li>
+                                <li>Flood risk modeling</li>
+                                <li>Maintenance scheduling optimization</li>
+                                <li>Performance monitoring</li>
+                            </ul>
+                            <a href="#" class="btn btn-primary mt-2">Try Analytics</a>
+                        </div>
+                        
+                        <div class="tab-pane fade" id="reports" role="tabpanel">
+                            <p>Generate custom reports for:</p>
+                            <ul>
+                                <li>Infrastructure condition assessments</li>
+                                <li>Maintenance planning and budgeting</li>
+                                <li>Regulatory compliance</li>
+                                <li>Performance metrics</li>
+                            </ul>
+                            <a href="#" class="btn btn-primary mt-2">Create Reports</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-4 mt-lg-0">
+                    <img src="/api/placeholder/600/400" alt="Data Services" class="img-fluid dashboard-preview">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">System Features</h2>
+                <p class="text-muted">Powerful tools to manage Muar's drainage infrastructure</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-map-marked-alt feature-icon"></i>
+                            <h4>Interactive GIS</h4>
+                            <p class="text-muted">Access interactive maps with detailed drainage infrastructure data across Muar District.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-tasks feature-icon"></i>
+                            <h4>Maintenance Management</h4>
+                            <p class="text-muted">Track and schedule maintenance activities for all drainage assets with automated alerts.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-chart-line feature-icon"></i>
+                            <h4>Analytics Dashboard</h4>
+                            <p class="text-muted">Visualize drainage performance data with customizable metrics and KPIs.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-mobile-alt feature-icon"></i>
+                            <h4>Field Data Collection</h4>
+                            <p class="text-muted">Collect inspection data on-site with our mobile app that works even offline.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-file-alt feature-icon"></i>
+                            <h4>Comprehensive Reporting</h4>
+                            <p class="text-muted">Generate detailed reports on infrastructure condition, maintenance history, and performance.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <i class="fas fa-bell feature-icon"></i>
+                            <h4>Early Warning System</h4>
+                            <p class="text-muted">Receive real-time alerts for potential flooding and drainage issues.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- District Coverage Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Muar District Coverage</h2>
+                <p class="text-muted">Our system provides comprehensive coverage across all areas of Muar District</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <h4 class="mb-4">Areas Covered</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Bandar Maharani</li>
+                                        <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Parit Jawa</li>
+                                        <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Sungai Balang</li>
+                                        <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Bukit Pasir</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Bakri</li>
+                                        <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Lenga</li>
+                                        <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Pagoh</li>
+                                        <li class="mb-2"><i class="fas fa-check-circle text-primary me-2"></i> Kesang</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <a href="#" class="btn btn-primary">View Coverage Map</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="/api/placeholder/600/400" class="card-img-top" alt="Muar District Map">
+                        <div class="card-body">
+                            <h4>Drainage Infrastructure by Mukim</h4>
+                            <div class="mt-3">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Bandar Maharani</span>
+                                    <span>25%</span>
+                                </div>
+                                <div class="progress mb-3">
+                                    <div class="progress-bar" role="progressbar" style="width: 25%"></div>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Bakri</span>
+                                    <span>18%</span>
+                                </div>
+                                <div class="progress mb-3">
+                                    <div class="progress-bar" role="progressbar" style="width: 18%"></div>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Parit Jawa</span>
+                                    <span>15%</span>
+                                </div>
+                                <div class="progress mb-3">
+                                    <div class="progress-bar" role="progressbar" style="width: 15%"></div>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Other Areas</span>
+                                    <span>42%</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 42%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-5 bg-primary text-white">
+        <div class="container text-center">
+            <h2 class="fw-bold mb-4">Ready to Explore Muar's Drainage Infrastructure?</h2>
+            <p class="lead mb-4">Access comprehensive data, maps, and tools to optimize drainage management in Muar District.</p>
+            <div class="d-flex justify-content-center">
+                <a href="#" class="btn btn-light btn-lg me-3">Access Maps Now</a>
+                <a href="#" class="btn btn-outline-light btn-lg">Request Training</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">What Our Users Say</h2>
+                <p class="text-muted">Feedback from local authorities and professionals using DrainTrack Muar</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card testimonial-card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                            </div>
+                            <p class="mb-4">"DrainTrack has transformed how we manage our drainage infrastructure in Bandar Maharani. The mapping tools and maintenance scheduling features have significantly improved our efficiency."</p>
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <span class="fw-bold">AR</span>
+                                </div>
+                                <div class="ms-3">
+                                    <h5 class="mb-0">Ahmad Razali</h5>
+                                    <p class="text-muted mb-0">Engineering Officer, MPM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card testimonial-card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                            </div>
+                            <p class="mb-4">"The data visualization capabilities have helped us identify high-risk areas and prioritize our maintenance efforts. This has been crucial in preventing flooding issues during monsoon season."</p>
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <span class="fw-bold">SL</span>
+                                </div>
+                                <div class="ms-3">
+                                    <h5 class="mb-0">Sarah Lim</h5>
+                                    <p class="text-muted mb-0">Project Manager, JPS Muar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card testimonial-card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star-half-alt text-warning"></i>
+                            </div>
+                            <p class="mb-4">"The mobile data collection feature has been a game-changer for our field teams. We can now update drainage information in real-time, even in areas with limited connectivity."</p>
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <span class="fw-bold">MI</span>
+                                </div>
+                                <div class="ms-3">
+                                    <h5 class="mb-0">Muhamad Ibrahim</h5>
+                                    <p class="text-muted mb-0">Field Supervisor, PAKAR Muar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News & Updates -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Latest Updates</h2>
+                <p class="text-muted">Stay informed about drainage projects and system improvements in Muar District</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="/api/placeholder/400/250" class="card-img-top" alt="News Image">
+                        <div class="card-body">
+                            <p class="text-muted mb-2">May 2, 2025</p>
+                            <h4>New Drainage Data for Bakri Area Now Available</h4>
+                            <p>Complete drainage inventory data for Bakri area has been added to the system, including detailed information for 250+ drainage points.</p>
+                            <a href="#" class="btn btn-sm btn-outline-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="/api/placeholder/400/250" class="card-img-top" alt="News Image">
+                        <div class="card-body">
+                            <p class="text-muted mb-2">April 25, 2025</p>
+                            <h4>System Update: Enhanced Flood Risk Analysis</h4>
+                            <p>Our latest update includes improved flood risk modeling with integration of rainfall data and advanced watershed analysis tools.</p>
+                            <a href="#" class="btn btn-sm btn-outline-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="/api/placeholder/400/250" class="card-img-top" alt="News Image">
+                        <div class="card-body">
+                            <p class="text-muted mb-2">April 15, 2025</p>
+                            <h4>Muar River Basin Drainage Management Plan Released</h4>
+                            <p>The comprehensive drainage management plan for the Muar River Basin is now available, outlining strategies for the next 5 years.</p>
+                            <a href="#" class="btn btn-sm btn-outline-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <a href="#" class="btn btn-primary">View All Updates</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h2 class="fw-bold mb-4">Contact Us</h2>
+                    <p class="mb-4">Have questions about drainage data or need assistance with the system? Our team is here to help.</p>
+                    
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="subject" class="form-label">Subject</label>
+                                <input type="text" class="form-control" id="subject">
+                            </div>
+                            <div class="col-12">
+                                <label for="message" class="form-label">Message</label>
+                                <textarea class="form-control" id="message" rows="5" required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Send Message</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-6">
+                    <div class="bg-white p-4 h-100 rounded shadow-sm">
+                        <h4 class="fw-bold mb-4">Contact Information</h4>
+                        <div class="d-flex mb-4">
+                            <div class="flex-shrink-0">                                <i class="fas fa-map-marker-alt text-primary me-3 mt-1"></i>
+                            </div>
+                            <div>
+                                <h5>Office Location</h5>
+                                <p class="text-muted mb-0">Jalan Petri, 84000 Muar, Johor, Malaysia</p>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex mb-4">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-phone-alt text-primary me-3 mt-1"></i>
+                            </div>
+                            <div>
+                                <h5>Phone</h5>
+                                <p class="text-muted mb-0">+60 6-952 1000</p>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex mb-4">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-envelope text-primary me-3 mt-1"></i>
+                            </div>
+                            <div>
+                                <h5>Email</h5>
+                                <p class="text-muted mb-0">draintrack@muar.gov.my</p>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-clock text-primary me-3 mt-1"></i>
+                            </div>
+                            <div>
+                                <h5>Operating Hours</h5>
+                                <p class="text-muted mb-0">Monday - Friday: 8:00 AM - 5:00 PM</p>
+                                <p class="text-muted mb-0">Saturday: 8:00 AM - 1:00 PM</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h5>Follow Us</h5>
+                            <div class="d-flex">
+                                <a href="#" class="btn btn-outline-primary btn-sm me-2"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="btn btn-outline-primary btn-sm me-2"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="btn btn-outline-primary btn-sm me-2"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="#" class="btn btn-outline-primary btn-sm"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h4 class="mb-4"><i class="fas fa-water me-2"></i> DrainTrack Muar</h4>
+                    <p>Comprehensive geospatial platform for accessing, analyzing, and managing drainage infrastructure across Muar District.</p>
+                    <div class="mt-4">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <h5 class="mb-4">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Home</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Maps</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Data</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Services</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">About</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <h5 class="mb-4">Resources</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Documentation</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">API Access</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Training</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">FAQ</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4">
+                    <h5 class="mb-4">Newsletter</h5>
+                    <p>Subscribe to our newsletter for updates on drainage projects and system improvements.</p>
+                    <form class="mt-3">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Your email" aria-label="Your email">
+                            <button class="btn btn-primary" type="button">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <hr class="my-4 bg-secondary">
+            
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0">&copy; 2025 DrainTrack Muar. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item"><a href="#" class="text-white text-decoration-none">Privacy Policy</a></li>
+                        <li class="list-inline-item mx-2">•</li>
+                        <li class="list-inline-item"><a href="#" class="text-white text-decoration-none">Terms of Service</a></li>
+                        <li class="list-inline-item mx-2">•</li>
+                        <li class="list-inline-item"><a href="#" class="text-white text-decoration-none">Sitemap</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="js/home.js"></script>
+</body>
+</html>
