@@ -9559,3 +9559,478 @@ GET error: Unknown column 'ins.status' in 'field list'
 2025-06-07 22:38:25 - GET request
 Database connection successful
 GET error: Unknown column 'ins.status' in 'field list'
+2025-06-07 23:38:34 - GET request
+Database connection successful
+GET error: Unknown column 'ins.status' in 'field list'
+2025-06-07 23:38:45 - GET request
+Database connection successful
+GET error: Unknown column 'ins.status' in 'field list'
+2025-06-07 23:43:38 - GET request
+Database connection successful
+2025-06-07 23:43:38 - GET request
+GET error: Unknown column 'ins.status' in 'field list'
+Database connection successful
+GET error: Unknown column 'ins.status' in 'field list'
+2025-06-07 23:44:25 - GET request
+Database connection successful
+2025-06-07 23:44:25 - GET request
+GET error: Unknown column 'ins.status' in 'field list'
+Database connection successful
+GET error: Unknown column 'ins.status' in 'field list'
+2025-06-07 23:45:27 - GET request
+2025-06-07 23:45:27 - GET request
+Database connection successful
+GET error: Unknown column 'ins.status' in 'field list'
+GET error: Unknown column 'ins.status' in 'field list'
+2025-06-07 23:48:57 - GET request
+2025-06-07 23:48:57 - GET request
+Database connection successful
+Database connection successful
+Successfully fetched 1 inspection schedules
+Successfully fetched 1 inspection schedules
+2025-06-07 23:50:18 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","inspection_type":"Routine Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"One-time","inspector_id":"8","description":"","inspection_checklist":["Structural integrity assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+            drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+            operator_id, frequency, next_inspection_date, status, priority,
+            description, inspection_checklist, findings, recommendations, created_by
+        ) VALUES (
+            'BB7', 'Routine Inspection', '2025-06-14', '09:00',
+            8, 'One-time', NULL, 'Scheduled', 'Medium',
+            '', '[\"Structural integrity assessment\"]', '', '', 1
+        )
+POST error: Unknown column 'findings' in 'field list'
+2025-06-07 23:50:46 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","inspection_type":"Routine Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"One-time","inspector_id":"7","description":"","inspection_checklist":["Structural integrity assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+            drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+            operator_id, frequency, next_inspection_date, priority,
+            description, inspection_checklist, created_by
+        ) VALUES (
+            'BB7', 'Routine Inspection', '2025-06-14', '09:00',
+            4, 'One-time', NULL, 'Medium',
+            '', '[\"Structural integrity assessment\"]', 1
+        )
+Inspection schedule created successfully with ID: 8
+2025-06-07 23:51:14 - GET request
+2025-06-07 23:51:14 - GET request
+Database connection successful
+Database connection successful
+Successfully fetched 2 inspection schedules
+Successfully fetched 2 inspection schedules
+2025-06-07 23:56:37 - GET request
+Database connection successful
+Successfully fetched 2 inspection schedules
+2025-06-07 23:58:46 - GET request
+2025-06-07 23:58:46 - GET request
+Database connection successful
+Database connection successful
+Successfully fetched 2 inspection schedules
+Successfully fetched 2 inspection schedules
+2025-06-07 23:58:49 - GET request
+Database connection successful
+Successfully fetched 2 inspection schedules
+2025-06-07 23:59:20 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"PHL1","inspection_type":"Safety Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Low","frequency":"Weekly","inspector_id":"7","description":"","inspection_checklist":["Water flow assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+            drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+            operator_id, frequency, next_inspection_date, priority,
+            description, inspection_checklist, created_by
+        ) VALUES (
+            'PHL1', 'Safety Inspection', '2025-06-14', '09:00',
+            4, 'Weekly', '2025-06-21', 'Low',
+            '', '[\"Water flow assessment\"]', 1
+        )
+Inspection schedule created successfully with ID: 9
+2025-06-08 00:00:03 - GET request
+2025-06-08 00:00:03 - GET request
+Database connection successful
+Database connection successful
+Successfully fetched 3 inspection schedules
+Successfully fetched 3 inspection schedules
+2025-06-08 00:48:08 - GET request
+2025-06-08 00:48:08 - GET request
+Database connection successful
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 00:49:18 - GET request
+2025-06-08 00:49:18 - GET request
+Database connection successful
+Database connection successful
+Successfully fetched 3 inspection schedules
+Successfully fetched 3 inspection schedules
+2025-06-08 00:55:51 - GET request
+2025-06-08 00:55:51 - GET request
+Database connection successful
+Database connection successful
+Successfully fetched 3 inspection schedules
+Successfully fetched 3 inspection schedules
+2025-06-08 00:59:22 - GET request
+Database connection successful
+2025-06-08 00:59:22 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+Successfully fetched 3 inspection schedules
+2025-06-08 01:00:00 - GET request
+Database connection successful
+2025-06-08 01:00:00 - GET request
+Successfully fetched 3 inspection schedules
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:00:03 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:01:51 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:03:40 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:04:14 - PUT request
+Database connection successful
+PUT error: Unknown column 'findings' in 'field list'
+2025-06-08 01:07:12 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:07:18 - PUT request
+Database connection successful
+2025-06-08 01:07:18 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:07:22 - PUT request
+Database connection successful
+2025-06-08 01:07:22 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:07:32 - PUT request
+Database connection successful
+2025-06-08 01:07:32 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:09:33 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:09:42 - PUT request
+Database connection successful
+2025-06-08 01:09:43 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:12:37 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:12:50 - PUT request
+Database connection successful
+2025-06-08 01:12:50 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:12:55 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:13:06 - PUT request
+Database connection successful
+2025-06-08 01:13:06 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:13:10 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:13:42 - PUT request
+Database connection successful
+2025-06-08 01:13:42 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:13:45 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:16:35 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:16:45 - PUT request
+Database connection successful
+2025-06-08 01:16:45 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:16:50 - PUT request
+Database connection successful
+2025-06-08 01:16:50 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:16:57 - PUT request
+Database connection successful
+2025-06-08 01:16:57 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:18:48 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:18:55 - PUT request
+Database connection successful
+2025-06-08 01:18:55 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:19:01 - PUT request
+Database connection successful
+2025-06-08 01:19:01 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:19:31 - GET request
+Database connection successful
+Successfully fetched 3 inspection schedules
+2025-06-08 01:19:55 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"JS1","inspection_type":"Safety Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"Monthly","inspector_id":"7","description":"","inspection_checklist":["Water flow assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+            drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+            operator_id, frequency, next_inspection_date, priority,
+            description, inspection_checklist, created_by
+        ) VALUES (
+            'JS1', 'Safety Inspection', '2025-06-14', '09:00',
+            4, 'Monthly', '2025-07-14', 'Medium',
+            '', '[\"Water flow assessment\"]', 1
+        )
+Inspection schedule created successfully with ID: 10
+2025-06-08 01:19:59 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:25:00 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"JS1","inspection_type":"Safety Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"One-time","operator_id":"7","description":"","inspection_checklist":["Structural integrity assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+            drainage_point_id, inspection_type, scheduled_date, scheduled_time,
+            operator_id, frequency, next_inspection_date, priority,
+            description, inspection_checklist, created_by
+        ) VALUES (
+            'JS1', 'Safety Inspection', '2025-06-14', '09:00',
+            7, 'One-time', NULL, 'Medium',
+            '', '[\"Structural integrity assessment\"]', 1
+        )
+Inspection schedule created successfully with ID: 11
+2025-06-08 01:25:04 - GET request
+Database connection successful
+Successfully fetched 5 inspection schedules
+2025-06-08 01:25:14 - DELETE request
+Database connection successful
+2025-06-08 01:25:14 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:27:58 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:37:37 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:37:41 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:38:12 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:38:42 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:39:12 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:39:42 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:40:12 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:40:42 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:41:12 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:41:42 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:42:12 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:42:42 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:43:12 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:43:42 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:44:12 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:44:42 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:45:12 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:45:42 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:46:12 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:46:42 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:47:13 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:47:44 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:48:15 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:48:46 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:49:17 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:49:48 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:50:19 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:50:50 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:51:21 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:51:52 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:52:23 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:52:54 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:53:25 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:53:56 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:54:27 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:54:58 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:55:29 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:56:00 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:56:31 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:56:51 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:58:24 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:58:44 - GET request
+Database connection successful
+Successfully fetched 4 inspection schedules
+2025-06-08 01:59:11 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"JS3","inspection_type":"Structural Inspection","scheduled_date":"2025-06-14","scheduled_time":"09:00","priority":"Medium","frequency":"Monthly","operator_id":"8","description":"","inspection_checklist":["Structural integrity assessment"]}
+SQL Query: INSERT INTO inspection_schedules (
+    schedule_number, drainage_point_id, inspection_type, priority, 
+    status, scheduled_date, scheduled_time, frequency, 
+    operator_id, description, findings, recommendations
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+POST error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)' at line 5
+2025-06-08 02:01:20 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"JS2","inspection_type":"Post-Maintenance Inspection","scheduled_date":"2025-06-15","scheduled_time":"09:00","priority":"Medium","frequency":"One-time","operator_id":"7","description":"","inspection_checklist":["Structural integrity assessment"]}
+Inspection schedule created successfully with ID: 12
+SQL Query: INSERT INTO inspection_schedules (
+            schedule_number, drainage_point_id, inspection_type, priority, 
+            status, scheduled_date, scheduled_time, frequency, 
+            operator_id, description, findings, recommendations
+        ) VALUES (?, ?, ?, ?, 'Scheduled', ?, ?, ?, ?, ?, ?, ?)
+POST error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '?, ?, ?, ?, 'Scheduled', ?, ?, ?, ?, ?, ?, ?)' at line 5
+2025-06-08 02:02:59 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB5","inspection_type":"Safety Inspection","scheduled_date":"2025-06-15","scheduled_time":"09:00","priority":"Medium","frequency":"One-time","operator_id":"7","description":"","inspection_checklist":["Check for blockages or debris"]}
+Inspection schedule created successfully with ID: 13
+2025-06-08 02:03:03 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:04:12 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:08:46 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:09:40 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:16:34 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:16:44 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:22:55 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:23:26 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:23:56 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:24:26 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:24:56 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:25:17 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:28:25 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:29:08 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:31:09 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:32:48 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:33:15 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:37:48 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:38:11 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:38:45 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:40:08 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules
+2025-06-08 02:47:15 - GET request
+Database connection successful
+Successfully fetched 6 inspection schedules

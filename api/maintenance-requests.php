@@ -1,7 +1,8 @@
 <?php
 // Enable error reporting for debugging
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0); // Change from 1 to 0
+header('Content-Type: application/json');
 
 // Set headers
 header('Content-Type: application/json');
@@ -43,6 +44,30 @@ try {
     exit;
 }
 
+function generateRequestNumber() {
+    global $conn;
+    $prefix = 'MR';  // MR for Maintenance Request
+    $year = date('Y');
+    $month = date('m');
+    
+    // Get the latest number for this month
+    $sql = "SELECT request_number FROM maintenance_requests 
+            WHERE request_number LIKE '{$prefix}{$year}{$month}%' 
+            ORDER BY request_number DESC LIMIT 1";
+    
+    $result = $conn->query($sql);
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $lastNum = intval(substr($row['request_number'], -4));
+        $newNum = $lastNum + 1;
+    } else {
+        $newNum = 1;
+    }
+    
+    // Format: MR202506001
+    return sprintf("%s%s%s%04d", $prefix, $year, $month, $newNum);
+}
+
 // Handle GET request to fetch maintenance requests
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
@@ -76,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             while ($row = $result->fetch_assoc()) {
                 $requests[] = [
                     'id' => (int)$row['id'],
-                    'drainage_point_id' => (int)$row['drainage_point_id'],
+                    'drainage_point_id' => $row['drainage_point_id'],
                     'drainage_point_name' => $row['drainage_point_name'],
                     'drainage_point_coordinates' => [
                         'lat' => $row['latitude'] ? (float)$row['latitude'] : null,
@@ -137,32 +162,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         // Sanitize and prepare data
-        $drainage_point_id = (int)$data['drainage_point_id'];
+        $drainage_point_id = $data['drainage_point_id'];
         $request_type = $conn->real_escape_string($data['request_type']);
         $priority = $conn->real_escape_string($data['priority'] ?? 'Medium');
         $description = $conn->real_escape_string($data['description']);
-        $requested_by = isset($data['requested_by']) ? (int)$data['requested_by'] : 1; // Default to admin user
-        $assigned_to = isset($data['assigned_to']) ? (int)$data['assigned_to'] : null;
         $estimated_cost = isset($data['estimated_cost']) ? (float)$data['estimated_cost'] : null;
-        $status = $conn->real_escape_string($data['status'] ?? 'Pending');
         $scheduled_date = $data['scheduled_date'] ?? null;
         $notes = $conn->real_escape_string($data['notes'] ?? '');
-        $images = $conn->real_escape_string($data['images'] ?? '');
+        $requested_by = isset($data['requested_by']) ? (int)$data['requested_by'] : null;
+        $assigned_to = isset($data['assigned_to']) ? (int)$data['assigned_to'] : null;
+        
+        $request_number = generateRequestNumber();
         
         $sql = "INSERT INTO maintenance_requests (
-                    drainage_point_id, request_type, priority, description, 
-                    requested_by, assigned_to, estimated_cost, status, 
-                    scheduled_date, notes, images
-                ) VALUES (
-                    $drainage_point_id, '$request_type', '$priority', '$description',
-                    $requested_by, " . ($assigned_to ? $assigned_to : "NULL") . ", 
-                    " . ($estimated_cost ? $estimated_cost : "NULL") . ", '$status',
-                    " . ($scheduled_date ? "'$scheduled_date'" : "NULL") . ", '$notes', '$images'
-                )";
+            request_number, drainage_point_id, request_type, priority, description, 
+            requested_by, assigned_to, estimated_cost, status, scheduled_date, notes
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Pending', ?, ?)";
         
-        file_put_contents($logFile, "SQL Query: " . $sql . "\n", FILE_APPEND);
-        
-        if ($conn->query($sql)) {
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param(
+            'sssssiidss',
+            $request_number,
+            $drainage_point_id,
+            $request_type,
+            $priority,
+            $description,
+            $requested_by,
+            $assigned_to,
+            $estimated_cost,
+            $scheduled_date,
+            $notes
+        );
+
+        if ($stmt->execute()) {
             $requestId = $conn->insert_id;
             file_put_contents($logFile, "Maintenance request created successfully with ID: " . $requestId . "\n", FILE_APPEND);
             
@@ -172,13 +204,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'id' => $requestId
             ]);
         } else {
-            throw new Exception('Database error: ' . $conn->error);
+            throw new Exception('Database error: ' . $stmt->error);
         }
-        
+
     } catch (Exception $e) {
         file_put_contents($logFile, "POST error: " . $e->getMessage() . "\n", FILE_APPEND);
         http_response_code(500);
-        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        echo json_encode([
+            'success' => false,
+            'message' => $e->getMessage()
+        ]);
     }
     exit;
 }

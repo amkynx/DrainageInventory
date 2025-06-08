@@ -43,6 +43,31 @@ try {
     exit;
 }
 
+function generateScheduleNumber() {
+    global $conn;
+    $prefix = 'IS';  // IS for Inspection Schedule
+    $year = date('Y');
+    $month = date('m');
+    
+    // Get the latest number for this month
+    $sql = "SELECT schedule_number FROM inspection_schedules 
+            WHERE schedule_number LIKE '{$prefix}{$year}{$month}%' 
+            ORDER BY schedule_number DESC LIMIT 1";
+    
+    $result = $conn->query($sql);
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $lastNum = intval(substr($row['schedule_number'], -4));
+        $newNum = $lastNum + 1;
+    } else {
+        $newNum = 1;
+    }
+    
+    // Format: IS202506001
+    return sprintf("%s%s%s%04d", $prefix, $year, $month, $newNum);
+}
+
+
 // Handle GET request to fetch inspection schedules
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
@@ -51,11 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $id = (int)$_GET['id'];
             $sql = "SELECT ins.*, dp.name as drainage_point_name, dp.latitude, dp.longitude,
                            u1.first_name as operator_name, u1.last_name as operator_lastname,
-                           u2.first_name as created_by_name, u2.last_name as created_by_lastname
+                           CASE 
+                               WHEN ins.scheduled_date < CURDATE() AND ins.status != 'Completed' THEN 'Overdue'
+                               ELSE ins.status
+                           END as current_status
                     FROM inspection_schedules ins
                     LEFT JOIN drainage_points dp ON ins.drainage_point_id = dp.id
                     LEFT JOIN users u1 ON ins.operator_id = u1.id
-                    LEFT JOIN users u2 ON ins.created_by = u2.id
                     WHERE ins.id = $id";
         } else {
             // Get all inspection schedules with related data
@@ -70,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     LEFT JOIN drainage_points dp ON ins.drainage_point_id = dp.id
                     LEFT JOIN users u1 ON ins.operator_id = u1.id
                     LEFT JOIN users u2 ON ins.created_by = u2.id
-                    ORDER BY ins.scheduled_date ASC";
+                    ORDER BY ins.created_at DESC, ins.id DESC"; // This line changed to sort by newest first
         }
         
         $result = $conn->query($sql);
@@ -97,10 +124,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     'priority' => $row['priority'],
                     'description' => $row['description'],
                     'inspection_checklist' => $row['inspection_checklist'] ? json_decode($row['inspection_checklist'], true) : null,
-                    'findings' => $row['findings'],
-                    'recommendations' => $row['recommendations'],
-                    'images' => $row['images'],
-                    'completion_date' => $row['completion_date'],
+                    'findings' => $row['findings'] ?? null,
+'recommendations' => $row['recommendations'] ?? null,
+'images' => $row['images'] ?? null,
+'completion_date' => $row['completion_date'] ?? null,
                     'created_by' => $row['created_by'],
                     'created_by_name' => $row['created_by_name'] ? $row['created_by_name'] . ' ' . $row['created_by_lastname'] : null,
                     'created_at' => $row['created_at'],
@@ -145,42 +172,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         // Sanitize and prepare data
-        
-        $drainage_point_id = $conn->real_escape_string($data['drainage_point_id']);        $inspection_type = $conn->real_escape_string($data['inspection_type']);
-        $scheduled_date = $conn->real_escape_string($data['scheduled_date']);
-        $scheduled_time = isset($data['scheduled_time']) ? "'" . $conn->real_escape_string($data['scheduled_time']) . "'" : 'NULL';
-        $operator_id = isset($data['operator_id']) ? (int)$data['operator_id'] : 4; // Default to operator user
-        $frequency = $conn->real_escape_string($data['frequency'] ?? 'One-time');
+        $drainage_point_id = $conn->real_escape_string($data['drainage_point_id']);
+        $inspection_type = $conn->real_escape_string($data['inspection_type']);
         $priority = $conn->real_escape_string($data['priority'] ?? 'Medium');
+        $frequency = $conn->real_escape_string($data['frequency'] ?? 'One-time');
+        $operator_id = isset($data['operator_id']) ? (int)$data['operator_id'] : null;
         $description = $conn->real_escape_string($data['description'] ?? '');
-        $created_by = isset($data['created_by']) ? (int)$data['created_by'] : 1; // Default to admin user
+        $scheduled_date = $conn->real_escape_string($data['scheduled_date']);
+        $scheduled_time = isset($data['scheduled_time']) ? $conn->real_escape_string($data['scheduled_time']) : null;
         
-        // Calculate next inspection date if recurring
-        $next_inspection_date = 'NULL';
-        if ($frequency !== 'One-time') {
-            $next_date = calculateNextInspectionDate($scheduled_date, $frequency);
-            $next_inspection_date = $next_date ? "'$next_date'" : 'NULL';
-        }
+        $schedule_number = generateScheduleNumber();
         
-        // Prepare inspection checklist if provided
-        $inspection_checklist = 'NULL';
-        if (isset($data['inspection_checklist']) && is_array($data['inspection_checklist'])) {
-            $inspection_checklist = "'" . $conn->real_escape_string(json_encode($data['inspection_checklist'])) . "'";
-        }
-        
+        // Prepare and execute the insert query
         $sql = "INSERT INTO inspection_schedules (
-            drainage_point_id, inspection_type, scheduled_date, scheduled_time,
-            operator_id, frequency, next_inspection_date, priority,
-            description, inspection_checklist, created_by
-        ) VALUES (
-            '$drainage_point_id', '$inspection_type', '$scheduled_date', $scheduled_time,
-            $operator_id, '$frequency', $next_inspection_date, '$priority',
-            '$description', $inspection_checklist, $created_by
-        )";
+            schedule_number, drainage_point_id, inspection_type, priority,
+            status, scheduled_date, scheduled_time, frequency,
+            operator_id, description
+        ) VALUES (?, ?, ?, ?, 'Scheduled', ?, ?, ?, ?, ?)";
         
-        file_put_contents($logFile, "SQL Query: " . $sql . "\n", FILE_APPEND);
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param(
+            'ssssssssi',
+            $schedule_number,
+            $drainage_point_id,
+            $inspection_type,
+            $priority,
+            $scheduled_date,
+            $scheduled_time,
+            $frequency,
+            $description,
+            $operator_id
+        );
         
-        if ($conn->query($sql)) {
+        if ($stmt->execute()) {
             $scheduleId = $conn->insert_id;
             file_put_contents($logFile, "Inspection schedule created successfully with ID: " . $scheduleId . "\n", FILE_APPEND);
             
@@ -190,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'id' => $scheduleId
             ]);
         } else {
-            throw new Exception('Database error: ' . $conn->error);
+            throw new Exception('Database error: ' . $stmt->error);
         }
         
     } catch (Exception $e) {

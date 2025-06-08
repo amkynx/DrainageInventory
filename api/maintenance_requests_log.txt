@@ -218,3 +218,317 @@ Successfully fetched 0 maintenance requests
 2025-06-07 22:38:25 - GET request
 Database connection successful
 Successfully fetched 0 maintenance requests
+2025-06-07 23:38:45 - GET request
+Database connection successful
+Successfully fetched 0 maintenance requests
+2025-06-08 00:13:44 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","request_type":"Cleaning","priority":"High","description":"Parit kotoq yop","estimated_cost":"4500","scheduled_date":"2025-06-08","assigned_to":"8","notes":"maceh yeop"}
+SQL Query: INSERT INTO maintenance_requests (
+                    drainage_point_id, request_type, priority, description, 
+                    requested_by, assigned_to, estimated_cost, status, 
+                    scheduled_date, notes, images
+                ) VALUES (
+                    0, 'Cleaning', 'High', 'Parit kotoq yop',
+                    1, 8, 
+                    4500, 'Pending',
+                    '2025-06-08', 'maceh yeop', ''
+                )
+POST error: Cannot add or update a child row: a foreign key constraint fails (`drainageinventory`.`maintenance_requests`, CONSTRAINT `fk_maintenance_drainage_point` FOREIGN KEY (`drainage_point_id`) REFERENCES `drainage_points_backup` (`id`) ON DELETE CASCADE)
+2025-06-08 00:20:48 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","request_type":"Cleaning","priority":"High","description":"Parit kotoq yop","estimated_cost":"4500","scheduled_date":"2025-06-08","assigned_to":"8","notes":"maceh yeop"}
+SQL Query: INSERT INTO maintenance_requests (
+                    drainage_point_id, request_type, priority, description, 
+                    requested_by, assigned_to, estimated_cost, status, 
+                    scheduled_date, notes, images
+                ) VALUES (
+                    0, 'Cleaning', 'High', 'Parit kotoq yop',
+                    1, 8, 
+                    4500, 'Pending',
+                    '2025-06-08', 'maceh yeop', ''
+                )
+POST error: Cannot add or update a child row: a foreign key constraint fails (`drainageinventory`.`maintenance_requests`, CONSTRAINT `fk_maintenance_drainage_point` FOREIGN KEY (`drainage_point_id`) REFERENCES `drainage_points` (`id`) ON DELETE CASCADE)
+2025-06-08 00:21:06 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","request_type":"Cleaning","priority":"Medium","description":"q","estimated_cost":"0.07","scheduled_date":"2025-06-08","assigned_to":"8","notes":""}
+SQL Query: INSERT INTO maintenance_requests (
+                    drainage_point_id, request_type, priority, description, 
+                    requested_by, assigned_to, estimated_cost, status, 
+                    scheduled_date, notes, images
+                ) VALUES (
+                    0, 'Cleaning', 'Medium', 'q',
+                    1, 8, 
+                    0.07, 'Pending',
+                    '2025-06-08', '', ''
+                )
+POST error: Cannot add or update a child row: a foreign key constraint fails (`drainageinventory`.`maintenance_requests`, CONSTRAINT `fk_maintenance_drainage_point` FOREIGN KEY (`drainage_point_id`) REFERENCES `drainage_points` (`id`) ON DELETE CASCADE)
+2025-06-08 00:28:33 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","request_type":"Cleaning","priority":"Medium","description":"1","estimated_cost":"2","scheduled_date":"2025-06-08","assigned_to":"8","notes":""}
+SQL Query: INSERT INTO maintenance_requests (
+                    drainage_point_id, request_type, priority, description, 
+                    requested_by, assigned_to, estimated_cost, status, 
+                    scheduled_date, notes, images
+                ) VALUES (
+                    0, 'Cleaning', 'Medium', '1',
+                    1, 8, 
+                    2, 'Pending',
+                    '2025-06-08', '', ''
+                )
+POST error: Cannot add or update a child row: a foreign key constraint fails (`drainageinventory`.`maintenance_requests`, CONSTRAINT `fk_maintenance_drainage_point` FOREIGN KEY (`drainage_point_id`) REFERENCES `drainage_points` (`id`) ON DELETE CASCADE)
+2025-06-08 00:32:02 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","request_type":"Cleaning","priority":"Medium","description":"1","estimated_cost":"1","scheduled_date":"2025-06-08","assigned_to":"8","notes":""}
+SQL Query: INSERT INTO maintenance_requests (
+            drainage_point_id, request_type, priority, description, 
+            requested_by, assigned_to, estimated_cost, status, 
+            scheduled_date, notes, images
+        ) VALUES (
+            'BB7', 'Cleaning', 'Medium', '1',
+            1, 8, 
+            1, 'Pending',
+            '2025-06-08', '', ''
+        )
+POST error: Cannot add or update a child row: a foreign key constraint fails (`drainageinventory`.`maintenance_requests`, CONSTRAINT `fk_maintenance_requested_by` FOREIGN KEY (`requested_by`) REFERENCES `users` (`id`) ON DELETE SET NULL)
+2025-06-08 00:34:05 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","request_type":"Repair","priority":"Medium","description":"1","estimated_cost":"1","scheduled_date":"2025-06-08","assigned_to":"8","notes":""}
+SQL Query: INSERT INTO maintenance_requests (
+            drainage_point_id, request_type, priority, description, 
+            requested_by, assigned_to, estimated_cost, status, 
+            scheduled_date, notes, images
+        ) VALUES (
+            'BB7', 'Repair', 'Medium', '1',
+            1, 8, 
+            1, 'Pending',
+            '2025-06-08', '', ''
+        )
+POST error: Cannot add or update a child row: a foreign key constraint fails (`drainageinventory`.`maintenance_requests`, CONSTRAINT `fk_maintenance_requested_by` FOREIGN KEY (`requested_by`) REFERENCES `users` (`id`) ON DELETE SET NULL)
+2025-06-08 00:36:13 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","request_type":"Repair","priority":"Medium","description":"1","estimated_cost":"1","scheduled_date":"2025-06-08","assigned_to":"8","notes":""}
+SQL Query: INSERT INTO maintenance_requests (
+            drainage_point_id, request_type, priority, description, 
+            requested_by, assigned_to, estimated_cost, status, 
+            scheduled_date, notes, images
+        ) VALUES (
+            'BB7', 'Repair', 'Medium', '1',
+            1, 8, 
+            1, 'Pending',
+            '2025-06-08', '', ''
+        )
+POST error: Cannot add or update a child row: a foreign key constraint fails (`drainageinventory`.`maintenance_requests`, CONSTRAINT `fk_maintenance_requested_by` FOREIGN KEY (`requested_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)
+2025-06-08 00:38:44 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","request_type":"Repair","priority":"Medium","description":"1","estimated_cost":"1","scheduled_date":"2025-06-08","assigned_to":"8","notes":""}
+SQL Query: INSERT INTO maintenance_requests (
+            drainage_point_id, request_type, priority, description, 
+            requested_by, assigned_to, estimated_cost, status, 
+            scheduled_date, notes, images
+        ) VALUES (
+            'BB7', 'Repair', 'Medium', '1',
+            , NULL, 
+            1, 'Pending',
+            '2025-06-08', '', ''
+        )
+POST error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' NULL, 
+            1, 'Pending',
+            '2025-06-08', '', ''
+        )' at line 7
+2025-06-08 00:45:19 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","request_type":"Replacement","priority":"Critical","description":"1","estimated_cost":"1","scheduled_date":"2025-06-08","assigned_to":"8","notes":""}
+SQL Query: INSERT INTO maintenance_requests (
+            drainage_point_id, request_type, priority, description, 
+            requested_by, assigned_to, estimated_cost, status, 
+            scheduled_date, notes, images
+        ) VALUES (
+            'BB7', 'Replacement', 'Critical', '1',
+            , NULL, 
+            1, 'Pending',
+            '2025-06-08', '', ''
+        )
+POST error: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' NULL, 
+            1, 'Pending',
+            '2025-06-08', '', ''
+        )' at line 7
+2025-06-08 00:48:02 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","request_type":"Repair","priority":"Medium","description":"1","estimated_cost":"1","scheduled_date":"2025-06-08","assigned_to":"8","notes":""}
+2025-06-08 00:48:32 - DELETE request
+Database connection successful
+2025-06-08 00:49:14 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"PHL1","request_type":"Repair","priority":"Medium","description":"1","estimated_cost":"12","scheduled_date":"2025-06-08","assigned_to":"7","notes":""}
+2025-06-08 00:55:46 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"PH4","request_type":"Cleaning","priority":"Critical","description":"1","estimated_cost":"1","scheduled_date":"2025-06-26","assigned_to":"8","notes":""}
+2025-06-08 00:59:42 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB6","request_type":"Repair","priority":"Medium","description":"1","estimated_cost":"1","scheduled_date":"2025-06-08","assigned_to":"7","notes":""}
+Maintenance request created successfully with ID: 14
+2025-06-08 01:01:51 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 01:02:01 - DELETE request
+Database connection successful
+2025-06-08 01:02:01 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 01:02:22 - PUT request
+Database connection successful
+2025-06-08 01:02:28 - PUT request
+Database connection successful
+2025-06-08 01:03:40 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 01:03:46 - PUT request
+Database connection successful
+2025-06-08 01:03:46 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 01:04:03 - PUT request
+Database connection successful
+2025-06-08 01:04:03 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 01:07:12 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 01:09:33 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 01:12:37 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 01:12:55 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 01:13:10 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 01:13:45 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 01:16:35 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 01:18:48 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 01:19:27 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"HP1","request_type":"Replacement","priority":"Low","description":"1","estimated_cost":"1","scheduled_date":"2025-06-08","assigned_to":"7","notes":""}
+Maintenance request created successfully with ID: 15
+2025-06-08 01:19:31 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 01:19:59 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 01:25:04 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 01:27:58 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 01:37:37 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 01:58:24 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 02:03:03 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 02:04:07 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB5","request_type":"Cleaning","priority":"Medium","description":"1","estimated_cost":"1","scheduled_date":"2025-06-09","assigned_to":"7","notes":""}
+Maintenance request created successfully with ID: 16
+2025-06-08 02:04:12 - GET request
+Database connection successful
+Successfully fetched 5 maintenance requests
+2025-06-08 02:08:46 - GET request
+Database connection successful
+Successfully fetched 5 maintenance requests
+2025-06-08 02:09:13 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB5","request_type":"Inspection","priority":"Medium","description":"1","estimated_cost":"0.01","scheduled_date":"2025-06-09","assigned_to":"7","requested_by":1,"notes":""}
+2025-06-08 02:09:40 - GET request
+Database connection successful
+Successfully fetched 5 maintenance requests
+2025-06-08 02:09:46 - DELETE request
+Database connection successful
+2025-06-08 02:09:46 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 02:09:48 - DELETE request
+Database connection successful
+2025-06-08 02:09:48 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 02:09:50 - DELETE request
+Database connection successful
+2025-06-08 02:09:50 - GET request
+Database connection successful
+Successfully fetched 2 maintenance requests
+2025-06-08 02:09:52 - DELETE request
+Database connection successful
+2025-06-08 02:09:52 - GET request
+Database connection successful
+Successfully fetched 1 maintenance requests
+2025-06-08 02:09:54 - DELETE request
+Database connection successful
+2025-06-08 02:09:54 - GET request
+Database connection successful
+Successfully fetched 0 maintenance requests
+2025-06-08 02:10:58 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"PHBK2","request_type":"Emergency Repair","priority":"Medium","description":"q","estimated_cost":"12","scheduled_date":"2025-06-09","assigned_to":"7","requested_by":1,"notes":""}
+POST error: Cannot add or update a child row: a foreign key constraint fails (`drainageinventory`.`maintenance_requests`, CONSTRAINT `fk_maintenance_requested_by` FOREIGN KEY (`requested_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)
+2025-06-08 02:25:11 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB6","request_type":"Replacement","priority":"Medium","description":"q","estimated_cost":"0.01","scheduled_date":"2025-06-09","assigned_to":"8","requested_by":2,"notes":""}
+Maintenance request created successfully with ID: 18
+2025-06-08 02:25:17 - GET request
+Database connection successful
+Successfully fetched 1 maintenance requests
+2025-06-08 02:28:25 - GET request
+Database connection successful
+Successfully fetched 1 maintenance requests
+2025-06-08 02:29:08 - GET request
+Database connection successful
+Successfully fetched 1 maintenance requests
+2025-06-08 02:31:09 - GET request
+Database connection successful
+Successfully fetched 1 maintenance requests
+2025-06-08 02:32:48 - GET request
+Database connection successful
+Successfully fetched 1 maintenance requests
+2025-06-08 02:33:15 - GET request
+Database connection successful
+Successfully fetched 1 maintenance requests
+2025-06-08 02:37:48 - GET request
+Database connection successful
+Successfully fetched 1 maintenance requests
+2025-06-08 02:38:07 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB7","request_type":"Repair","priority":"Medium","description":"1","estimated_cost":"0.01","scheduled_date":"2025-06-09","assigned_to":"8","requested_by":2,"notes":""}
+Maintenance request created successfully with ID: 19
+2025-06-08 02:38:11 - GET request
+Database connection successful
+Successfully fetched 2 maintenance requests
+2025-06-08 02:38:42 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"JS2","request_type":"Upgrade","priority":"Medium","description":"dadsada","estimated_cost":"23","scheduled_date":"2025-06-09","assigned_to":"7","requested_by":2,"notes":""}
+Maintenance request created successfully with ID: 20
+2025-06-08 02:38:45 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 02:40:08 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 02:47:15 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests

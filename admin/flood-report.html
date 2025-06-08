@@ -91,10 +91,7 @@
       transition: all 0.3s ease;
     }
 
-    .report-row:hover {
-      background-color: #f8f9fa;
-      transform: scale(1.01);
-    }
+    
 
     .mini-map {
       width: 80px;
@@ -107,6 +104,24 @@
       margin-right: 0.25rem;
       margin-bottom: 0.25rem;
     }
+
+    .action-buttons .btn-group {
+  position: static;
+}
+
+.action-buttons .dropdown-menu {
+  position: absolute;
+  z-index: 1000;
+  min-width: 200px;
+}
+
+.dropdown-item.text-danger:hover {
+  background-color: #fee2e2;
+}
+
+.action-buttons {
+  position: relative;
+}
 
     .urgency-indicator {
       width: 4px;

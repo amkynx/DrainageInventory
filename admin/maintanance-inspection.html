@@ -880,50 +880,84 @@
 
     // Load maintenance requests
     async function loadMaintenanceRequests() {
-      try {
-        const response = await fetch('/DrainageInventory/api/maintenance-requests.php');
-        if (response.ok) {
-          maintenanceRequests = await response.json();
-        } else {
-          maintenanceRequests = getSampleMaintenanceData();
-        }
-        filteredMaintenanceRequests = [...maintenanceRequests];
-        updateMaintenanceStatistics();
-        renderMaintenanceTable();
-      } catch (error) {
-        console.error('Error loading maintenance requests:', error);
-        maintenanceRequests = getSampleMaintenanceData();
-        filteredMaintenanceRequests = [...maintenanceRequests];
-        updateMaintenanceStatistics();
-        renderMaintenanceTable();
-      }
+  try {
+    const response = await fetch('/drainageInventory/api/maintenance-requests.php');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    const data = await response.json();
+    maintenanceRequests = Array.isArray(data) ? data : [];
+    filteredMaintenanceRequests = [...maintenanceRequests];
+    updateMaintenanceStatistics();
+    renderMaintenanceTable();
+    console.log('Maintenance requests loaded:', maintenanceRequests.length);
+  } catch (error) {
+    console.error('Error loading maintenance requests:', error);
+    showNotification('Error loading maintenance requests: ' + error.message, 'danger');
+    maintenanceRequests = getSampleMaintenanceData();
+    filteredMaintenanceRequests = [...maintenanceRequests];
+    updateMaintenanceStatistics();
+    renderMaintenanceTable();
+  }
+}
 
     // Load inspection schedules
     async function loadInspectionSchedules() {
-      try {
-        const response = await fetch('/DrainageInventory/api/inspection-schedules.php');
-        if (response.ok) {
-          inspectionSchedules = await response.json();
-        } else {
-          inspectionSchedules = getSampleInspectionData();
-        }
-        filteredInspectionSchedules = [...inspectionSchedules];
-        updateInspectionStatistics();
-        renderInspectionTable();
-      } catch (error) {
-        console.error('Error loading inspection schedules:', error);
-        inspectionSchedules = getSampleInspectionData();
-        filteredInspectionSchedules = [...inspectionSchedules];
-        updateInspectionStatistics();
-        renderInspectionTable();
-      }
+  try {
+    const response = await fetch('/drainageInventory/api/inspection-schedules.php');
+    if (response.ok) {
+      inspectionSchedules = await response.json();
+      // Sort by created_at date in descending order (newest first)
+      inspectionSchedules.sort((a, b) => {
+        return new Date(b.created_at) - new Date(a.created_at);
+      });
+    } else {
+      inspectionSchedules = getSampleInspectionData();
     }
+    filteredInspectionSchedules = [...inspectionSchedules];
+    updateInspectionStatistics();
+    renderInspectionTable();
+  } catch (error) {
+    console.error('Error loading inspection schedules:', error);
+    inspectionSchedules = getSampleInspectionData();
+    filteredInspectionSchedules = [...inspectionSchedules];
+    updateInspectionStatistics();
+    renderInspectionTable();
+  }
+}
+
+// When applying filters, maintain the sort order
+function applyInspectionFilters() {
+  const search = document.getElementById('inspection-search').value.toLowerCase();
+  const status = document.getElementById('inspection-status-filter').value;
+  const priority = document.getElementById('inspection-priority-filter').value;
+  const frequency = document.getElementById('inspection-frequency-filter').value;
+
+  filteredInspectionSchedules = inspectionSchedules.filter(schedule => {
+    const matchesSearch = !search || 
+      schedule.drainage_point_name?.toLowerCase().includes(search) ||
+      schedule.description?.toLowerCase().includes(search) ||
+      schedule.inspection_type?.toLowerCase().includes(search);
+    
+    const matchesStatus = !status || schedule.status === status;
+    const matchesPriority = !priority || schedule.priority === priority;
+    const matchesFrequency = !frequency || schedule.frequency === frequency;
+
+    return matchesSearch && matchesStatus && matchesPriority && matchesFrequency;
+  });
+
+  // Maintain sort order after filtering
+  filteredInspectionSchedules.sort((a, b) => {
+    return new Date(b.created_at) - new Date(a.created_at);
+  });
+
+  renderInspectionTable();
+}
 
     // Load drainage points
     async function loadDrainagePoints() {
       try {
-        const response = await fetch('/DrainageInventory/api/drainage-points.php');
+        const response = await fetch('/drainageInventory/api/drainage-points.php');
         if (response.ok) {
           drainagePoints = await response.json();
         } else {
@@ -938,7 +972,7 @@
     // Load users
     async function loadUsers() {
       try {
-        const response = await fetch('/DrainageInventory/api/users.php');
+        const response = await fetch('/drainageInventory/api/users.php');
         if (response.ok) {
           users = await response.json();
         } else {
@@ -1116,76 +1150,87 @@
 
     // Render tables
     function renderMaintenanceTable() {
-      const tbody = document.getElementById('maintenance-table-body');
-      tbody.innerHTML = '';
+  const tbody = document.getElementById('maintenance-table-body');
+  tbody.innerHTML = '';
 
-      filteredMaintenanceRequests.forEach(request => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${request.id}</td>
-          <td>${request.drainage_point_name || 'N/A'}</td>
-          <td>${request.request_type}</td>
-          <td><span class="badge priority-${request.priority.toLowerCase()}">${request.priority}</span></td>
-          <td><span class="badge status-${request.status.toLowerCase().replace(' ', '-')}">${request.status}</span></td>
-          <td>${request.assigned_to_name || 'Unassigned'}</td>
-          <td>${request.scheduled_date || 'Not scheduled'}</td>
-          <td>${request.estimated_cost ? 'RM ' + parseFloat(request.estimated_cost).toFixed(2) : 'N/A'}</td>
-          <td>${formatDate(request.created_at)}</td>
-          <td>
-            <div class="action-buttons">
-              <button class="btn btn-sm btn-primary" onclick="editMaintenanceRequest(${request.id})" title="Edit">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="btn btn-sm btn-info" onclick="viewMaintenanceRequest(${request.id})" title="View">
-                <i class="fas fa-eye"></i>
-              </button>
-              <button class="btn btn-sm btn-danger" onclick="deleteMaintenanceRequest(${request.id})" title="Delete">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
+  filteredMaintenanceRequests.forEach(request => {
+    // Format the values
+    const requestId = request.request_number || request.id; // Use this line instead
+    const point = request.drainage_point_name || 'N/A';
+    const type = request.request_type;
+    const priority = `<span class="badge priority-${request.priority.toLowerCase()}">${request.priority}</span>`;
+    const status = `<span class="badge status-${request.status.toLowerCase().replace(' ', '-')}">${request.status}</span>`;
+    const assignedTo = request.assigned_to_name || 'Unassigned';
+    const scheduledDate = request.scheduled_date || 'Not scheduled';
+    const cost = request.estimated_cost ? `RM ${parseFloat(request.estimated_cost).toFixed(2)}` : 'N/A';
+    const created = formatDate(request.created_at);
 
-      document.getElementById('maintenance-count').textContent = filteredMaintenanceRequests.length;
-    }
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${requestId}</td>  
+      <td>${point}</td>
+      <td>${type}</td>
+      <td>${priority}</td>
+      <td>${status}</td>
+      <td>${assignedTo}</td>
+      <td>${scheduledDate}</td>
+      <td>${cost}</td>
+      <td>${created}</td>
+      <td>
+        <div class="action-buttons">
+          <button class="btn btn-sm btn-primary" onclick="editMaintenanceRequest(${request.id})" title="Edit">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn btn-sm btn-info" onclick="viewMaintenanceRequest(${request.id})" title="View">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" onclick="deleteMaintenanceRequest(${request.id})" title="Delete">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
 
-    function renderInspectionTable() {
-      const tbody = document.getElementById('inspection-table-body');
-      tbody.innerHTML = '';
+  document.getElementById('maintenance-count').textContent = filteredMaintenanceRequests.length;
+}
 
-      filteredInspectionSchedules.forEach(schedule => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${schedule.id}</td>
-          <td>${schedule.drainage_point_name || 'N/A'}</td>
-          <td>${schedule.inspection_type}</td>
-          <td><span class="badge priority-${schedule.priority.toLowerCase()}">${schedule.priority}</span></td>
-          <td><span class="badge status-${schedule.status.toLowerCase().replace(' ', '-')}">${schedule.status}</span></td>
-          <td>${schedule.inspector_name || 'Unassigned'}</td>
-          <td>${schedule.scheduled_date}${schedule.scheduled_time ? ' ' + schedule.scheduled_time : ''}</td>
-          <td>${schedule.frequency}</td>
-          <td>${formatDate(schedule.created_at)}</td>
-          <td>
-            <div class="action-buttons">
-              <button class="btn btn-sm btn-primary" onclick="editInspectionSchedule(${schedule.id})" title="Edit">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button class="btn btn-sm btn-info" onclick="viewInspectionSchedule(${schedule.id})" title="View">
-                <i class="fas fa-eye"></i>
-              </button>
-              <button class="btn btn-sm btn-danger" onclick="deleteInspectionSchedule(${schedule.id})" title="Delete">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
+function renderInspectionTable() {
+  const tbody = document.getElementById('inspection-table-body');
+  tbody.innerHTML = '';
 
-      document.getElementById('inspection-count').textContent = filteredInspectionSchedules.length;
-    }
+  filteredInspectionSchedules.forEach(schedule => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${schedule.schedule_number || schedule.id}</td> 
+      <td>${schedule.drainage_point_name || 'N/A'}</td>
+      <td>${schedule.inspection_type}</td>
+      <td><span class="badge priority-${schedule.priority.toLowerCase()}">${schedule.priority}</span></td>
+      <td><span class="badge status-${schedule.status.toLowerCase().replace(' ', '-')}">${schedule.status}</span></td>
+      <td>${schedule.operator_name || 'Unassigned'}</td>
+      <td>${schedule.scheduled_date}${schedule.scheduled_time ? ' ' + schedule.scheduled_time : ''}</td>
+      <td>${schedule.frequency}</td>
+      <td>${formatDate(schedule.created_at)}</td>
+      <td>
+        <div class="action-buttons">
+          <button class="btn btn-sm btn-primary" onclick="editInspectionSchedule(${schedule.id})" title="Edit">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn btn-sm btn-info" onclick="viewInspectionSchedule(${schedule.id})" title="View">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" onclick="deleteInspectionSchedule(${schedule.id})" title="Delete">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  document.getElementById('inspection-count').textContent = filteredInspectionSchedules.length;
+}
 
     // Filter functions
     function applyMaintenanceFilters() {
@@ -1303,7 +1348,7 @@
 
     // Save functions
     async function saveMaintenanceRequest() {
-      const formData = {
+    const formData = {
         drainage_point_id: parseInt(document.getElementById('modal-maintenance-point').value),
         request_type: document.getElementById('modal-maintenance-type').value,
         priority: document.getElementById('modal-maintenance-priority').value,
@@ -1313,87 +1358,97 @@
         scheduled_date: document.getElementById('modal-maintenance-scheduled').value || null,
         description: document.getElementById('modal-maintenance-description').value,
         notes: document.getElementById('modal-maintenance-notes').value
-      };
+    };
 
-      const id = document.getElementById('maintenance-id').value;
-      const isEdit = !!id;
+    const id = document.getElementById('maintenance-id').value;
+    const isEdit = !!id;
 
-      if (isEdit) {
+    if (isEdit) {
         formData.id = parseInt(id);
-      }
+    }
 
-      try {
-        const response = await fetch('../api/maintenance-requests.php', {
-          method: isEdit ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
+    try {
+        // Add const response here
+        const response = await fetch('/drainageInventory/api/maintenance-requests.php', {
+            method: isEdit ? 'PUT' : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
         });
 
         const result = await response.json();
 
         if (result.success) {
-          showNotification(isEdit ? 'Maintenance request updated successfully' : 'Maintenance request created successfully', 'success');
-          loadMaintenanceRequests();
-          bootstrap.Modal.getInstance(document.getElementById('maintenanceModal')).hide();
+            showNotification(isEdit ? 'Maintenance request updated successfully' : 'Maintenance request created successfully', 'success');
+            await loadMaintenanceRequests();
+            bootstrap.Modal.getInstance(document.getElementById('maintenanceModal')).hide();
         } else {
-          throw new Error(result.message);
+            throw new Error(result.message);
         }
-      } catch (error) {
+    } catch (error) {
         console.error('Error saving maintenance request:', error);
         showNotification('Error saving maintenance request: ' + error.message, 'danger');
-      }
+    }
+}
+
+async function saveInspectionSchedule() {
+  const formData = {
+    drainage_point_id: document.getElementById('modal-inspection-point').value,
+    inspection_type: document.getElementById('modal-inspection-type').value,
+    priority: document.getElementById('modal-inspection-priority').value,
+    status: document.getElementById('modal-inspection-status').value,
+    scheduled_date: document.getElementById('modal-inspection-date').value,
+    scheduled_time: document.getElementById('modal-inspection-time').value || null,
+    frequency: document.getElementById('modal-inspection-frequency').value,
+    operator_id: document.getElementById('modal-inspection-inspector').value || null, // Changed from inspector_id
+    description: document.getElementById('modal-inspection-description').value,
+    findings: document.getElementById('modal-inspection-findings').value,
+    recommendations: document.getElementById('modal-inspection-recommendations').value
+  };
+
+  const id = document.getElementById('inspection-id').value;
+  const isEdit = !!id;
+
+  if (isEdit) {
+    formData.id = parseInt(id);
+  }
+
+  console.log('Sending inspection data:', formData); // Add debug log
+
+  try {
+    const response = await fetch('/drainageInventory/api/inspection-schedules.php', {
+      method: isEdit ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    async function saveInspectionSchedule() {
-      const formData = {
-        drainage_point_id: parseInt(document.getElementById('modal-inspection-point').value),
-        inspection_type: document.getElementById('modal-inspection-type').value,
-        priority: document.getElementById('modal-inspection-priority').value,
-        status: document.getElementById('modal-inspection-status').value,
-        scheduled_date: document.getElementById('modal-inspection-date').value,
-        scheduled_time: document.getElementById('modal-inspection-time').value || null,
-        frequency: document.getElementById('modal-inspection-frequency').value,
-        operator_id: document.getElementById('modal-inspection-inspector').value || null,
-        description: document.getElementById('modal-inspection-description').value,
-        findings: document.getElementById('modal-inspection-findings').value,
-        recommendations: document.getElementById('modal-inspection-recommendations').value
-      };
+    const result = await response.json();
 
-      const id = document.getElementById('inspection-id').value;
-      const isEdit = !!id;
-
-      if (isEdit) {
-        formData.id = parseInt(id);
-      }
-
-      try {
-        const response = await fetch('/DrainageInventory/api/inspection-schedules.php', {
-          method: isEdit ? 'PUT' : 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-          showNotification(isEdit ? 'Inspection schedule updated successfully' : 'Inspection schedule created successfully', 'success');
-          loadInspectionSchedules();
-          bootstrap.Modal.getInstance(document.getElementById('inspectionModal')).hide();
-        } else {
-          throw new Error(result.message);
-        }
-      } catch (error) {
-        console.error('Error saving inspection schedule:', error);
-        showNotification('Error saving inspection schedule: ' + error.message, 'danger');
-      }
+    if (result.success) {
+      showNotification(
+        isEdit ? 'Inspection schedule updated successfully' : 'Inspection schedule created successfully', 
+        'success'
+      );
+      await loadInspectionSchedules();
+      bootstrap.Modal.getInstance(document.getElementById('inspectionModal')).hide();
+    } else {
+      throw new Error(result.message || 'Failed to save inspection schedule');
     }
+  } catch (error) {
+    console.error('Error saving inspection schedule:', error);
+    showNotification('Error saving inspection schedule: ' + error.message, 'danger');
+  }
+}
 
     // Delete functions
     async function deleteMaintenanceRequest(id) {
       if (!confirm('Are you sure you want to delete this maintenance request?')) return;
 
       try {
-        const response = await fetch(`/DrainageInventory/api/maintenance-requests.php?id=${id}`, {
+        const response = await fetch(`/drainageInventory/api/maintenance-requests.php?id=${id}`, {
           method: 'DELETE'
         });
 
@@ -1415,7 +1470,7 @@
       if (!confirm('Are you sure you want to delete this inspection schedule?')) return;
 
       try {
-        const response = await fetch(`/DrainageInventory/api/inspection-schedules.php?id=${id}`, {
+        const response = await fetch(`/drainageInventory/api/inspection-schedules.php?id=${id}`, {
           method: 'DELETE'
         });
 

@@ -2633,25 +2633,62 @@ function showRequestMaintenanceModal(pointId) {
     return;
   }
 
-  document.getElementById("maintenance-drainage-point-id").value = point.id;
-  document.getElementById("maintenance-point-name").value = point.name;
-
+  // Reset form first
   resetForm("maintenance-request-form");
 
+  // Set the drainage point information
+  document.getElementById("maintenance-drainage-point-id").value = point.id;
+  document.getElementById("maintenance-point-name").value = `${point.name}`;
+
+  console.log("Set maintenance drainage point ID:", point.id); // Debug log
+
+  // Set default scheduled date to tomorrow
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   document.getElementById("maintenance-scheduled-date").value = tomorrow
     .toISOString()
     .split("T")[0];
 
+  // Show the modal
   showModal("requestMaintenanceModal");
 }
 
+function getCurrentUserId() {
+  // Check both storage locations
+  const localId = localStorage.getItem("user_id");
+  const sessionId = sessionStorage.getItem("userId");
+  const userId = localId || sessionId;
+
+  console.log("Storage check:", {
+    localStorage: localId,
+    sessionStorage: sessionId,
+    finalUserId: userId,
+  });
+
+  if (!userId) {
+    console.warn("No user ID found in storage");
+    // Redirect to login if no user ID found
+    window.location.href = "/DrainageInventory/login.html?unauthorized=1";
+    return null;
+  }
+
+  return parseInt(userId);
+}
 async function handleMaintenanceRequestForm() {
+  const userId = getCurrentUserId();
+  console.log("Submitting request with user ID:", userId);
+
+  if (!userId) {
+    showNotification(
+      "You must be logged in to submit a maintenance request",
+      "warning"
+    );
+    return;
+  }
+
   const formData = {
-    drainage_point_id: parseInt(
-      document.getElementById("maintenance-drainage-point-id").value
-    ),
+    drainage_point_id: document.getElementById("maintenance-drainage-point-id")
+      .value,
     request_type: document.getElementById("maintenance-type").value,
     priority: document.getElementById("maintenance-priority").value,
     description: document
@@ -2663,8 +2700,37 @@ async function handleMaintenanceRequestForm() {
       document.getElementById("maintenance-scheduled-date").value || null,
     assigned_to:
       document.getElementById("maintenance-assigned-to").value || null,
+    requested_by: userId, // This will be automatically set from getCurrentUserId()
     notes: document.getElementById("maintenance-notes").value.trim(),
   };
+
+  // Validation
+  if (!formData.drainage_point_id) {
+    showNotification("Invalid drainage point selected", "warning");
+    return;
+  }
+
+  if (!formData.request_type) {
+    showNotification("Please select a maintenance type", "warning");
+    document.getElementById("maintenance-type").focus();
+    return;
+  }
+
+  // Check user ID before proceeding
+  if (!userId) {
+    showNotification(
+      "You must be logged in to submit a maintenance request",
+      "warning"
+    );
+    return;
+  }
+
+  // Validation
+  if (!formData.drainage_point_id) {
+    showNotification("Invalid drainage point selected", "warning");
+    document.getElementById("maintenance-drainage-point-id").focus();
+    return;
+  }
 
   if (!formData.request_type) {
     showNotification("Please select a maintenance type", "warning");
@@ -2678,11 +2744,16 @@ async function handleMaintenanceRequestForm() {
     return;
   }
 
+  console.log(
+    "Sending maintenance request with ID:",
+    formData.drainage_point_id
+  ); // Debug log
+
   showLoading(true);
 
   try {
     const response = await fetch(
-      "/DrainageInventory/api/maintenance-requests.php",
+      "/drainageInventory/api/maintenance-requests.php", // Fixed URL case
       {
         method: "POST",
         headers: {
@@ -2757,9 +2828,11 @@ async function handleInspectionScheduleForm() {
       document.getElementById("inspection-scheduled-time").value || null,
     priority: document.getElementById("inspection-priority").value,
     frequency: document.getElementById("inspection-frequency").value,
-    inspector_id: document.getElementById("inspection-inspector").value || null,
+    operator_id: document.getElementById("inspection-inspector").value || null, // Changed from inspector_id to operator_id
     description: document.getElementById("inspection-description").value.trim(),
   };
+
+  console.log("Sending inspection data:", formData);
 
   const checklist = [];
   if (document.getElementById("checklist-structural").checked) {
