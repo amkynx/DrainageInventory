@@ -2,10 +2,10 @@
 /**
  * DrainTrack Enhanced Operator Dashboard API
  * Handles both maintenance and inspection tasks for operators
- * Updated to work with centralized authentication system
+ * Fixed to match actual database structure
  * 
  * @author DrainTrack Systems
- * @version 2.0
+ * @version 2.1 (Database-Aligned)
  */
 
 session_start();
@@ -85,7 +85,7 @@ function getEnhancedOperatorStatistics($pdo, $operatorId) {
         $maintenanceStmt->execute([$operatorId]);
         $maintenanceStats = $maintenanceStmt->fetch() ?: [];
         
-        // Get inspection statistics
+        // Get inspection statistics - Fixed field names to match database
         $inspectionStmt = $pdo->prepare("
             SELECT 
                 COUNT(*) as total_inspections,
@@ -93,7 +93,7 @@ function getEnhancedOperatorStatistics($pdo, $operatorId) {
                 SUM(CASE WHEN status = 'In Progress' THEN 1 ELSE 0 END) as in_progress_inspections,
                 SUM(CASE WHEN status = 'Completed' AND completion_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) THEN 1 ELSE 0 END) as completed_inspections_week,
                 SUM(CASE WHEN priority IN ('High', 'Critical') AND status != 'Completed' THEN 1 ELSE 0 END) as high_priority_inspections,
-                SUM(CASE WHEN scheduled_date < CURDATE() AND status NOT IN ('Completed', 'Cancelled') THEN 1 ELSE 0 END) as overdue_inspections
+                SUM(CASE WHEN scheduled_date < CURDATE() AND status NOT IN ('Completed', 'Cancelled', 'Overdue') THEN 1 ELSE 0 END) as overdue_inspections
             FROM inspection_schedules 
             WHERE operator_id = ?
         ");
@@ -133,7 +133,7 @@ function getEnhancedOperatorStatistics($pdo, $operatorId) {
  */
 function getPriorityTasks($pdo, $operatorId) {
     try {
-        // Get priority maintenance tasks
+        // Get priority maintenance tasks - Fixed table reference
         $maintenanceStmt = $pdo->prepare("
             SELECT mr.*, dp.name as drainage_point_name, dp.latitude, dp.longitude,
                    'Maintenance' as task_category, mr.request_type as task_type
@@ -155,7 +155,7 @@ function getPriorityTasks($pdo, $operatorId) {
         $maintenanceStmt->execute([$operatorId]);
         $maintenanceTasks = $maintenanceStmt->fetchAll();
         
-        // Get priority inspection tasks
+        // Get priority inspection tasks - Fixed table reference
         $inspectionStmt = $pdo->prepare("
             SELECT ins.*, dp.name as drainage_point_name, dp.latitude, dp.longitude,
                    'Inspection' as task_category, ins.inspection_type as task_type
@@ -219,7 +219,7 @@ function getTodaySchedule($pdo, $operatorId) {
         $maintenanceStmt->execute([$operatorId]);
         $maintenanceTasks = $maintenanceStmt->fetchAll();
         
-        // Get today's inspection tasks
+        // Get today's inspection tasks - Fixed field reference
         $inspectionStmt = $pdo->prepare("
             SELECT ins.*, dp.name as drainage_point_name, dp.latitude, dp.longitude,
                    'Inspection' as task_category, ins.inspection_type as task_type
@@ -342,10 +342,10 @@ function getWorkProgress($pdo, $operatorId) {
         // If no data, provide sample data for chart
         if (empty($progress)) {
             return [
-                ['completed_tasks' => 0, 'total_tasks' => 0, 'completed_maintenance' => 0, 'completed_inspections' => 0],
-                ['completed_tasks' => 1, 'total_tasks' => 2, 'completed_maintenance' => 1, 'completed_inspections' => 0],
-                ['completed_tasks' => 2, 'total_tasks' => 3, 'completed_maintenance' => 1, 'completed_inspections' => 1],
-                ['completed_tasks' => 1, 'total_tasks' => 1, 'completed_maintenance' => 0, 'completed_inspections' => 1]
+                ['work_date' => date('Y-m-d', strtotime('-3 days')), 'completed_tasks' => 0, 'total_tasks' => 0, 'completed_maintenance' => 0, 'completed_inspections' => 0],
+                ['work_date' => date('Y-m-d', strtotime('-2 days')), 'completed_tasks' => 1, 'total_tasks' => 2, 'completed_maintenance' => 1, 'completed_inspections' => 0],
+                ['work_date' => date('Y-m-d', strtotime('-1 day')), 'completed_tasks' => 2, 'total_tasks' => 3, 'completed_maintenance' => 1, 'completed_inspections' => 1],
+                ['work_date' => date('Y-m-d'), 'completed_tasks' => 1, 'total_tasks' => 1, 'completed_maintenance' => 0, 'completed_inspections' => 1]
             ];
         }
         
@@ -354,10 +354,10 @@ function getWorkProgress($pdo, $operatorId) {
     } catch (Exception $e) {
         error_log("Error getting work progress: " . $e->getMessage());
         return [
-            ['completed_tasks' => 0, 'total_tasks' => 0, 'completed_maintenance' => 0, 'completed_inspections' => 0],
-            ['completed_tasks' => 1, 'total_tasks' => 2, 'completed_maintenance' => 1, 'completed_inspections' => 0],
-            ['completed_tasks' => 2, 'total_tasks' => 3, 'completed_maintenance' => 1, 'completed_inspections' => 1],
-            ['completed_tasks' => 1, 'total_tasks' => 1, 'completed_maintenance' => 0, 'completed_inspections' => 1]
+            ['work_date' => date('Y-m-d', strtotime('-3 days')), 'completed_tasks' => 0, 'total_tasks' => 0, 'completed_maintenance' => 0, 'completed_inspections' => 0],
+            ['work_date' => date('Y-m-d', strtotime('-2 days')), 'completed_tasks' => 1, 'total_tasks' => 2, 'completed_maintenance' => 1, 'completed_inspections' => 0],
+            ['work_date' => date('Y-m-d', strtotime('-1 day')), 'completed_tasks' => 2, 'total_tasks' => 3, 'completed_maintenance' => 1, 'completed_inspections' => 1],
+            ['work_date' => date('Y-m-d'), 'completed_tasks' => 1, 'total_tasks' => 1, 'completed_maintenance' => 0, 'completed_inspections' => 1]
         ];
     }
 }
@@ -397,7 +397,7 @@ function getEnhancedOperatorNotifications($pdo, $operatorId) {
                 ins.id,
                 CONCAT('Inspection: ', ins.inspection_type, ' for ', COALESCE(dp.name, 'Unknown Location')) as title,
                 ins.priority,
-                CONCAT('Inspection scheduled for ', ins.scheduled_date, ' at ', ins.scheduled_time) as message,
+                CONCAT('Inspection scheduled for ', ins.scheduled_date, ' at ', COALESCE(ins.scheduled_time, '09:00')) as message,
                 'inspection_reminder' as type,
                 ins.updated_at as created_at,
                 0 as is_read
@@ -431,8 +431,8 @@ function getEnhancedOperatorNotifications($pdo, $operatorId) {
         if (empty($notifications)) {
             $notifications[] = [
                 'id' => 1,
-                'title' => 'Welcome to Enhanced DrainTrack',
-                'message' => 'You can now manage both maintenance tasks and inspections from your dashboard.',
+                'title' => 'Welcome to DrainTrack',
+                'message' => 'You can manage both maintenance tasks and inspections from your dashboard.',
                 'type' => 'system',
                 'created_at' => date('Y-m-d H:i:s'),
                 'is_read' => false
@@ -451,8 +451,8 @@ function getEnhancedOperatorNotifications($pdo, $operatorId) {
         return [
             [
                 'id' => 1,
-                'title' => 'Welcome to Enhanced DrainTrack',
-                'message' => 'You can now manage both maintenance tasks and inspections.',
+                'title' => 'Welcome to DrainTrack',
+                'message' => 'You can manage both maintenance tasks and inspections.',
                 'type' => 'system',
                 'created_at' => date('Y-m-d H:i:s'),
                 'is_read' => false
@@ -545,7 +545,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'data' => $dashboardData,
             'operator' => [
                 'id' => $_SESSION['user_id'],
-                'name' => $_SESSION['user_name'],
+                'name' => $_SESSION['user_name'] ?? ($_SESSION['first_name'] . ' ' . $_SESSION['last_name']),
                 'email' => $_SESSION['user_email'],
                 'role' => $_SESSION['user_role']
             ],
@@ -636,8 +636,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 if ($status === 'Completed') {
                     $updateSql .= ", completion_date = CURDATE()";
-                } else if ($status === 'In Progress') {
-                    $updateSql .= ", start_time = NOW()";
                 }
                 $updateSql .= " WHERE id = ?";
                 $params[] = $taskId;

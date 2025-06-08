@@ -1,11 +1,11 @@
 <?php
 /**
  * DrainTrack Enhanced Operator Tasks API
- * Handles both maintenance and inspection tasks for operators
- * Updated to work with centralized authentication system
+ * Now includes all inspector functions - operators handle both maintenance and inspections
+ * Fixed to match actual database structure
  * 
  * @author DrainTrack Systems
- * @version 2.0
+ * @version 3.1 (Database-Aligned)
  */
 
 session_start();
@@ -69,7 +69,7 @@ function initializeDatabase($config) {
  */
 function getAllOperatorTasks($pdo, $operatorId) {
     try {
-        // Get maintenance tasks
+        // Get maintenance tasks - Fixed table reference
         $maintenanceStmt = $pdo->prepare("
             SELECT mr.*, dp.name as drainage_point_name, dp.latitude, dp.longitude, dp.type as drainage_type,
                    'Maintenance' as task_category, mr.request_type as task_type
@@ -89,7 +89,7 @@ function getAllOperatorTasks($pdo, $operatorId) {
         $maintenanceStmt->execute([$operatorId]);
         $maintenanceTasks = $maintenanceStmt->fetchAll();
         
-        // Get inspection tasks
+        // Get inspection tasks - Fixed field reference (only operator_id exists)
         $inspectionStmt = $pdo->prepare("
             SELECT ins.*, dp.name as drainage_point_name, dp.latitude, dp.longitude, dp.type as drainage_type,
                    'Inspection' as task_category, ins.inspection_type as task_type
@@ -143,6 +143,129 @@ function getAllOperatorTasks($pdo, $operatorId) {
 }
 
 /**
+ * Start an inspection
+ */
+function startInspection($pdo, $operatorId, $inspectionId, $notes = '') {
+    try {
+        // Verify inspection belongs to operator
+        $stmt = $pdo->prepare("
+            SELECT id, status FROM inspection_schedules 
+            WHERE id = ? AND operator_id = ?
+        ");
+        $stmt->execute([$inspectionId, $operatorId]);
+        $inspection = $stmt->fetch();
+        
+        if (!$inspection) {
+            throw new Exception('Inspection not found or not assigned to you');
+        }
+        
+        if ($inspection['status'] !== 'Scheduled') {
+            throw new Exception('Inspection cannot be started - current status: ' . $inspection['status']);
+        }
+        
+        // Update inspection status
+        $stmt = $pdo->prepare("
+            UPDATE inspection_schedules 
+            SET status = 'In Progress', 
+                updated_at = NOW()
+            WHERE id = ?
+        ");
+        
+        $stmt->execute([$inspectionId]);
+        
+        // Log activity in user_activity_log instead of non-existent inspection_activity_log
+        logOperatorActivity($pdo, $operatorId, 'inspection_started', "Started inspection ID: $inspectionId. Notes: $notes");
+        
+        return ['success' => true, 'message' => 'Inspection started successfully'];
+        
+    } catch (Exception $e) {
+        throw new Exception('Failed to start inspection: ' . $e->getMessage());
+    }
+}
+
+/**
+ * Complete an inspection
+ */
+function completeInspection($pdo, $operatorId, $data) {
+    try {
+        $inspectionId = $data['inspection_id'];
+        $findings = $data['findings'] ?? '';
+        $recommendations = $data['recommendations'] ?? '';
+        $conditionRating = $data['condition_rating'] ?? 'Good';
+        $maintenanceRequired = isset($data['maintenance_required']) ? (bool)$data['maintenance_required'] : false;
+        $createMaintenanceRequest = $data['create_maintenance_request'] ?? false;
+        
+        // Verify inspection belongs to operator
+        $stmt = $pdo->prepare("
+            SELECT id, status, drainage_point_id FROM inspection_schedules 
+            WHERE id = ? AND operator_id = ?
+        ");
+        $stmt->execute([$inspectionId, $operatorId]);
+        $inspection = $stmt->fetch();
+        
+        if (!$inspection) {
+            throw new Exception('Inspection not found or not assigned to you');
+        }
+        
+        if ($inspection['status'] !== 'In Progress') {
+            throw new Exception('Inspection cannot be completed - current status: ' . $inspection['status']);
+        }
+        
+        // Begin transaction
+        $pdo->beginTransaction();
+        
+        // Update inspection status - only update fields that exist in database
+        $stmt = $pdo->prepare("
+            UPDATE inspection_schedules 
+            SET status = 'Completed',
+                completion_date = NOW(),
+                findings = ?,
+                recommendations = ?,
+                updated_at = NOW()
+            WHERE id = ?
+        ");
+        
+        $stmt->execute([
+            $findings, 
+            $recommendations, 
+            $inspectionId
+        ]);
+        
+        // Update drainage point condition if applicable
+        if ($conditionRating && $inspection['drainage_point_id']) {
+            $newStatus = mapConditionToStatus($conditionRating);
+            $stmt = $pdo->prepare("
+                UPDATE drainage_points 
+                SET status = ?, last_inspection = CURDATE()
+                WHERE id = ?
+            ");
+            $stmt->execute([$newStatus, $inspection['drainage_point_id']]);
+        }
+        
+        // Create maintenance request if requested
+        if ($createMaintenanceRequest && $maintenanceRequired) {
+            $maintenanceId = createMaintenanceRequestFromInspection($pdo, $inspection['drainage_point_id'], $findings, $recommendations, $operatorId);
+            if ($maintenanceId) {
+                // Update the inspection with maintenance_required flag
+                $stmt = $pdo->prepare("UPDATE inspection_schedules SET maintenance_required = 1 WHERE id = ?");
+                $stmt->execute([$inspectionId]);
+            }
+        }
+        
+        // Log activity
+        logOperatorActivity($pdo, $operatorId, 'inspection_completed', "Completed inspection ID: $inspectionId. Findings: $findings");
+        
+        $pdo->commit();
+        
+        return ['success' => true, 'message' => 'Inspection completed successfully'];
+        
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        throw new Exception('Failed to complete inspection: ' . $e->getMessage());
+    }
+}
+
+/**
  * Update task status (maintenance or inspection)
  */
 function updateTaskStatus($pdo, $operatorId, $data) {
@@ -174,7 +297,7 @@ function updateTaskStatus($pdo, $operatorId, $data) {
             if ($status === 'Completed') {
                 $updateSql .= ", completion_date = NOW()";
             } elseif ($status === 'In Progress') {
-                $updateSql .= ", start_date = COALESCE(start_date, NOW())";
+                $updateSql .= ", work_start_date = COALESCE(work_start_date, NOW())";
             }
             
             if (!empty($findings)) {
@@ -199,14 +322,14 @@ function updateTaskStatus($pdo, $operatorId, $data) {
                 throw new Exception('Inspection task not found or not assigned to you');
             }
             
-            // Update inspection task
+            // Update inspection task - only update fields that exist
             $updateSql = "UPDATE inspection_schedules SET 
                          status = ?, 
                          updated_at = NOW()";
             $params = [$status];
             
             if ($status === 'Completed') {
-                $updateSql .= ", completion_date = NOW(), end_time = NOW()";
+                $updateSql .= ", completion_date = NOW()";
                 if (!empty($findings)) {
                     $updateSql .= ", findings = ?";
                     $params[] = $findings;
@@ -215,8 +338,6 @@ function updateTaskStatus($pdo, $operatorId, $data) {
                     $updateSql .= ", recommendations = ?";
                     $params[] = $recommendations;
                 }
-            } elseif ($status === 'In Progress') {
-                $updateSql .= ", start_time = NOW()";
             }
             
             $updateSql .= " WHERE id = ?";
@@ -232,10 +353,13 @@ function updateTaskStatus($pdo, $operatorId, $data) {
         
         // Add work log entry if notes provided
         if (!empty($notes)) {
-            $logSql = "INSERT INTO operator_work_logs (task_id, operator_id, task_category, work_description, created_at) 
-                      VALUES (?, ?, ?, ?, NOW())";
+            $logSql = "INSERT INTO operator_work_logs (task_id, operator_id, task_category, work_description, work_date, created_at) 
+                      VALUES (?, ?, ?, ?, CURDATE(), NOW())";
             $pdo->prepare($logSql)->execute([$taskId, $operatorId, $taskCategory, $notes]);
         }
+        
+        // Log operator activity
+        logOperatorActivity($pdo, $operatorId, 'task_updated', "Updated $taskCategory task $taskId to status: $status");
         
         $pdo->commit();
         
@@ -258,11 +382,12 @@ function updateTaskStatus($pdo, $operatorId, $data) {
  */
 function scheduleInspection($pdo, $operatorId, $data) {
     try {
-        $drainagePointId = (int)$data['drainage_point_id'];
+        $drainagePointId = $data['drainage_point_id'];
         $inspectionType = $data['inspection_type'];
         $scheduledDate = $data['scheduled_date'];
-        $scheduledTime = $data['scheduled_time'] ?? '09:00:00';
+        $scheduledTime = $data['scheduled_time'] ?? '09:00';
         $priority = $data['priority'] ?? 'Medium';
+        $frequency = $data['frequency'] ?? 'One-time';
         $description = $data['description'] ?? '';
         
         // Validate required fields
@@ -292,26 +417,34 @@ function scheduleInspection($pdo, $operatorId, $data) {
             throw new Exception('An inspection is already scheduled for this drainage point on the selected date');
         }
         
+        // Generate schedule number
+        $scheduleNumber = generateScheduleNumber($pdo);
+        
         // Insert new inspection
         $stmt = $pdo->prepare("
             INSERT INTO inspection_schedules (
-                drainage_point_id, operator_id, inspection_type, 
-                scheduled_date, scheduled_time, priority, 
-                description, status, created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, 'Scheduled', NOW(), NOW())
+                schedule_number, drainage_point_id, operator_id, inspection_type, 
+                scheduled_date, scheduled_time, priority, frequency, 
+                description, status, created_by, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Scheduled', ?, NOW(), NOW())
         ");
         
         $stmt->execute([
-            $drainagePointId, $operatorId, $inspectionType,
-            $scheduledDate, $scheduledTime, $priority, $description
+            $scheduleNumber, $drainagePointId, $operatorId, $inspectionType,
+            $scheduledDate, $scheduledTime, $priority, 
+            $frequency, $description, $operatorId
         ]);
         
         $inspectionId = $pdo->lastInsertId();
+        
+        // Log activity
+        logOperatorActivity($pdo, $operatorId, 'inspection_scheduled', "Scheduled inspection $scheduleNumber for {$drainagePoint['name']}");
         
         return [
             'success' => true, 
             'message' => 'Inspection scheduled successfully',
             'inspection_id' => $inspectionId,
+            'schedule_number' => $scheduleNumber,
             'drainage_point_name' => $drainagePoint['name']
         ];
         
@@ -321,7 +454,7 @@ function scheduleInspection($pdo, $operatorId, $data) {
 }
 
 /**
- * Report an issue (creates maintenance request)
+ * Report an issue (creates issue report)
  */
 function reportIssue($pdo, $operatorId, $data) {
     try {
@@ -349,27 +482,31 @@ function reportIssue($pdo, $operatorId, $data) {
             $drainagePointId = $point['id'];
         }
         
-        // Create maintenance request for the issue
-        $insertSql = "INSERT INTO maintenance_requests 
-                     (drainage_point_id, request_type, description, priority, status, 
-                      reported_by, assigned_to, created_at, scheduled_date) 
+        // Create issue report
+        $insertSql = "INSERT INTO operator_issue_reports 
+                     (operator_id, location, drainage_point_id, issue_type, priority, description, status, created_at, updated_at) 
                      VALUES 
-                     (?, ?, ?, ?, 'Pending', ?, ?, NOW(), CURDATE())";
+                     (?, ?, ?, ?, ?, ?, 'Open', NOW(), NOW())";
         
         $stmt = $pdo->prepare($insertSql);
         $stmt->execute([
+            $operatorId,
+            $location, 
             $drainagePointId, 
             $issueType, 
-            $description, 
             $priority, 
-            $operatorId, 
-            $operatorId
+            $description
         ]);
+        
+        $issueId = $pdo->lastInsertId();
+        
+        // Log activity
+        logOperatorActivity($pdo, $operatorId, 'issue_reported', "Reported $issueType issue at $location");
         
         return [
             'success' => true, 
             'message' => 'Issue report submitted successfully',
-            'issue_id' => $pdo->lastInsertId(),
+            'issue_id' => $issueId,
             'location' => $location
         ];
         
@@ -398,11 +535,11 @@ function logWorkHours($pdo, $operatorId, $data) {
         // Verify task belongs to operator
         if ($taskCategory === 'Maintenance') {
             $checkStmt = $pdo->prepare("SELECT id FROM maintenance_requests WHERE id = ? AND assigned_to = ?");
+            $checkStmt->execute([$taskId, $operatorId]);
         } else {
             $checkStmt = $pdo->prepare("SELECT id FROM inspection_schedules WHERE id = ? AND operator_id = ?");
+            $checkStmt->execute([$taskId, $operatorId]);
         }
-        
-        $checkStmt->execute([$taskId, $operatorId]);
         
         if (!$checkStmt->fetch()) {
             throw new Exception('Task not found or not assigned to you');
@@ -413,9 +550,9 @@ function logWorkHours($pdo, $operatorId, $data) {
         // Insert work log
         $logSql = "INSERT INTO operator_work_logs 
                   (task_id, operator_id, task_category, work_description, hours_worked, 
-                   completion_percentage, materials_used, created_at) 
+                   completion_percentage, materials_used, work_date, created_at) 
                   VALUES 
-                  (?, ?, ?, ?, ?, ?, ?, NOW())";
+                  (?, ?, ?, ?, ?, ?, ?, CURDATE(), NOW())";
         
         $stmt = $pdo->prepare($logSql);
         $stmt->execute([
@@ -423,30 +560,25 @@ function logWorkHours($pdo, $operatorId, $data) {
             $hoursWorked, $completionPercentage, $materialsUsed
         ]);
         
-        // Update task progress if provided
-        if ($completionPercentage > 0) {
-            if ($taskCategory === 'Maintenance') {
-                $updateSql = "UPDATE maintenance_requests 
-                             SET completion_percentage = ?, updated_at = NOW()";
-                if ($completionPercentage >= 100) {
-                    $updateSql .= ", status = 'Completed', completion_date = NOW()";
-                } elseif ($completionPercentage > 0) {
-                    $updateSql .= ", status = 'In Progress', start_date = COALESCE(start_date, NOW())";
-                }
-                $updateSql .= " WHERE id = ?";
-            } else {
-                $updateSql = "UPDATE inspection_schedules 
-                             SET completion_percentage = ?, updated_at = NOW()";
-                if ($completionPercentage >= 100) {
-                    $updateSql .= ", status = 'Completed', completion_date = NOW(), end_time = NOW()";
-                } elseif ($completionPercentage > 0) {
-                    $updateSql .= ", status = 'In Progress', start_time = COALESCE(start_time, NOW())";
-                }
-                $updateSql .= " WHERE id = ?";
-            }
+        // Update task progress if provided and field exists
+        if ($completionPercentage > 0 && $taskCategory === 'Maintenance') {
+            $updateSql = "UPDATE maintenance_requests 
+                         SET completion_percentage = ?, updated_at = NOW()";
+            $params = [$completionPercentage];
             
-            $pdo->prepare($updateSql)->execute([$completionPercentage, $taskId]);
+            if ($completionPercentage >= 100) {
+                $updateSql .= ", status = 'Completed', completion_date = NOW()";
+            } elseif ($completionPercentage > 0) {
+                $updateSql .= ", status = 'In Progress', work_start_date = COALESCE(work_start_date, NOW())";
+            }
+            $updateSql .= " WHERE id = ?";
+            $params[] = $taskId;
+            
+            $pdo->prepare($updateSql)->execute($params);
         }
+        
+        // Log activity
+        logOperatorActivity($pdo, $operatorId, 'work_logged', "Logged $hoursWorked hours for $taskCategory task $taskId");
         
         $pdo->commit();
         
@@ -461,6 +593,131 @@ function logWorkHours($pdo, $operatorId, $data) {
         $pdo->rollback();
         throw new Exception('Failed to log work hours: ' . $e->getMessage());
     }
+}
+
+/**
+ * Create maintenance request based on inspection findings
+ */
+function createMaintenanceRequestFromInspection($pdo, $drainagePointId, $findings, $recommendations, $operatorId) {
+    try {
+        $priority = 'Medium'; // Default priority
+        $description = "Maintenance required based on inspection findings: " . $findings;
+        if ($recommendations) {
+            $description .= "\n\nRecommendations: " . $recommendations;
+        }
+        
+        // Generate request number
+        $requestNumber = generateMaintenanceRequestNumber($pdo);
+        
+        $stmt = $pdo->prepare("
+            INSERT INTO maintenance_requests (
+                request_number, drainage_point_id, request_type, priority, description,
+                status, requested_by, assigned_to, scheduled_date, created_at, updated_at
+            ) VALUES (?, ?, 'Inspection Follow-up', ?, ?, 'Pending', ?, ?, CURDATE(), NOW(), NOW())
+        ");
+        
+        $stmt->execute([
+            $requestNumber,
+            $drainagePointId,
+            $priority,
+            $description,
+            $operatorId,
+            $operatorId
+        ]);
+        
+        return $pdo->lastInsertId();
+        
+    } catch (Exception $e) {
+        error_log("Failed to create maintenance request: " . $e->getMessage());
+        return null;
+    }
+}
+
+/**
+ * Log operator activity
+ */
+function logOperatorActivity($pdo, $operatorId, $action, $details = '') {
+    try {
+        $stmt = $pdo->prepare("
+            INSERT INTO user_activity_log (
+                user_id, action, description, created_at
+            ) VALUES (?, ?, ?, NOW())
+        ");
+        
+        $stmt->execute([$operatorId, $action, $details]);
+        
+    } catch (Exception $e) {
+        error_log("Failed to log operator activity: " . $e->getMessage());
+    }
+}
+
+/**
+ * Generate schedule number for inspections
+ */
+function generateScheduleNumber($pdo) {
+    $year = date('Y');
+    $month = date('m');
+    
+    // Get the last schedule number for this month
+    $stmt = $pdo->prepare("
+        SELECT schedule_number FROM inspection_schedules 
+        WHERE schedule_number LIKE ? 
+        ORDER BY schedule_number DESC 
+        LIMIT 1
+    ");
+    $stmt->execute(["IS{$year}{$month}%"]);
+    $lastSchedule = $stmt->fetch();
+    
+    if ($lastSchedule) {
+        $lastNumber = (int)substr($lastSchedule['schedule_number'], -3);
+        $newNumber = $lastNumber + 1;
+    } else {
+        $newNumber = 1;
+    }
+    
+    return "IS{$year}{$month}" . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+}
+
+/**
+ * Generate request number for maintenance
+ */
+function generateMaintenanceRequestNumber($pdo) {
+    $year = date('Y');
+    $month = date('m');
+    
+    // Get the last request number for this month
+    $stmt = $pdo->prepare("
+        SELECT request_number FROM maintenance_requests 
+        WHERE request_number LIKE ? 
+        ORDER BY request_number DESC 
+        LIMIT 1
+    ");
+    $stmt->execute(["MR{$year}{$month}%"]);
+    $lastRequest = $stmt->fetch();
+    
+    if ($lastRequest) {
+        $lastNumber = (int)substr($lastRequest['request_number'], -3);
+        $newNumber = $lastNumber + 1;
+    } else {
+        $newNumber = 1;
+    }
+    
+    return "MR{$year}{$month}" . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+}
+
+/**
+ * Map condition rating to drainage point status
+ */
+function mapConditionToStatus($conditionRating) {
+    $statusMap = [
+        'Excellent' => 'Good',
+        'Good' => 'Good',
+        'Fair' => 'Needs Maintenance',
+        'Poor' => 'Needs Maintenance',
+        'Critical' => 'Critical'
+    ];
+    
+    return $statusMap[$conditionRating] ?? 'Good';
 }
 
 // Handle GET request - Get operator's enhanced tasks
@@ -488,12 +745,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'inspection_count' => count($inspectionTasks),
             'operator' => [
                 'id' => $_SESSION['user_id'],
-                'name' => $_SESSION['user_name'],
+                'name' => $_SESSION['user_name'] ?? ($_SESSION['first_name'] . ' ' . $_SESSION['last_name']),
                 'role' => $_SESSION['user_role']
             ],
             'enhanced_features' => [
                 'inspection_management' => true,
-                'combined_task_view' => true
+                'combined_task_view' => true,
+                'inspector_functions' => true
             ]
         ]);
         
@@ -515,14 +773,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         $input = file_get_contents('php://input');
         $data = json_decode($input, true);
         
-        if (!isset($data['task_id']) || !isset($data['status'])) {
+        if (!$data) {
             http_response_code(400);
-            echo json_encode(['success' => false, 'message' => 'Task ID and status are required']);
+            echo json_encode(['success' => false, 'message' => 'Invalid JSON data']);
             exit;
         }
         
         $pdo = initializeDatabase($config);
-        $result = updateTaskStatus($pdo, $operatorId, $data);
+        $action = $data['action'] ?? '';
+        
+        switch ($action) {
+            case 'start_inspection':
+                $result = startInspection($pdo, $operatorId, $data['inspection_id'], $data['notes'] ?? '');
+                break;
+                
+            case 'complete_inspection':
+                $result = completeInspection($pdo, $operatorId, $data);
+                break;
+                
+            default:
+                // Regular task status update
+                if (!isset($data['task_id']) || !isset($data['status'])) {
+                    http_response_code(400);
+                    echo json_encode(['success' => false, 'message' => 'Task ID and status are required']);
+                    exit;
+                }
+                $result = updateTaskStatus($pdo, $operatorId, $data);
+                break;
+        }
         
         echo json_encode($result);
         
@@ -555,10 +833,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 break;
                 
             case 'report_issue':
+            case 'submit_issue_report':
                 $result = reportIssue($pdo, $operatorId, $data);
                 break;
                 
             case 'work_log':
+            case 'log_work_hours':
                 $result = logWorkHours($pdo, $operatorId, $data);
                 break;
                 

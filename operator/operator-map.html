@@ -13,11 +13,9 @@
   <!-- Leaflet MarkerCluster CSS -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" rel="stylesheet">
-  <!-- Common DrainTrack Styles -->
-  <link href="../css/common.css" rel="stylesheet">
   
   <style>
-    /* Operator-specific theme with Green colors - exactly matching dashboard */
+    /* Operator-specific theme with Green colors */
     :root {
       --primary-color: #28a745;
       --secondary-color: #6c757d;
@@ -32,7 +30,6 @@
       --gradient-nature: linear-gradient(135deg, #198754 0%, #20c997 100%);
     }
 
-    /* Full screen map layout */
     body {
       margin: 0;
       padding: 0;
@@ -64,25 +61,25 @@
       border-radius: 0;
     }
 
-    /* Control Panel - matching dashboard style */
+    /* Enhanced Control Panel */
     .control-panel {
       position: absolute;
       top: 0;
       left: 0;
-      width: 380px;
+      width: 420px;
       height: 100%;
-      background: rgba(255, 255, 255, 0.97);
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(15px);
       border-right: 1px solid rgba(0, 0, 0, 0.1);
       display: flex;
       flex-direction: column;
       transition: transform 0.3s ease;
       z-index: 1000;
-      box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+      box-shadow: 2px 0 20px rgba(0,0,0,0.1);
     }
 
     .control-panel.collapsed {
-      transform: translateX(-340px);
+      transform: translateX(-380px);
     }
 
     .control-panel-header {
@@ -93,6 +90,7 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
     }
 
     .control-panel-header h4 {
@@ -130,18 +128,244 @@
       padding: 1rem;
     }
 
-    /* Access Notice */
-    .access-notice {
-      background: var(--gradient-warm);
-      color: white;
-      padding: 0.75rem;
-      border-radius: 10px;
-      margin-bottom: 1rem;
-      text-align: center;
-      font-size: 0.9rem;
+    /* Statistics Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
     }
 
-    /* Search Container */
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid #e9ecef;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: #6c757d;
+      font-weight: 500;
+    }
+
+    /* Quick Stats Bar */
+    .quick-stats {
+      background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(32, 201, 151, 0.1));
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(40, 167, 69, 0.2);
+    }
+
+    .quick-stats h6 {
+      color: var(--primary-color);
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .stats-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stat-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .stat-dot.pending { background: #ffc107; }
+    .stat-dot.progress { background: #17a2b8; }
+    .stat-dot.completed { background: #28a745; }
+    .stat-dot.overdue { background: #dc3545; }
+
+    /* Enhanced Task Cards */
+    .task-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      border: 1px solid #e9ecef;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .task-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--success-color);
+      transition: all 0.3s ease;
+    }
+
+    .task-card.maintenance-task::before { background: var(--success-color); }
+    .task-card.inspection-task::before { background: var(--warning-color); }
+    .task-card.priority-high::before, .task-card.priority-critical::before { background: var(--danger-color); }
+
+    .task-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    }
+
+    .task-card:hover::before {
+      width: 6px;
+    }
+
+    .task-header {
+      display: flex;
+      justify-content: between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+
+    .task-title {
+      font-weight: 600;
+      color: var(--dark-color);
+      margin: 0 0 0.25rem 0;
+      font-size: 0.95rem;
+    }
+
+    .task-location {
+      font-size: 0.85rem;
+      color: #6c757d;
+      margin-bottom: 0.5rem;
+    }
+
+    .task-badges {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+
+    .task-badge {
+      padding: 0.25rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid;
+    }
+
+    .badge-maintenance {
+      background: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+      border-color: #28a745;
+    }
+
+    .badge-inspection {
+      background: rgba(255, 193, 7, 0.1);
+      color: #856404;
+      border-color: #ffc107;
+    }
+
+    .badge-priority-critical {
+      background: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+      border-color: #dc3545;
+    }
+
+    .badge-priority-high {
+      background: rgba(253, 126, 20, 0.1);
+      color: #fd7e14;
+      border-color: #fd7e14;
+    }
+
+    .badge-status-pending {
+      background: rgba(108, 117, 125, 0.1);
+      color: #495057;
+      border-color: #6c757d;
+    }
+
+    .badge-status-progress {
+      background: rgba(23, 162, 184, 0.1);
+      color: #17a2b8;
+      border-color: #17a2b8;
+    }
+
+    .task-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #6c757d;
+      margin-bottom: 0.75rem;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .task-action-btn {
+      padding: 0.375rem 0.75rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .btn-task-update {
+      background: var(--gradient-primary);
+      color: white;
+    }
+
+    .btn-task-update:hover {
+      background: var(--gradient-warm);
+      transform: translateY(-1px);
+    }
+
+    .btn-task-details {
+      background: #f8f9fa;
+      color: #495057;
+      border: 1px solid #dee2e6;
+    }
+
+    .btn-task-details:hover {
+      background: #e9ecef;
+    }
+
+    /* Search and Filters */
     .search-container {
       position: relative;
       margin-bottom: 1.5rem;
@@ -150,9 +374,10 @@
     .search-container .form-control {
       padding-left: 2.5rem;
       padding-right: 2.5rem;
-      border-radius: 10px;
+      border-radius: 12px;
       border: 2px solid #e9ecef;
       transition: all 0.3s ease;
+      font-size: 0.9rem;
     }
 
     .search-container .form-control:focus {
@@ -193,106 +418,7 @@
       color: var(--danger-color);
     }
 
-    /* Content Sections */
-    .content-section {
-      margin-bottom: 1.5rem;
-    }
-
-    .content-section h6 {
-      color: var(--dark-color);
-      font-weight: 600;
-      margin-bottom: 0.75rem;
-      display: flex;
-      align-items: center;
-      font-size: 0.9rem;
-    }
-
-    .content-section h6 i {
-      color: var(--primary-color);
-    }
-
-    /* Task Cards - exactly matching dashboard */
-    .task-card {
-      border-left: 4px solid var(--success-color);
-      transition: all 0.3s ease;
-      cursor: pointer;
-      position: relative;
-      background: white;
-      border: 1px solid #e9ecef;
-      border-radius: 10px;
-      padding: 1rem;
-      margin-bottom: 0.75rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .task-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    .task-card.inspection-task {
-      border-left-color: var(--warning-color) !important;
-    }
-
-    .task-category-badge {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      font-size: 0.7rem;
-      padding: 0.25rem 0.5rem;
-      border-radius: 12px;
-    }
-
-    .task-category-badge.maintenance {
-      background: rgba(40, 167, 69, 0.1);
-      color: #28a745;
-      border: 1px solid #28a745;
-    }
-
-    .task-category-badge.inspection {
-      background: rgba(255, 193, 7, 0.1);
-      color: #856404;
-      border: 1px solid #ffc107;
-    }
-
-    .priority-high, .priority-critical {
-      border-left-color: var(--danger-color) !important;
-    }
-
-    .priority-medium {
-      border-left-color: var(--warning-color) !important;
-    }
-
-    .priority-low {
-      border-left-color: var(--success-color) !important;
-    }
-
-    /* Status badges - matching dashboard */
-    .status-pending { 
-      background-color: #fff3cd; 
-      color: #856404; 
-      border-color: #ffeaa7;
-    }
-
-    .status-in-progress { 
-      background-color: #d1ecf1; 
-      color: #0c5460; 
-      border-color: #bee5eb;
-    }
-
-    .status-completed { 
-      background-color: #d4edda; 
-      color: #155724; 
-      border-color: #c3e6cb;
-    }
-
-    .status-scheduled {
-      background-color: #e3f2fd;
-      color: #1976d2;
-      border-color: #bbdefb;
-    }
-
-    /* Filter Section */
+    /* Filter Badges */
     .filter-section {
       margin-bottom: 1.5rem;
     }
@@ -326,6 +452,7 @@
 
     .filter-badge:hover {
       background: #e9ecef;
+      transform: translateY(-1px);
     }
 
     .filter-badge.active {
@@ -334,37 +461,54 @@
       border-color: var(--primary-color);
     }
 
-    /* Legend */
-    .legend {
-      background: #f8f9fa;
-      border-radius: 10px;
-      padding: 1rem;
-      margin-bottom: 1rem;
+    /* Content Sections */
+    .content-section {
+      margin-bottom: 1.5rem;
     }
 
-    .legend h6 {
+    .content-section h6 {
       color: var(--dark-color);
       font-weight: 600;
       margin-bottom: 0.75rem;
       display: flex;
       align-items: center;
       font-size: 0.9rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e9ecef;
     }
 
-    .legend-item {
+    .content-section h6 i {
+      color: var(--primary-color);
+      margin-right: 0.5rem;
+    }
+
+    /* Quick Actions */
+    .quick-action-btn {
+      background: var(--gradient-primary);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      padding: 0.875rem 1rem;
+      text-decoration: none;
       display: flex;
       align-items: center;
-      margin-bottom: 0.5rem;
-      font-size: 0.85rem;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+      font-size: 0.9rem;
+      font-weight: 500;
     }
 
-    .legend-color {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
+    .quick-action-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+      color: white;
+      background: var(--gradient-warm);
+    }
+
+    .quick-action-btn i {
       margin-right: 0.5rem;
-      border: 2px solid white;
-      box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
     }
 
     /* Map Controls */
@@ -379,24 +523,25 @@
     }
 
     .map-control-btn {
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       background: white;
       border: 1px solid #ccc;
-      border-radius: 8px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       transition: all 0.3s ease;
+      font-size: 1rem;
     }
 
     .map-control-btn:hover {
       background: var(--primary-color);
       color: white;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
     /* Action Buttons */
@@ -406,12 +551,12 @@
       right: 20px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
       z-index: 1000;
     }
 
     .action-btn {
-      padding: 12px 16px;
+      padding: 12px 18px;
       border: none;
       border-radius: 25px;
       color: white;
@@ -422,12 +567,17 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      min-width: 140px;
+      min-width: 150px;
       justify-content: center;
+      font-size: 0.9rem;
     }
 
     .btn-danger-custom {
       background: linear-gradient(135deg, #dc3545, #c82333);
+    }
+
+    .btn-primary-custom {
+      background: var(--gradient-primary);
     }
 
     .action-btn:hover {
@@ -435,54 +585,110 @@
       box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }
 
-    /* Quick Actions - matching dashboard */
-    .quick-action-btn {
-      background: var(--gradient-primary);
-      border: none;
-      border-radius: 10px;
-      color: white;
-      padding: 0.75rem;
-      text-decoration: none;
-      display: block;
-      text-align: center;
-      margin-bottom: 0.75rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
-      font-size: 0.9rem;
+    /* Notifications */
+    .notifications-section {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
     }
 
-    .quick-action-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
-      color: white;
-    }
-
-    /* Loading Overlay */
-    .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255,255,255,0.9);
+    .notification-item {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      border-left: 4px solid var(--primary-color);
     }
 
-    .loading-content {
-      text-align: center;
+    .notification-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .notification-icon {
+      color: var(--primary-color);
+      font-size: 1rem;
+      margin-top: 0.25rem;
+    }
+
+    .notification-content h6 {
+      margin: 0 0 0.25rem 0;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .notification-content p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: #6c757d;
+    }
+
+    /* Performance Indicator */
+    .performance-indicator {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #e9ecef;
+    }
+
+    .performance-metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .performance-metric:last-child {
+      margin-bottom: 0;
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: #6c757d;
+      font-weight: 500;
+    }
+
+    .metric-value {
+      font-size: 1rem;
+      font-weight: 600;
       color: var(--primary-color);
     }
 
-    .loading-spinner {
-      width: 3rem;
-      height: 3rem;
-      margin-bottom: 1rem;
+    .progress-bar-custom {
+      height: 6px;
+      background: #e9ecef;
+      border-radius: 3px;
+      margin-top: 0.5rem;
+      overflow: hidden;
     }
 
-    /* Responsive */
+    .progress-fill {
+      height: 100%;
+      background: var(--gradient-primary);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    /* Loading States */
+    .loading-spinner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      color: var(--primary-color);
+    }
+
+    .loading-spinner .spinner-border {
+      width: 2rem;
+      height: 2rem;
+    }
+
+    /* Responsive Design */
     @media (max-width: 768px) {
       .control-panel {
         width: 100%;
@@ -497,6 +703,10 @@
         transform: translateX(0);
       }
       
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
       .map-controls {
         top: 10px;
         right: 10px;
@@ -506,9 +716,18 @@
         bottom: 10px;
         right: 10px;
       }
+
+      .task-actions {
+        flex-direction: column;
+      }
+
+      .task-action-btn {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+      }
     }
 
-    /* Custom popup styles */
+    /* Custom Popup Styles */
     .custom-popup .leaflet-popup-content {
       margin: 0;
       width: auto !important;
@@ -516,13 +735,14 @@
 
     .popup-content {
       padding: 1rem;
-      min-width: 250px;
+      min-width: 280px;
     }
 
     .popup-content h5 {
       margin-bottom: 0.75rem;
       color: var(--primary-color);
       font-weight: 600;
+      font-size: 1rem;
     }
 
     .property-row {
@@ -536,48 +756,129 @@
     .property-label {
       font-weight: 600;
       color: #495057;
+      font-size: 0.85rem;
     }
 
-    /* Task progress indicator */
-    .task-progress-indicator {
+    .property-value {
+      font-size: 0.85rem;
+      color: #6c757d;
+    }
+
+    /* Enhanced Modal Styling */
+    .modal-content {
+      border-radius: 15px;
+      border: none;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .modal-header {
+      border-radius: 15px 15px 0 0;
+      border-bottom: 1px solid #e9ecef;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .modal-title {
+      font-weight: 600;
+      color: white;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-footer {
+      border-top: 1px solid #e9ecef;
+      padding: 1rem 1.5rem;
+      border-radius: 0 0 15px 15px;
+    }
+
+    .form-control, .form-select {
+      border-radius: 10px;
+      border: 2px solid #e9ecef;
+      padding: 0.75rem 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+
+    .btn {
+      border-radius: 10px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Legend Styling */
+    .legend {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid #e9ecef;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .legend-item {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
     }
 
-    .task-completion-badge {
-      display: inline-flex;
+    .legend-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      margin-right: 0.75rem;
+      border: 2px solid white;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.95);
+      display: flex;
       align-items: center;
-      gap: 0.25rem;
-      padding: 0.25rem 0.5rem;
-      border-radius: 12px;
-      font-size: 0.75rem;
+      justify-content: center;
+      z-index: 9999;
+      backdrop-filter: blur(5px);
+    }
+
+    .loading-content {
+      text-align: center;
+      color: var(--primary-color);
+    }
+
+    .loading-content .spinner-border {
+      width: 3rem;
+      height: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .loading-content h4 {
       font-weight: 600;
+      margin-bottom: 0.5rem;
     }
 
-    .task-completion-badge.pending {
-      background: rgba(108, 117, 125, 0.1);
-      color: #495057;
-      border: 1px solid #6c757d;
-    }
-
-    .task-completion-badge.in-progress {
-      background: rgba(255, 193, 7, 0.1);
-      color: #856404;
-      border: 1px solid #ffc107;
-    }
-
-    .task-completion-badge.completed {
-      background: rgba(40, 167, 69, 0.1);
-      color: #155724;
-      border: 1px solid #28a745;
-    }
-
-    .task-completion-badge.overdue {
-      background: rgba(220, 53, 69, 0.1);
-      color: #721c24;
-      border: 1px solid #dc3545;
+    .loading-content p {
+      color: #6c757d;
+      margin: 0;
     }
   </style>
 </head>
@@ -585,11 +886,11 @@
   <!-- Loading Overlay -->
   <div class="loading-overlay" id="loadingOverlay">
     <div class="loading-content">
-      <div class="spinner-border loading-spinner" role="status">
+      <div class="spinner-border" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
-      <h4>Loading Map...</h4>
-      <p>Please wait while we prepare your workspace</p>
+      <h4>Loading Operator Map...</h4>
+      <p>Initializing your workspace and loading tasks...</p>
     </div>
   </div>
 
@@ -612,7 +913,12 @@
           </li>
           <li class="nav-item">
             <a class="nav-link active" href="operator-map.html">
-              <i class="fas fa-map me-1"></i>Drainage Map
+              <i class="fas fa-map me-1"></i>Map View
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="operator-tasks.html">
+              <i class="fas fa-tasks me-1"></i>Tasks
             </a>
           </li>
         </ul>
@@ -638,37 +944,114 @@
       <!-- Map Element -->
       <div id="map"></div>
       
-      <!-- Control Panel -->
+      <!-- Enhanced Control Panel -->
       <div class="control-panel" id="controlPanel">
         <div class="control-panel-header">
-          <h4><i class="fas fa-hard-hat me-2"></i>Operator View</h4>
+          <h4><i class="fas fa-hard-hat me-2"></i>Operator Control Center</h4>
           <button type="button" class="panel-toggle" id="panelToggle" title="Toggle Control Panel">
             <i class="fas fa-chevron-left" id="toggleIcon"></i>
           </button>
         </div>
         
         <div class="control-panel-body">
-          <!-- Operator Access Notice -->
-          <div class="access-notice">
-            <i class="fas fa-tools me-2"></i>
-            <strong>Operator Access:</strong> View all drainage points and manage your assigned tasks.
+          <!-- Quick Statistics -->
+          <div class="quick-stats">
+            <h6><i class="fas fa-chart-line me-2"></i>Today's Overview</h6>
+            <div class="stats-row">
+              <div class="stat-item">
+                <div class="stat-dot pending"></div>
+                <span>Pending: <strong id="stat-pending">-</strong></span>
+              </div>
+              <div class="stat-item">
+                <div class="stat-dot progress"></div>
+                <span>Active: <strong id="stat-progress">-</strong></span>
+              </div>
+            </div>
+            <div class="stats-row">
+              <div class="stat-item">
+                <div class="stat-dot completed"></div>
+                <span>Completed: <strong id="stat-completed">-</strong></span>
+              </div>
+              <div class="stat-item">
+                <div class="stat-dot overdue"></div>
+                <span>Overdue: <strong id="stat-overdue">-</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Performance Indicator -->
+          <div class="performance-indicator">
+            <h6><i class="fas fa-trophy me-2"></i>Performance</h6>
+            <div class="performance-metric">
+              <span class="metric-label">Completion Rate</span>
+              <span class="metric-value" id="completion-rate">--%</span>
+            </div>
+            <div class="progress-bar-custom">
+              <div class="progress-fill" id="completion-progress" style="width: 0%"></div>
+            </div>
+            <div class="performance-metric mt-2">
+              <span class="metric-label">Tasks This Week</span>
+              <span class="metric-value" id="tasks-week">--</span>
+            </div>
           </div>
 
           <!-- Search Container -->
           <div class="search-container">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" class="form-control" id="search-input" placeholder="Search drainage points...">
+            <input type="text" class="form-control" id="search-input" placeholder="Search tasks and locations...">
             <button class="clear-search" id="clear-search-btn" title="Clear search">
               <i class="fas fa-times"></i>
             </button>
           </div>
 
-          <!-- My Assigned Tasks -->
+          <!-- View Filters -->
+          <div class="filter-section">
+            <h6><i class="fas fa-filter me-2"></i>Quick Filters</h6>
+            
+            <div class="mb-3">
+              <div class="filter-badges">
+                <span class="filter-badge active" data-filter="all" data-type="view">All Tasks</span>
+                <span class="filter-badge" data-filter="today" data-type="view">Today</span>
+                <span class="filter-badge" data-filter="urgent" data-type="view">Urgent</span>
+                <span class="filter-badge" data-filter="nearby" data-type="view">Nearby</span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="filter-badges">
+                <span class="filter-badge active" data-filter="all" data-type="category">All Types</span>
+                <span class="filter-badge" data-filter="maintenance" data-type="category">Maintenance</span>
+                <span class="filter-badge" data-filter="inspection" data-type="category">Inspections</span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="filter-badges">
+                <span class="filter-badge active" data-filter="all" data-type="status">All Status</span>
+                <span class="filter-badge" data-filter="pending" data-type="status">Pending</span>
+                <span class="filter-badge" data-filter="progress" data-type="status">In Progress</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- My Priority Tasks -->
           <div class="content-section">
-            <h6><i class="fas fa-tasks me-2"></i>My Assigned Tasks</h6>
-            <div id="assigned-tasks">
-              <div class="text-center py-3">
-                <div class="spinner-border text-success" role="status">
+            <h6><i class="fas fa-exclamation-circle me-2"></i>Priority Tasks</h6>
+            <div id="priority-tasks">
+              <div class="loading-spinner">
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Today's Schedule -->
+          <div class="content-section">
+            <h6><i class="fas fa-calendar-day me-2"></i>Today's Schedule</h6>
+            <div id="today-tasks">
+              <div class="loading-spinner">
+                <div class="spinner-border" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
               </div>
@@ -678,62 +1061,39 @@
           <!-- Quick Actions -->
           <div class="content-section">
             <h6><i class="fas fa-bolt me-2"></i>Quick Actions</h6>
-            <a href="#" class="quick-action-btn" onclick="showUpdateTaskModal()">
-              <i class="fas fa-edit me-2"></i>
+            <button class="quick-action-btn" onclick="showUpdateTaskModal()">
+              <i class="fas fa-edit"></i>
               Update Task Status
-            </a>
-            <a href="#" class="quick-action-btn" onclick="showScheduleInspectionModal()">
-              <i class="fas fa-clipboard-plus me-2"></i>
+            </button>
+            <button class="quick-action-btn" onclick="showScheduleInspectionModal()">
+              <i class="fas fa-clipboard-plus"></i>
               Schedule Inspection
-            </a>
-            <a href="#" class="quick-action-btn" onclick="showReportIssueModal()">
-              <i class="fas fa-exclamation-circle me-2"></i>
+            </button>
+            <button class="quick-action-btn" onclick="showReportIssueModal()">
+              <i class="fas fa-exclamation-triangle"></i>
               Report Issue
-            </a>
-            <a href="#" class="quick-action-btn" onclick="showWorkLogModal()">
-              <i class="fas fa-clipboard-list me-2"></i>
+            </button>
+            <button class="quick-action-btn" onclick="showWorkLogModal()">
+              <i class="fas fa-clock"></i>
               Log Work Hours
-            </a>
+            </button>
           </div>
 
-          <!-- View Filters -->
-          <div class="filter-section">
-            <h6><i class="fas fa-filter me-2"></i>View Filters</h6>
-            
-            <div class="mb-3">
-              <label class="form-label mb-2">Show</label>
-              <div class="filter-badges">
-                <span class="filter-badge active" data-filter="all" data-type="view">All Points</span>
-                <span class="filter-badge" data-filter="my-tasks" data-type="view">My Tasks Only</span>
-                <span class="filter-badge" data-filter="urgent" data-type="view">Urgent Tasks</span>
-                <span class="filter-badge" data-filter="pending" data-type="view">Pending</span>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label mb-2">Status</label>
-              <div class="filter-badges">
-                <span class="filter-badge active" data-filter="all" data-type="status">All Status</span>
-                <span class="filter-badge" data-filter="good" data-type="status">Good</span>
-                <span class="filter-badge" data-filter="needs-maintenance" data-type="status">Maintenance</span>
-                <span class="filter-badge" data-filter="critical" data-type="status">Critical</span>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label mb-2">Task Priority</label>
-              <div class="filter-badges">
-                <span class="filter-badge active" data-filter="all" data-type="priority">All Priority</span>
-                <span class="filter-badge" data-filter="high" data-type="priority">High</span>
-                <span class="filter-badge" data-filter="medium" data-type="priority">Medium</span>
-                <span class="filter-badge" data-filter="low" data-type="priority">Low</span>
+          <!-- Recent Notifications -->
+          <div class="content-section">
+            <h6><i class="fas fa-bell me-2"></i>Notifications</h6>
+            <div class="notifications-section" id="notifications-container">
+              <div class="loading-spinner">
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Legend -->
           <div class="legend">
-            <h6><i class="fas fa-info-circle me-2"></i>Legend</h6>
+            <h6><i class="fas fa-info-circle me-2"></i>Map Legend</h6>
             <div class="legend-item">
               <div class="legend-color" style="background-color: #28a745;"></div>
               <span>Good Condition</span>
@@ -747,11 +1107,11 @@
               <span>Critical Condition</span>
             </div>
             <div class="legend-item">
-              <div class="legend-color" style="background-color: #17a2b8; border: 2px solid #28a745;"></div>
+              <div class="legend-color" style="background-color: #17a2b8; border: 3px solid #28a745;"></div>
               <span>My Assigned Task</span>
             </div>
             <div class="legend-item">
-              <div class="legend-color" style="background-color: #ffc107; border: 2px solid #dc3545;"></div>
+              <div class="legend-color" style="background-color: #ffc107; border: 3px solid #dc3545;"></div>
               <span>Overdue Task</span>
             </div>
           </div>
@@ -772,8 +1132,8 @@
         <button class="map-control-btn" id="full-extent-btn" title="Full Extent">
           <i class="fas fa-expand"></i>
         </button>
-        <button class="map-control-btn" id="toggle-layers-btn" title="Layer Control">
-          <i class="fas fa-layer-group"></i>
+        <button class="map-control-btn" id="refresh-btn" title="Refresh Data">
+          <i class="fas fa-sync-alt"></i>
         </button>
       </div>
       
@@ -781,27 +1141,25 @@
       <div class="action-buttons">
         <button class="action-btn btn-danger-custom" onclick="showFloodReportModal()">
           <i class="fas fa-exclamation-triangle"></i>
-          Report Flood
+          Emergency Report
         </button>
-        <button class="action-btn" onclick="showUpdateTaskModal()" style="background: var(--gradient-primary); color: white;">
-          <i class="fas fa-edit"></i>
-          Update Task
+        <button class="action-btn btn-primary-custom" onclick="showUpdateTaskModal()">
+          <i class="fas fa-tasks"></i>
+          Quick Update
         </button>
       </div>
     </div>
   </div>
 
-  <!-- All Modals from Dashboard -->
-  
   <!-- Enhanced Task Update Modal -->
   <div class="modal fade" id="updateTaskModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header" style="background: var(--gradient-primary);">
           <h5 class="modal-title">
             <i class="fas fa-edit me-2"></i>Update Task Status
           </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <form id="updateTaskForm">
@@ -812,9 +1170,8 @@
               </select>
             </div>
             
-            <div class="mb-3" id="task-type-display" style="display: none;">
-              <label class="form-label">Task Type</label>
-              <div id="task-type-info" class="bg-light p-3 rounded"></div>
+            <div class="mb-3" id="task-info-display" style="display: none;">
+              <div class="alert alert-info" id="task-info-content"></div>
             </div>
             
             <div class="mb-3">
@@ -845,10 +1202,21 @@
                         placeholder="Describe work completed, issues encountered, etc."></textarea>
             </div>
             
-            <div class="mb-3">
-              <label for="task-images" class="form-label">Upload Photos</label>
-              <input type="file" class="form-control" id="task-images" multiple accept="image/*">
-              <div class="form-text">Upload photos of work progress or completed tasks</div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="hours-worked" class="form-label">Hours Worked</label>
+                  <input type="number" class="form-control" id="hours-worked" step="0.5" min="0" 
+                         placeholder="0.0">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="completion-percentage" class="form-label">Completion %</label>
+                  <input type="number" class="form-control" id="completion-percentage" min="0" max="100" 
+                         placeholder="0">
+                </div>
+              </div>
             </div>
           </form>
         </div>
@@ -866,11 +1234,11 @@
   <div class="modal fade" id="scheduleInspectionModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header bg-warning">
+        <div class="modal-header" style="background: #ffc107; color: #000;">
           <h5 class="modal-title">
             <i class="fas fa-clipboard-plus me-2"></i>Schedule Inspection
           </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <form id="scheduleInspectionForm">
@@ -939,16 +1307,16 @@
   <div class="modal fade" id="reportIssueModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header bg-warning">
+        <div class="modal-header" style="background: #fd7e14; color: white;">
           <h5 class="modal-title">
             <i class="fas fa-exclamation-circle me-2"></i>Report Issue
           </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <form id="reportIssueForm">
             <div class="mb-3">
-              <label for="issue-location" class="form-label">Location/Drainage Point ID</label>
+              <label for="issue-location" class="form-label">Location/Drainage Point</label>
               <input type="text" class="form-control" id="issue-location" required 
                      placeholder="e.g., PO03, BB7, or location description">
             </div>
@@ -981,17 +1349,11 @@
               <textarea class="form-control" id="issue-description" rows="4" required
                         placeholder="Describe the issue in detail..."></textarea>
             </div>
-            
-            <div class="mb-3">
-              <label for="issue-images" class="form-label">Upload Photos</label>
-              <input type="file" class="form-control" id="issue-images" multiple accept="image/*">
-              <div class="form-text">Photos help supervisors understand the issue better</div>
-            </div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-warning" onclick="submitIssueReport()">
+          <button type="button" class="btn" style="background: #fd7e14; color: white;" onclick="submitIssueReport()">
             <i class="fas fa-paper-plane me-1"></i>Submit Report
           </button>
         </div>
@@ -1003,11 +1365,11 @@
   <div class="modal fade" id="workLogModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header bg-info">
+        <div class="modal-header" style="background: #17a2b8; color: white;">
           <h5 class="modal-title">
-            <i class="fas fa-clipboard-list me-2"></i>Log Work Hours
+            <i class="fas fa-clock me-2"></i>Log Work Hours
           </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" title="Close"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <form id="workLogForm">
@@ -1027,14 +1389,14 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="hours-worked" class="form-label">Hours Worked</label>
-                  <input type="number" class="form-control" id="hours-worked" step="0.5" min="0" required>
+                  <label for="worklog-hours-worked" class="form-label">Hours Worked</label>
+                  <input type="number" class="form-control" id="worklog-hours-worked" step="0.5" min="0" required>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="completion-percentage" class="form-label">Completion %</label>
-                  <input type="number" class="form-control" id="completion-percentage" min="0" max="100">
+                  <label for="worklog-completion-percentage" class="form-label">Completion %</label>
+                  <input type="number" class="form-control" id="worklog-completion-percentage" min="0" max="100">
                 </div>
               </div>
             </div>
@@ -1061,17 +1423,21 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header bg-danger">
-          <h5 class="modal-title">
-            <i class="fas fa-exclamation-triangle me-2"></i>Report Flooding
+          <h5 class="modal-title text-white">
+            <i class="fas fa-exclamation-triangle me-2"></i>Emergency Flood Report
           </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
+          <div class="alert alert-warning">
+            <i class="fas fa-info-circle me-2"></i>
+            Use this for immediate flood situations requiring urgent response.
+          </div>
           <form id="floodReportForm">
             <div class="mb-3">
               <label for="flood-location" class="form-label">Location</label>
               <input type="text" class="form-control" id="flood-location" required 
-                     placeholder="Enter location description">
+                     placeholder="Enter specific location description">
             </div>
             
             <div class="mb-3">
@@ -1087,68 +1453,15 @@
             <div class="mb-3">
               <label for="flood-description" class="form-label">Description</label>
               <textarea class="form-control" id="flood-description" rows="3" required
-                        placeholder="Describe the flooding situation..."></textarea>
+                        placeholder="Describe the flooding situation in detail..."></textarea>
             </div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
           <button type="button" class="btn btn-danger" onclick="submitFloodReport()">
-            <i class="fas fa-paper-plane me-1"></i>Submit Report
+            <i class="fas fa-paper-plane me-1"></i>Submit Emergency Report
           </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Layer Control Modal -->
-  <div class="modal fade" id="layerControlModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">
-            <i class="fas fa-layer-group me-2"></i>Layer Control
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <h6 class="mb-3">Overlay Layers</h6>
-          <div class="form-check form-switch mb-3">
-            <input class="form-check-input" type="checkbox" id="layer-drainage" checked>
-            <label class="form-check-label" for="layer-drainage">
-              <i class="fas fa-map-pin me-2 text-primary"></i>Drainage Points
-            </label>
-          </div>
-          <div class="form-check form-switch mb-3">
-            <input class="form-check-input" type="checkbox" id="layer-flood-prone" checked>
-            <label class="form-check-label" for="layer-flood-prone">
-              <i class="fas fa-water me-2 text-info"></i>Flood-prone Areas
-            </label>
-          </div>
-          
-          <hr>
-          <h6 class="mb-3">Base Maps</h6>
-          <div class="form-check mb-2">
-            <input class="form-check-input" type="radio" name="basemap" id="basemap-street" checked>
-            <label class="form-check-label" for="basemap-street">
-              <i class="fas fa-road me-2"></i>Street Map
-            </label>
-          </div>
-          <div class="form-check mb-2">
-            <input class="form-check-input" type="radio" name="basemap" id="basemap-satellite">
-            <label class="form-check-label" for="basemap-satellite">
-              <i class="fas fa-satellite me-2"></i>Satellite Imagery
-            </label>
-          </div>
-          <div class="form-check mb-2">
-            <input class="form-check-input" type="radio" name="basemap" id="basemap-terrain">
-            <label class="form-check-label" for="basemap-terrain">
-              <i class="fas fa-mountain me-2"></i>Terrain
-            </label>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
@@ -1160,7 +1473,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
 
   <script>
-    // Global variables - exactly matching dashboard
+    // Global variables
     let map;
     let drainagePointsLayer, floodProneAreasLayer;
     let osmTileLayer, satelliteTileLayer, terrainTileLayer;
@@ -1171,18 +1484,19 @@
     let drainagePoints = [];
     let currentFilters = {
       view: "all",
+      category: "all",
       status: "all",
-      priority: "all",
       search: ""
     };
+    let refreshInterval;
 
-    // Initialize page - exactly like dashboard
+    // Initialize page
     document.addEventListener('DOMContentLoaded', function() {
       checkAuthentication();
     });
 
     /**
-     * Check if user is authenticated and has appropriate role - exactly like dashboard
+     * Check authentication and initialize
      */
     async function checkAuthentication() {
       try {
@@ -1190,9 +1504,8 @@
         const result = await response.json();
         
         if (result.success && result.authenticated) {
-          // Check if user has Operator role
           if (result.user.role !== 'Operator') {
-            showNotification('Access denied. This map is for operators only.', 'danger');
+            showNotification('Access denied. This interface is for operators only.', 'danger');
             setTimeout(() => {
               window.location.href = '../login.html?unauthorized=1';
             }, 2000);
@@ -1204,7 +1517,6 @@
           hideLoadingOverlay();
           initializeOperatorMap();
         } else {
-          // Redirect to login page
           window.location.href = '../login.html?unauthorized=1';
         }
       } catch (error) {
@@ -1217,7 +1529,7 @@
     }
 
     /**
-     * Hide the loading overlay - exactly like dashboard
+     * Hide loading overlay
      */
     function hideLoadingOverlay() {
       const overlay = document.getElementById('loadingOverlay');
@@ -1228,26 +1540,10 @@
     }
 
     /**
-     * Logout function - exactly like dashboard
+     * Initialize the operator map
      */
-    async function logout() {
-      try {
-        showNotification('Logging out...', 'info');
-        
-        // Clear session on server
-        await fetch('../api/logout.php', { method: 'POST' });
-        
-        // Redirect to login page
-        window.location.href = '../login.html?logout=1';
-      } catch (error) {
-        console.error('Logout failed:', error);
-        // Still redirect even if logout request fails
-        window.location.href = '../login.html?logout=1';
-      }
-    }
-
     function initializeOperatorMap() {
-      // Initialize map - DISABLE default zoom controls
+      // Initialize map
       map = L.map('map', {
         zoomControl: false,
         attributionControl: false,
@@ -1259,18 +1555,21 @@
       // Initialize overlay layers
       initializeOverlayLayers();
       
-      // Setup map event handlers
+      // Setup event handlers
       setupMapEventHandlers();
-      
-      // Setup controls
       setupOperatorControls();
       
-      // Load data - using same functions as dashboard
+      // Load data
       loadAllData();
+      
+      // Setup auto-refresh
+      refreshInterval = setInterval(() => {
+        refreshData();
+      }, 300000); // Refresh every 5 minutes
       
       // Show welcome message
       setTimeout(() => {
-        showNotification(`Welcome ${currentUser.name}! Map view loaded successfully.`, 'info');
+        showNotification(`Welcome ${currentUser.name}! Map interface loaded successfully.`, 'success');
       }, 1000);
     }
 
@@ -1297,6 +1596,7 @@
         spiderfyOnMaxZoom: true,
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
+        maxClusterRadius: 40
       }).addTo(map);
 
       floodProneAreasLayer = L.layerGroup().addTo(map);
@@ -1308,7 +1608,7 @@
     }
 
     function handleMapClick(e) {
-      // Handle any map click events here
+      // Could implement click-to-report functionality here
     }
 
     function updateZoomLevel() {
@@ -1318,7 +1618,9 @@
       }
     }
 
-    // Load all data using same functions as dashboard
+    /**
+     * Load all data
+     */
     async function loadAllData() {
       try {
         await Promise.all([
@@ -1328,24 +1630,23 @@
         ]);
         
         renderOperatorMap();
-        displayMyTasks();
+        updateStatistics();
+        displayPriorityTasks();
+        displayTodayTasks();
+        displayNotifications();
         populateTaskSelects();
         populateDrainagePointsSelect();
-        renderFloodProneAreas(getSampleFloodProneAreas());
         
-        // Refresh data every 5 minutes like dashboard
-        setInterval(() => {
-          loadDashboardData();
-          loadAllTasks();
-        }, 300000);
       } catch (error) {
         console.error('Data loading failed:', error);
-        showNotification('Using sample data for demonstration', 'warning');
+        showNotification('Error loading data. Using sample data for demonstration.', 'warning');
         loadSampleData();
       }
     }
 
-    // Exact same functions as dashboard
+    /**
+     * Load dashboard data
+     */
     async function loadDashboardData() {
       try {
         const response = await fetch('operator-dashboard.php');
@@ -1358,28 +1659,14 @@
         }
       } catch (error) {
         console.error('Error loading dashboard data:', error);
-        showNotification('Error loading dashboard data: ' + error.message, 'warning');
-        
-        // Provide default data to prevent crashes
-        dashboardData = {
-          statistics: {
-            total_tasks: 0,
-            pending_tasks: 0,
-            in_progress_tasks: 0,
-            completed_this_week: 0
-          },
-          today_schedule: [],
-          work_progress: [
-            {completed_tasks: 0},
-            {completed_tasks: 1},
-            {completed_tasks: 2},
-            {completed_tasks: 1}
-          ],
-          notifications: []
-        };
+        // Provide fallback data
+        dashboardData = getSampleDashboardData();
       }
     }
 
+    /**
+     * Load all tasks
+     */
     async function loadAllTasks() {
       try {
         const response = await fetch('operator-tasks.php');
@@ -1387,15 +1674,18 @@
         
         if (result.success) {
           allTasksData = result.tasks || [];
-          populateTaskSelects();
+        } else {
+          throw new Error(result.message || 'Failed to load tasks');
         }
       } catch (error) {
-        console.error('Error loading tasks data:', error);
+        console.error('Error loading tasks:', error);
         allTasksData = getSampleTasks();
-        populateTaskSelects();
       }
     }
 
+    /**
+     * Load drainage points
+     */
     async function loadDrainagePoints() {
       try {
         const response = await fetch('../api/drainage-points.php');
@@ -1405,112 +1695,324 @@
           drainagePoints = result.data || [];
           allDrainageData = result.data || [];
         } else {
-          drainagePoints = getSampleDrainagePoints();
-          allDrainageData = getSampleDrainageData();
+          throw new Error(result.message || 'Failed to load drainage points');
         }
-        populateDrainagePointsSelect();
       } catch (error) {
         console.error('Error loading drainage points:', error);
         drainagePoints = getSampleDrainagePoints();
         allDrainageData = getSampleDrainageData();
-        populateDrainagePointsSelect();
       }
     }
 
-    function loadSampleData() {
-      // Load sample drainage data if API fails
-      allDrainageData = getSampleDrainageData();
-      allTasksData = getSampleTasks();
-      drainagePoints = getSampleDrainagePoints();
-      
-      renderOperatorMap();
-      displayMyTasks();
-      populateTaskSelects();
-      populateDrainagePointsSelect();
-      renderFloodProneAreas(getSampleFloodProneAreas());
-      
-      showNotification('Sample data loaded successfully', 'success');
+    /**
+     * Refresh data
+     */
+    async function refreshData() {
+      try {
+        await Promise.all([
+          loadDashboardData(),
+          loadAllTasks()
+        ]);
+        
+        updateStatistics();
+        displayPriorityTasks();
+        displayTodayTasks();
+        displayNotifications();
+        renderOperatorMap();
+        
+        // Visual feedback for refresh
+        const refreshBtn = document.getElementById('refresh-btn');
+        refreshBtn.classList.add('fa-spin');
+        setTimeout(() => {
+          refreshBtn.classList.remove('fa-spin');
+        }, 1000);
+        
+      } catch (error) {
+        console.error('Error refreshing data:', error);
+      }
     }
 
-    // Display My Tasks - exactly like dashboard
-    function displayMyTasks() {
-      const container = document.getElementById('assigned-tasks');
+    /**
+     * Update statistics display
+     */
+    function updateStatistics() {
+      if (!dashboardData || !dashboardData.statistics) return;
+
+      const stats = dashboardData.statistics;
       
-      if (allTasksData.length === 0) {
-        container.innerHTML = '<p class="text-muted">No tasks currently assigned to you.</p>';
+      // Update quick stats
+      document.getElementById('stat-pending').textContent = stats.pending_tasks || 0;
+      document.getElementById('stat-progress').textContent = stats.in_progress_tasks || 0;
+      document.getElementById('stat-completed').textContent = stats.completed_this_week || 0;
+      document.getElementById('stat-overdue').textContent = stats.overdue_tasks || 0;
+
+      // Update performance metrics
+      if (dashboardData.performance) {
+        const performance = dashboardData.performance;
+        const completionRate = performance.on_time_completion_rate || 0;
+        
+        document.getElementById('completion-rate').textContent = `${Math.round(completionRate)}%`;
+        document.getElementById('completion-progress').style.width = `${completionRate}%`;
+        document.getElementById('tasks-week').textContent = performance.total_completed || 0;
+      }
+    }
+
+    /**
+     * Display priority tasks
+     */
+    function displayPriorityTasks() {
+      const container = document.getElementById('priority-tasks');
+      
+      if (!dashboardData || !dashboardData.priority_tasks || dashboardData.priority_tasks.length === 0) {
+        container.innerHTML = '<p class="text-muted small">No priority tasks at this time.</p>';
         return;
       }
 
-      // Group tasks by status - exact same logic as dashboard
-      const pendingTasks = allTasksData.filter(t => t.status === 'Pending' || t.status === 'Scheduled');
-      const inProgressTasks = allTasksData.filter(t => t.status === 'In Progress');
-
-      let html = '';
-
-      if (pendingTasks.length > 0) {
-        html += '<h6 class="text-warning mb-2">Pending Tasks</h6>';
-        html += pendingTasks.map(task => createTaskCard(task)).join('');
-      }
-
-      if (inProgressTasks.length > 0) {
-        html += '<h6 class="text-info mb-2">In Progress</h6>';
-        html += inProgressTasks.map(task => createTaskCard(task)).join('');
-      }
-
-      container.innerHTML = html;
+      const tasks = dashboardData.priority_tasks.slice(0, 3); // Show top 3
+      container.innerHTML = tasks.map(task => createTaskCard(task, true)).join('');
     }
 
-    // Create Task Card - exactly like dashboard
-    function createTaskCard(task) {
+    /**
+     * Display today's tasks
+     */
+    function displayTodayTasks() {
+      const container = document.getElementById('today-tasks');
+      
+      if (!dashboardData || !dashboardData.today_schedule || dashboardData.today_schedule.length === 0) {
+        container.innerHTML = '<p class="text-muted small">No tasks scheduled for today.</p>';
+        return;
+      }
+
+      const tasks = dashboardData.today_schedule;
+      container.innerHTML = tasks.map(task => createTaskCard(task, false)).join('');
+    }
+
+    /**
+     * Display notifications
+     */
+    function displayNotifications() {
+      const container = document.getElementById('notifications-container');
+      
+      if (!dashboardData || !dashboardData.notifications || dashboardData.notifications.length === 0) {
+        container.innerHTML = '<p class="text-muted small">No new notifications.</p>';
+        return;
+      }
+
+      const notifications = dashboardData.notifications.slice(0, 3);
+      container.innerHTML = notifications.map(notification => `
+        <div class="notification-item">
+          <i class="notification-icon fas fa-${getNotificationIcon(notification.type)}"></i>
+          <div class="notification-content">
+            <h6>${notification.title}</h6>
+            <p>${notification.message}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /**
+     * Create task card HTML
+     */
+    function createTaskCard(task, isCompact = false) {
       const isOverdue = new Date(task.scheduled_date) < new Date() && task.status !== 'Completed';
-      const priorityClass = task.priority ? task.priority.toLowerCase().replace(' ', '-') + '-priority' : '';
-      const categoryClass = task.task_category === 'Inspection' ? 'inspection-task' : '';
+      const priorityClass = `priority-${(task.priority || 'medium').toLowerCase()}`;
+      const categoryClass = `${(task.task_category || 'maintenance').toLowerCase()}-task`;
       
       return `
-        <div class="task-card ${priorityClass} ${categoryClass}" onclick="focusOnTask(${task.id})">
-          <div class="position-relative">
-            <span class="task-category-badge ${task.task_category.toLowerCase()}">${task.task_category}</span>
-            
-            <div class="d-flex justify-content-between align-items-start mb-2">
-              <div class="flex-grow-1">
-                <h6 class="mb-1">${task.drainage_point_name || 'Unknown Location'}</h6>
-                <div class="d-flex align-items-center gap-2 mb-2">
-                  <span class="badge bg-${getPriorityColor(task.priority)}">${task.priority}</span>
-                  <span class="badge ${getStatusBadgeClass(task.status)}">${task.status}</span>
-                  ${isOverdue ? '<span class="badge bg-danger">OVERDUE</span>' : ''}
-                </div>
-                <p class="small mb-1">${task.task_type} - ${task.description || 'No description'}</p>
-                <small class="text-muted">
-                  <i class="fas fa-calendar me-1"></i>
-                  Due: ${task.scheduled_date}
-                  ${task.scheduled_time ? ` at ${task.scheduled_time}` : ''}
-                </small>
-              </div>
-            </div>
-            
-            <div class="mt-3 d-flex gap-2">
-              <button class="btn btn-sm btn-primary" onclick="event.stopPropagation(); updateSpecificTask(${task.id}, '${task.task_category}')">
-                <i class="fas fa-edit me-1"></i>Update
-              </button>
-              <button class="btn btn-sm btn-outline-info" onclick="event.stopPropagation(); viewTaskDetails(${task.id}, '${task.task_category}')">
-                <i class="fas fa-eye me-1"></i>Details
-              </button>
-              ${task.task_category === 'Inspection' ? `
-                <button class="btn btn-sm btn-outline-warning" onclick="event.stopPropagation(); startInspection(${task.id})">
-                  <i class="fas fa-play me-1"></i>Start
-                </button>
-              ` : ''}
-            </div>
+        <div class="task-card ${priorityClass} ${categoryClass}" onclick="focusOnTask('${task.id}', '${task.task_category}')">
+          <div class="task-header">
+            <h6 class="task-title">${task.drainage_point_name || 'Unknown Location'}</h6>
           </div>
+          
+          <div class="task-location">${task.task_type || task.request_type}</div>
+          
+          <div class="task-badges">
+            <span class="task-badge badge-${(task.task_category || 'maintenance').toLowerCase()}">${task.task_category || 'Maintenance'}</span>
+            <span class="task-badge badge-priority-${(task.priority || 'medium').toLowerCase()}">${task.priority || 'Medium'}</span>
+            <span class="task-badge badge-status-${(task.status || 'pending').toLowerCase().replace(' ', '-')}">${task.status || 'Pending'}</span>
+            ${isOverdue ? '<span class="task-badge badge-priority-critical">OVERDUE</span>' : ''}
+          </div>
+          
+          <div class="task-meta">
+            <span><i class="fas fa-calendar me-1"></i>${task.scheduled_date}</span>
+            ${task.scheduled_time ? `<span><i class="fas fa-clock me-1"></i>${task.scheduled_time}</span>` : ''}
+          </div>
+          
+          ${!isCompact ? `
+            <div class="task-actions">
+              <button class="task-action-btn btn-task-update" onclick="event.stopPropagation(); updateSpecificTask('${task.id}', '${task.task_category}')">
+                <i class="fas fa-edit"></i>
+                Update
+              </button>
+              <button class="task-action-btn btn-task-details" onclick="event.stopPropagation(); viewTaskDetails('${task.id}', '${task.task_category}')">
+                <i class="fas fa-eye"></i>
+                Details
+              </button>
+            </div>
+          ` : ''}
         </div>
       `;
     }
 
-    function renderOperatorMap() {
+    /**
+     * Setup operator controls
+     */
+    function setupOperatorControls() {
+      // Panel toggle
+      const panel = document.getElementById('controlPanel');
+      const toggleBtn = document.getElementById('panelToggle');
+      const toggleIcon = document.getElementById('toggleIcon');
+
+      toggleBtn.addEventListener('click', function() {
+        const isCollapsed = panel.classList.contains('collapsed');
+        
+        if (isCollapsed) {
+          panel.classList.remove('collapsed');
+          toggleIcon.className = 'fas fa-chevron-left';
+        } else {
+          panel.classList.add('collapsed');
+          toggleIcon.className = 'fas fa-chevron-right';
+        }
+      });
+
+      // Map controls
+      document.getElementById('zoom-in-btn').addEventListener('click', () => map.zoomIn());
+      document.getElementById('zoom-out-btn').addEventListener('click', () => map.zoomOut());
+      document.getElementById('locate-me-btn').addEventListener('click', handleLocateMe);
+      document.getElementById('full-extent-btn').addEventListener('click', () => map.setView([2.05788, 102.57471], 13));
+      document.getElementById('refresh-btn').addEventListener('click', refreshData);
+
+      // Filter functionality
+      document.querySelectorAll('.filter-badge').forEach(badge => {
+        badge.addEventListener('click', function() {
+          const filterType = this.getAttribute('data-type');
+          const filterValue = this.getAttribute('data-filter');
+
+          // Update active state
+          document.querySelectorAll(`[data-type="${filterType}"]`).forEach(b => {
+            b.classList.remove('active');
+          });
+          this.classList.add('active');
+
+          // Apply filter
+          currentFilters[filterType] = filterValue;
+          applyFilters();
+        });
+      });
+
+      // Search functionality
+      setupSearch();
+    }
+
+    /**
+     * Setup search functionality
+     */
+    function setupSearch() {
+      const searchInput = document.getElementById('search-input');
+      const clearSearchBtn = document.getElementById('clear-search-btn');
+      
+      searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.trim();
+        currentFilters.search = searchTerm;
+        if (searchTerm) {
+          clearSearchBtn.classList.add('show');
+        } else {
+          clearSearchBtn.classList.remove('show');
+        }
+        applyFilters();
+      });
+      
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        clearSearchBtn.classList.remove('show');
+        currentFilters.search = '';
+        applyFilters();
+      });
+    }
+
+    /**
+     * Apply filters to map and data
+     */
+    function applyFilters() {
+      let filteredData = [...allDrainageData];
+
+      // Apply search filter
+      if (currentFilters.search) {
+        const searchTerm = currentFilters.search.toLowerCase();
+        filteredData = filteredData.filter(point =>
+          point.name.toLowerCase().includes(searchTerm) ||
+          point.type.toLowerCase().includes(searchTerm) ||
+          point.status.toLowerCase().includes(searchTerm) ||
+          (point.description && point.description.toLowerCase().includes(searchTerm))
+        );
+      }
+
+      // Apply view filter
+      if (currentFilters.view !== 'all') {
+        switch (currentFilters.view) {
+          case 'today':
+            const today = new Date().toISOString().split('T')[0];
+            const todayTaskPoints = allTasksData
+              .filter(task => task.scheduled_date === today)
+              .map(task => task.drainage_point_name);
+            filteredData = filteredData.filter(point => 
+              todayTaskPoints.includes(point.name)
+            );
+            break;
+          case 'urgent':
+            const urgentTaskPoints = allTasksData
+              .filter(task => task.priority === 'High' || task.priority === 'Critical')
+              .map(task => task.drainage_point_name);
+            filteredData = filteredData.filter(point => 
+              urgentTaskPoints.includes(point.name)
+            );
+            break;
+          case 'nearby':
+            // Could implement geolocation-based filtering
+            break;
+        }
+      }
+
+      // Apply category filter
+      if (currentFilters.category !== 'all') {
+        const categoryTaskPoints = allTasksData
+          .filter(task => task.task_category && task.task_category.toLowerCase() === currentFilters.category)
+          .map(task => task.drainage_point_name);
+        filteredData = filteredData.filter(point => 
+          categoryTaskPoints.includes(point.name)
+        );
+      }
+
+      // Apply status filter
+      if (currentFilters.status !== 'all') {
+        const statusTaskPoints = allTasksData
+          .filter(task => {
+            switch (currentFilters.status) {
+              case 'pending':
+                return task.status === 'Pending' || task.status === 'Scheduled';
+              case 'progress':
+                return task.status === 'In Progress';
+              default:
+                return true;
+            }
+          })
+          .map(task => task.drainage_point_name);
+        filteredData = filteredData.filter(point => 
+          statusTaskPoints.includes(point.name)
+        );
+      }
+
+      // Re-render map with filtered data
+      renderFilteredMap(filteredData);
+    }
+
+    /**
+     * Render filtered map
+     */
+    function renderFilteredMap(filteredData) {
       drainagePointsLayer.clearLayers();
 
-      allDrainageData.forEach(point => {
-        // Check if this point has an assigned task for current operator
+      filteredData.forEach(point => {
         const hasMyTask = allTasksData.some(task => 
           task.drainage_point_name === point.name || 
           task.drainage_point_id == point.id
@@ -1535,6 +2037,40 @@
       });
     }
 
+    /**
+     * Render operator map
+     */
+    function renderOperatorMap() {
+      drainagePointsLayer.clearLayers();
+
+      allDrainageData.forEach(point => {
+        const hasMyTask = allTasksData.some(task => 
+          task.drainage_point_name === point.name || 
+          task.drainage_point_id == point.id
+        );
+
+        const task = allTasksData.find(t => 
+          t.drainage_point_name === point.name || t.drainage_point_id == point.id
+        );
+
+        const marker = L.marker(point.coordinates, {
+          icon: createOperatorMarkerIcon(point.status, hasMyTask, task),
+          title: point.name
+        });
+
+        const popupContent = createOperatorPopupContent(point, hasMyTask, task);
+        marker.bindPopup(popupContent, {
+          maxWidth: 300,
+          className: 'custom-popup'
+        });
+
+        drainagePointsLayer.addLayer(marker);
+      });
+    }
+
+    /**
+     * Create operator marker icon
+     */
     function createOperatorMarkerIcon(status, hasMyTask, task) {
       const colors = {
         Good: "#28a745",
@@ -1567,18 +2103,21 @@
         html: `
           <div style="
             background: ${color}; 
-            width: 14px; 
-            height: 14px; 
+            width: 16px; 
+            height: 16px; 
             border-radius: 50%; 
             border: ${borderWidth} solid ${borderColor};
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
           "></div>
         `,
-        iconSize: [20, 20],
-        iconAnchor: [10, 10],
+        iconSize: [22, 22],
+        iconAnchor: [11, 11],
       });
     }
 
+    /**
+     * Create operator popup content
+     */
     function createOperatorPopupContent(point, hasMyTask, task) {
       const statusClass = getStatusBadgeClass(point.status);
 
@@ -1590,12 +2129,16 @@
             ${hasMyTask ? '<span class="badge bg-primary ms-1">My Task</span>' : ''}
           </div>
           <div class="property-row">
+            <div class="property-label">Type:</div>
+            <div class="property-value">${point.type || 'Unknown'}</div>
+          </div>
+          <div class="property-row">
             <div class="property-label">Depth:</div>
-            <div>${point.depth}m</div>
+            <div class="property-value">${point.depth}m</div>
           </div>
           <div class="property-row">
             <div class="property-label">Description:</div>
-            <div>${point.description || "No description available"}</div>
+            <div class="property-value">${point.description || "No description available"}</div>
           </div>
           ${task ? `
             <div class="mt-2 p-2 bg-light rounded">
@@ -1610,8 +2153,8 @@
                 <i class="fas fa-edit me-1"></i>Update My Task
               </button>
             ` : `
-              <button class="btn btn-sm btn-outline-secondary" disabled>
-                <i class="fas fa-eye me-1"></i>View Only
+              <button class="btn btn-sm btn-outline-primary" onclick="createTaskForPoint('${point.name}')">
+                <i class="fas fa-plus me-1"></i>Create Task
               </button>
             `}
           </div>
@@ -1619,231 +2162,9 @@
       `;
     }
 
-    function renderFloodProneAreas(data) {
-      floodProneAreasLayer.clearLayers();
-
-      data.forEach((area) => {
-        const polygon = L.polygon(area.coordinates, {
-          color: "#17a2b8",
-          fillColor: "#17a2b8",
-          fillOpacity: 0.3,
-          weight: 2,
-        }).addTo(floodProneAreasLayer);
-
-        const popupContent = `
-          <div class="popup-content">
-            <h5><i class="fas fa-water me-2"></i>${area.name}</h5>
-            <div class="property-row">
-              <div class="property-label">Risk Level:</div>
-              <div><span class="badge bg-warning">${area.risk_level}</span></div>
-            </div>
-            <div class="property-row">
-              <div class="property-label">Last Flood:</div>
-              <div>${area.last_flood || "No record"}</div>
-            </div>
-          </div>
-        `;
-
-        polygon.bindPopup(popupContent);
-      });
-    }
-
-    function setupOperatorControls() {
-      // Panel toggle functionality
-      const panel = document.getElementById('controlPanel');
-      const toggleBtn = document.getElementById('panelToggle');
-      const toggleIcon = document.getElementById('toggleIcon');
-
-      toggleBtn.addEventListener('click', function() {
-        const isCollapsed = panel.classList.contains('collapsed');
-        
-        if (isCollapsed) {
-          panel.classList.remove('collapsed');
-          toggleIcon.className = 'fas fa-chevron-left';
-        } else {
-          panel.classList.add('collapsed');
-          toggleIcon.className = 'fas fa-chevron-right';
-        }
-      });
-
-      // Map controls
-      document.getElementById('zoom-in-btn').addEventListener('click', () => map.zoomIn());
-      document.getElementById('zoom-out-btn').addEventListener('click', () => map.zoomOut());
-      document.getElementById('locate-me-btn').addEventListener('click', handleLocateMe);
-      document.getElementById('full-extent-btn').addEventListener('click', () => map.setView([2.05788, 102.57471], 13));
-      document.getElementById('toggle-layers-btn').addEventListener('click', () => showModal('layerControlModal'));
-
-      // Filter functionality
-      document.querySelectorAll('.filter-badge').forEach(badge => {
-        badge.addEventListener('click', function() {
-          const filterType = this.getAttribute('data-type');
-          const filterValue = this.getAttribute('data-filter');
-
-          // Update active state
-          document.querySelectorAll(`[data-type="${filterType}"]`).forEach(b => {
-            b.classList.remove('active');
-          });
-          this.classList.add('active');
-
-          // Apply filter
-          currentFilters[filterType] = filterValue;
-          applyOperatorFilters();
-        });
-      });
-
-      // Search functionality
-      setupEnhancedSearch();
-
-      // Layer controls
-      setupLayerControls();
-      setupBasemapControls();
-    }
-
-    function setupEnhancedSearch() {
-      const searchInput = document.getElementById('search-input');
-      const clearSearchBtn = document.getElementById('clear-search-btn');
-      
-      searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.trim();
-        currentFilters.search = searchTerm;
-        if (searchTerm) {
-          clearSearchBtn.classList.add('show');
-        } else {
-          clearSearchBtn.classList.remove('show');
-        }
-        applyOperatorFilters();
-      });
-      
-      clearSearchBtn.addEventListener('click', () => {
-        searchInput.value = '';
-        clearSearchBtn.classList.remove('show');
-        currentFilters.search = '';
-        applyOperatorFilters();
-      });
-    }
-
-    function setupLayerControls() {
-      document.getElementById('layer-drainage').addEventListener('change', (e) => {
-        if (e.target.checked) {
-          map.addLayer(drainagePointsLayer);
-        } else {
-          map.removeLayer(drainagePointsLayer);
-        }
-      });
-
-      document.getElementById('layer-flood-prone').addEventListener('change', (e) => {
-        if (e.target.checked) {
-          map.addLayer(floodProneAreasLayer);
-        } else {
-          map.removeLayer(floodProneAreasLayer);
-        }
-      });
-    }
-
-    function setupBasemapControls() {
-      document.getElementById('basemap-street').addEventListener('change', () => switchBasemap('street'));
-      document.getElementById('basemap-satellite').addEventListener('change', () => switchBasemap('satellite'));
-      document.getElementById('basemap-terrain').addEventListener('change', () => switchBasemap('terrain'));
-    }
-
-    function switchBasemap(type) {
-      [osmTileLayer, satelliteTileLayer, terrainTileLayer].forEach((layer) => {
-        map.removeLayer(layer);
-      });
-
-      const basemaps = {
-        street: osmTileLayer,
-        satellite: satelliteTileLayer,
-        terrain: terrainTileLayer,
-      };
-
-      if (basemaps[type]) {
-        map.addLayer(basemaps[type]);
-      }
-    }
-
-    function applyOperatorFilters() {
-      let filteredData = [...allDrainageData];
-
-      // Apply search filter
-      if (currentFilters.search) {
-        const searchTerm = currentFilters.search.toLowerCase();
-        filteredData = filteredData.filter(point =>
-          point.name.toLowerCase().includes(searchTerm) ||
-          point.type.toLowerCase().includes(searchTerm) ||
-          point.status.toLowerCase().includes(searchTerm) ||
-          (point.description && point.description.toLowerCase().includes(searchTerm))
-        );
-      }
-
-      // Apply view filter
-      if (currentFilters.view !== 'all') {
-        switch (currentFilters.view) {
-          case 'my-tasks':
-            const myTaskPointNames = allTasksData.map(task => task.drainage_point_name);
-            filteredData = filteredData.filter(point => 
-              myTaskPointNames.includes(point.name)
-            );
-            break;
-          case 'urgent':
-            const urgentTaskPoints = allTasksData
-              .filter(task => task.priority === 'High' || task.priority === 'Critical')
-              .map(task => task.drainage_point_name);
-            filteredData = filteredData.filter(point => 
-              urgentTaskPoints.includes(point.name)
-            );
-            break;
-          case 'pending':
-            const pendingTaskPoints = allTasksData
-              .filter(task => task.status === 'Pending' || task.status === 'Scheduled')
-              .map(task => task.drainage_point_name);
-            filteredData = filteredData.filter(point => 
-              pendingTaskPoints.includes(point.name)
-            );
-            break;
-        }
-      }
-
-      // Apply status filter
-      if (currentFilters.status !== 'all') {
-        const statusMap = {
-          'good': 'Good',
-          'needs-maintenance': 'Needs Maintenance',
-          'critical': 'Critical'
-        };
-        filteredData = filteredData.filter(point => 
-          point.status === statusMap[currentFilters.status]
-        );
-      }
-
-      // Re-render map with filtered data
-      drainagePointsLayer.clearLayers();
-      filteredData.forEach(point => {
-        const hasMyTask = allTasksData.some(task => 
-          task.drainage_point_name === point.name || 
-          task.drainage_point_id == point.id
-        );
-
-        const task = allTasksData.find(t => 
-          t.drainage_point_name === point.name || t.drainage_point_id == point.id
-        );
-
-        const marker = L.marker(point.coordinates, {
-          icon: createOperatorMarkerIcon(point.status, hasMyTask, task),
-          title: point.name
-        });
-
-        const popupContent = createOperatorPopupContent(point, hasMyTask, task);
-        marker.bindPopup(popupContent, {
-          maxWidth: 300,
-          className: 'custom-popup'
-        });
-
-        drainagePointsLayer.addLayer(marker);
-      });
-    }
-
-    // Populate selects - exactly like dashboard
+    /**
+     * Populate task selects
+     */
     function populateTaskSelects() {
       const taskSelect = document.getElementById('task-select');
       const worklogTaskSelect = document.getElementById('worklog-task');
@@ -1858,7 +2179,7 @@
       if (taskSelect) taskSelect.innerHTML = options;
       if (worklogTaskSelect) worklogTaskSelect.innerHTML = options;
 
-      // Add event listener to show/hide inspection fields
+      // Add event listener to show task info
       if (taskSelect) {
         taskSelect.addEventListener('change', function() {
           const selectedOption = this.options[this.selectedIndex];
@@ -1867,11 +2188,11 @@
           
           // Show task info
           if (task) {
-            const taskTypeDisplay = document.getElementById('task-type-display');
-            const taskTypeInfo = document.getElementById('task-type-info');
-            if (taskTypeDisplay && taskTypeInfo) {
-              taskTypeDisplay.style.display = 'block';
-              taskTypeInfo.innerHTML = `
+            const taskInfoDisplay = document.getElementById('task-info-display');
+            const taskInfoContent = document.getElementById('task-info-content');
+            if (taskInfoDisplay && taskInfoContent) {
+              taskInfoDisplay.style.display = 'block';
+              taskInfoContent.innerHTML = `
                 <strong>${task.drainage_point_name}</strong><br>
                 <span class="text-muted">${task.task_type || task.request_type} (${task.task_category})</span><br>
                 <span class="badge bg-${getPriorityColor(task.priority)}">${task.priority}</span>
@@ -1879,7 +2200,7 @@
             }
           }
           
-          // Show/hide inspection specific fields
+          // Show/hide inspection fields
           const inspectionFields = document.getElementById('inspection-fields');
           const inspectionRecommendations = document.getElementById('inspection-recommendations');
           
@@ -1894,6 +2215,9 @@
       }
     }
 
+    /**
+     * Populate drainage points select
+     */
     function populateDrainagePointsSelect() {
       const select = document.getElementById('inspection-drainage-point');
       if (select) {
@@ -1904,27 +2228,41 @@
       }
     }
 
-    function focusOnTask(taskId) {
-      const task = allTasksData.find(t => t.id === taskId);
-      if (task && task.coordinates) {
-        map.setView([task.coordinates.lat, task.coordinates.lng], 16);
-        showNotification(`Focused on ${task.drainage_point_name}`, 'info');
-      } else {
-        // Try to find by drainage point name
-        const point = allDrainageData.find(p => p.name === task.drainage_point_name);
-        if (point && point.coordinates) {
-          map.setView(point.coordinates, 16);
+    /**
+     * Focus on task
+     */
+    function focusOnTask(taskId, taskCategory) {
+      const task = allTasksData.find(t => t.id == taskId);
+      if (task) {
+        // Try to find coordinates
+        let coordinates = null;
+        if (task.coordinates) {
+          coordinates = [task.coordinates.lat, task.coordinates.lng];
+        } else {
+          const point = allDrainageData.find(p => p.name === task.drainage_point_name);
+          if (point && point.coordinates) {
+            coordinates = point.coordinates;
+          }
+        }
+        
+        if (coordinates) {
+          map.setView(coordinates, 16);
           showNotification(`Focused on ${task.drainage_point_name}`, 'info');
+        } else {
+          showNotification(`Location not found for ${task.drainage_point_name}`, 'warning');
         }
       }
     }
 
+    /**
+     * Update specific task
+     */
     function updateSpecificTask(taskId, taskCategory) {
       const taskSelect = document.getElementById('task-select');
       if (taskSelect) {
         taskSelect.value = taskId;
         
-        // Trigger change event to show task info and inspection fields if needed
+        // Trigger change event
         const event = new Event('change');
         taskSelect.dispatchEvent(event);
       }
@@ -1932,6 +2270,9 @@
       showUpdateTaskModal();
     }
 
+    /**
+     * Update task for point
+     */
     function updateTaskForPoint(pointName) {
       const task = allTasksData.find(t => t.drainage_point_name === pointName);
       if (task) {
@@ -1939,15 +2280,33 @@
       }
     }
 
-    // Modal functions - exactly like dashboard
-    function showModal(modalId) {
-      const modalElement = document.getElementById(modalId);
-      if (modalElement) {
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+    /**
+     * Create task for point
+     */
+    function createTaskForPoint(pointName) {
+      // Pre-select the drainage point and show the appropriate modal
+      const point = drainagePoints.find(p => p.name === pointName);
+      if (point) {
+        const select = document.getElementById('inspection-drainage-point');
+        if (select) {
+          select.value = point.id;
+        }
+        showScheduleInspectionModal();
       }
     }
 
+    /**
+     * View task details
+     */
+    function viewTaskDetails(taskId, taskCategory) {
+      const task = allTasksData.find(t => t.id == taskId);
+      if (task) {
+        showNotification(`Task Details: ${task.task_type || task.request_type} at ${task.drainage_point_name}`, 'info');
+        // Could open a detailed modal here
+      }
+    }
+
+    // Modal functions
     function showUpdateTaskModal() {
       const modal = new bootstrap.Modal(document.getElementById('updateTaskModal'));
       modal.show();
@@ -1981,13 +2340,15 @@
       modal.show();
     }
 
-    // Task management functions - exactly like dashboard
+    // Task management functions
     async function updateTaskStatus() {
       const taskId = document.getElementById('task-select').value;
       const status = document.getElementById('task-status').value;
       const notes = document.getElementById('task-notes').value;
       const findings = document.getElementById('inspection-findings').value;
       const recommendations = document.getElementById('recommendations').value;
+      const hoursWorked = document.getElementById('hours-worked').value;
+      const completionPercentage = document.getElementById('completion-percentage').value;
 
       if (!taskId || !status) {
         showNotification('Please fill in all required fields', 'warning');
@@ -2017,6 +2378,14 @@
           updateData.recommendations = recommendations;
         }
 
+        // Add work tracking fields
+        if (hoursWorked) {
+          updateData.hours_worked = parseFloat(hoursWorked);
+        }
+        if (completionPercentage) {
+          updateData.completion_percentage = parseInt(completionPercentage);
+        }
+
         const response = await fetch('operator-tasks.php', {
           method: 'PUT',
           headers: {
@@ -2031,13 +2400,11 @@
           showNotification('Task status updated successfully', 'success');
           bootstrap.Modal.getInstance(document.getElementById('updateTaskModal')).hide();
           document.getElementById('updateTaskForm').reset();
-          const taskTypeDisplay = document.getElementById('task-type-display');
-          if (taskTypeDisplay) taskTypeDisplay.style.display = 'none';
+          const taskInfoDisplay = document.getElementById('task-info-display');
+          if (taskInfoDisplay) taskInfoDisplay.style.display = 'none';
           
           // Reload data
-          await Promise.all([loadDashboardData(), loadAllTasks()]);
-          displayMyTasks();
-          renderOperatorMap();
+          await refreshData();
         } else {
           throw new Error(result.message);
         }
@@ -2082,9 +2449,7 @@
           document.getElementById('scheduleInspectionForm').reset();
           
           // Reload data
-          await Promise.all([loadDashboardData(), loadAllTasks()]);
-          displayMyTasks();
-          renderOperatorMap();
+          await refreshData();
         } else {
           throw new Error(result.message);
         }
@@ -2138,8 +2503,8 @@
       const worklogData = {
         task_id: document.getElementById('worklog-task').value,
         work_description: document.getElementById('work-description').value,
-        hours_worked: document.getElementById('hours-worked').value,
-        completion_percentage: document.getElementById('completion-percentage').value,
+        hours_worked: document.getElementById('worklog-hours-worked').value,
+        completion_percentage: document.getElementById('worklog-completion-percentage').value,
         materials_used: document.getElementById('materials-used').value
       };
 
@@ -2149,6 +2514,9 @@
       }
 
       try {
+        const task = allTasksData.find(t => t.id == worklogData.task_id);
+        worklogData.task_category = task ? task.task_category : 'Maintenance';
+
         const response = await fetch('operator-tasks.php', {
           method: 'POST',
           headers: {
@@ -2202,30 +2570,20 @@
         const result = await response.json();
 
         if (result.success) {
-          showNotification('Flood report submitted successfully', 'success');
+          showNotification('Emergency flood report submitted successfully', 'success');
         } else {
           throw new Error(result.message);
         }
       } catch (error) {
         console.error('Flood report error:', error);
-        showNotification('Flood report submitted (demo mode)', 'info');
+        showNotification('Emergency flood report submitted (demo mode)', 'info');
       }
 
       bootstrap.Modal.getInstance(document.getElementById('floodReportModal')).hide();
       document.getElementById('floodReportForm').reset();
     }
 
-    // Task action functions
-    function viewTaskDetails(taskId, taskCategory) {
-      showNotification(`Showing details for ${taskCategory} task ${taskId}`, 'info');
-    }
-
-    function startInspection(taskId) {
-      showNotification(`Starting inspection task ${taskId}`, 'info');
-      updateSpecificTask(taskId, 'Inspection');
-    }
-
-    // Utility functions - exactly like dashboard
+    // Utility functions
     function getPriorityColor(priority) {
       const colors = {
         'Critical': 'danger',
@@ -2250,9 +2608,22 @@
       return classes[status] || 'bg-secondary';
     }
 
+    function getNotificationIcon(type) {
+      const icons = {
+        'info': 'info-circle',
+        'warning': 'exclamation-triangle',
+        'success': 'check-circle',
+        'danger': 'exclamation-circle',
+        'task_reminder': 'tasks',
+        'inspection_reminder': 'clipboard-check',
+        'system': 'cog'
+      };
+      return icons[type] || 'bell';
+    }
+
     function showNotification(message, type) {
       const notification = document.createElement('div');
-      notification.className = `alert alert-${type} alert-dismissible fade show notification`;
+      notification.className = `alert alert-${type} alert-dismissible fade show`;
       notification.style.cssText = `
         position: fixed; top: 100px; right: 20px; z-index: 9999; 
         max-width: 400px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -2267,16 +2638,6 @@
       setTimeout(() => {
         if (notification.parentNode) notification.remove();
       }, 5000);
-    }
-
-    function getNotificationIcon(type) {
-      const icons = {
-        success: "check-circle",
-        danger: "exclamation-triangle",
-        warning: "exclamation-triangle",
-        info: "info-circle",
-      };
-      return icons[type] || "info-circle";
     }
 
     function handleLocateMe() {
@@ -2297,7 +2658,77 @@
       }
     }
 
-    // Sample data functions - exactly like dashboard
+    async function logout() {
+      try {
+        showNotification('Logging out...', 'info');
+        
+        // Clear auto-refresh
+        if (refreshInterval) {
+          clearInterval(refreshInterval);
+        }
+        
+        // Clear session on server
+        await fetch('../api/logout.php', { method: 'POST' });
+        
+        // Redirect to login page
+        window.location.href = '../login.html?logout=1';
+      } catch (error) {
+        console.error('Logout failed:', error);
+        window.location.href = '../login.html?logout=1';
+      }
+    }
+
+    // Sample data functions (fallbacks)
+    function loadSampleData() {
+      allDrainageData = getSampleDrainageData();
+      allTasksData = getSampleTasks();
+      drainagePoints = getSampleDrainagePoints();
+      dashboardData = getSampleDashboardData();
+      
+      renderOperatorMap();
+      updateStatistics();
+      displayPriorityTasks();
+      displayTodayTasks();
+      displayNotifications();
+      populateTaskSelects();
+      populateDrainagePointsSelect();
+      
+      showNotification('Sample data loaded for demonstration', 'info');
+    }
+
+    function getSampleDashboardData() {
+      return {
+        statistics: {
+          total_tasks: 8,
+          pending_tasks: 3,
+          in_progress_tasks: 2,
+          completed_this_week: 3,
+          high_priority_tasks: 2,
+          overdue_tasks: 1
+        },
+        priority_tasks: getSampleTasks().filter(t => t.priority === 'High' || t.priority === 'Critical'),
+        today_schedule: getSampleTasks().filter(t => t.scheduled_date === new Date().toISOString().split('T')[0]),
+        notifications: [
+          {
+            id: 1,
+            title: 'High Priority Task Due',
+            message: 'Drainage cleaning at PO03 is scheduled for today',
+            type: 'warning'
+          },
+          {
+            id: 2,
+            title: 'New Task Assigned',
+            message: 'Safety inspection at BB7 has been assigned to you',
+            type: 'info'
+          }
+        ],
+        performance: {
+          on_time_completion_rate: 85,
+          total_completed: 12
+        }
+      };
+    }
+
     function getSampleDrainageData() {
       return [
         {
@@ -2312,7 +2743,7 @@
         {
           id: "BB7",
           name: "BB7 - Sg Bentayan",
-          type: "Concrete Drain",
+          type: "Natural Drain",
           status: "Good",
           depth: 3.2,
           coordinates: [2.047305, 102.603401],
@@ -2321,7 +2752,7 @@
         {
           id: "HP2",
           name: "HP2 - Hospital",
-          type: "Concrete Drain",
+          type: "Covered Drain",
           status: "Critical",
           depth: 1.8,
           coordinates: [2.057750, 102.575628],
@@ -2331,40 +2762,45 @@
     }
 
     function getSampleTasks() {
+      const today = new Date().toISOString().split('T')[0];
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      
       return [
         {
           id: 1,
           drainage_point_name: 'PO 03 - Parit Othman',
+          drainage_point_id: 'PO03',
           task_type: 'Cleaning',
           task_category: 'Maintenance',
           priority: 'High',
           status: 'Pending',
-          scheduled_date: new Date().toISOString().split('T')[0],
+          scheduled_date: today,
           description: 'Clear debris and sediment buildup',
-          completion: 0,
           coordinates: { lat: 2.044531, lng: 102.563652 }
         },
         {
           id: 2,
           drainage_point_name: 'BB7 - Sg Bentayan',
+          drainage_point_id: 'BB7',
           task_type: 'Routine Inspection',
           task_category: 'Inspection',
           priority: 'Medium',
           status: 'Scheduled',
-          scheduled_date: new Date().toISOString().split('T')[0],
+          scheduled_date: today,
           scheduled_time: '09:00',
           description: 'Monthly routine inspection'
         },
         {
           id: 3,
           drainage_point_name: 'HP2 - Hospital',
+          drainage_point_id: 'HP2',
           task_type: 'Repair',
           task_category: 'Maintenance',
           priority: 'Critical',
           status: 'In Progress',
-          scheduled_date: new Date().toISOString().split('T')[0],
+          scheduled_date: tomorrow.toISOString().split('T')[0],
           description: 'Fix damaged grating',
-          completion: 45,
           coordinates: { lat: 2.057750, lng: 102.575628 }
         }
       ];
@@ -2372,28 +2808,9 @@
 
     function getSampleDrainagePoints() {
       return [
-        { id: 1, name: 'PO 03 - Parit Othman', type: 'Concrete Drain' },
-        { id: 2, name: 'BB7 - Sg Bentayan', type: 'Natural Drain' },
-        { id: 3, name: 'HP2 - Hospital', type: 'Covered Drain' }
-      ];
-    }
-
-    function getSampleFloodProneAreas() {
-      return [
-        {
-          name: 'Downtown Flood Zone',
-          risk_level: 'High',
-          last_flood: '2024-12-15',
-          coordinates: [
-            [
-              [2.055, 102.57],
-              [2.06, 102.575],
-              [2.055, 102.58],
-              [2.05, 102.575],
-              [2.055, 102.57],
-            ],
-          ],
-        },
+        { id: 'PO03', name: 'PO 03 - Parit Othman', type: 'Concrete Drain' },
+        { id: 'BB7', name: 'BB7 - Sg Bentayan', type: 'Natural Drain' },
+        { id: 'HP2', name: 'HP2 - Hospital', type: 'Covered Drain' }
       ];
     }
   </script>

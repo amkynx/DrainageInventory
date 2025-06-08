@@ -3,650 +3,330 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DrainTrack - Centralized Drainage Information Management System for Muar District</title>
-  <meta name="description" content="Access real-time drainage information and report flooding incidents in Muar District. Community-focused platform for flood monitoring and drainage system transparency.">
-  <meta name="keywords" content="Muar, drainage, flood report, Johor, Malaysia, community, water management">
+  <title>DrainTrack - Advanced Drainage Information Management System for Muar District</title>
+  <meta name="description" content="Real-time drainage monitoring, flood prediction, and community reporting platform for Muar District, Johor, Malaysia.">
+  <meta name="keywords" content="Muar, drainage, flood monitoring, smart city, IoT sensors, real-time data, Malaysia">
   
   <!-- Bootstrap CSS -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome for icons -->
+  <!-- Font Awesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- AOS Animation Library -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/home.css">
+
+  <style>.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2rem;
+  }
   
-  <style>
-    :root {
-      --primary-color: #0d6efd;
-      --secondary-color: #6c757d;
-      --success-color: #198754;
-      --danger-color: #dc3545;
-      --warning-color: #ffc107;
-      --info-color: #0dcaf0;
-      --light-color: #f8f9fa;
-      --dark-color: #212529;
-      --muar-blue: #1e40af;
-      --muar-green: #059669;
-      --water-blue: #3b82f6;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.6;
-    }
-
-    /* Hero Section */
-    .hero-section {
-      background: linear-gradient(135deg, var(--muar-blue) 0%, var(--water-blue) 50%, var(--muar-green) 100%);
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-section::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="water" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M0,50 Q25,30 50,50 T100,50" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none"/></pattern></defs><rect width="100%" height="100%" fill="url(%23water)"/></svg>') repeat;
-      opacity: 0.1;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-    }
-
-    .hero-title {
-      font-size: 3.5rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-
-    .hero-subtitle {
-      font-size: 1.3rem;
-      margin-bottom: 2rem;
-      opacity: 0.95;
-    }
-
-    .cta-button {
-      padding: 1rem 2.5rem;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border-radius: 50px;
-      text-decoration: none;
-      display: inline-block;
-      margin: 0.5rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-
-    .cta-primary {
-      background: rgba(255,255,255,0.2);
-      color: white;
-      border: 2px solid rgba(255,255,255,0.3);
-      backdrop-filter: blur(10px);
-    }
-
-    .cta-primary:hover {
-      background: white;
-      color: var(--muar-blue);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-    }
-
-    .cta-secondary {
-      background: rgba(220,53,69,0.9);
-      color: white;
-      border: 2px solid rgba(220,53,69,0.3);
-    }
-
-    .cta-secondary:hover {
-      background: var(--danger-color);
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(220,53,69,0.4);
-    }
-
-    /* Features Section */
-    .features-section {
-      padding: 5rem 0;
-      background: var(--light-color);
-    }
-
-    .feature-card {
-      background: white;
-      border-radius: 20px;
-      padding: 2.5rem;
-      text-align: center;
-      height: 100%;
-      transition: all 0.3s ease;
-      border: none;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    }
-
-    .feature-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-    }
-
-    .feature-icon {
-      font-size: 3.5rem;
-      margin-bottom: 1.5rem;
-      background: linear-gradient(45deg, var(--muar-blue), var(--water-blue));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .feature-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: var(--dark-color);
-    }
-
-    /* About Muar Section */
-    .about-muar {
-      padding: 5rem 0;
-      background: white;
-    }
-
-    .muar-stats {
-      background: linear-gradient(135deg, var(--muar-blue), var(--muar-green));
-      color: white;
-      border-radius: 20px;
-      padding: 2.5rem;
-      text-align: center;
-      margin: 2rem 0;
-    }
-
-    .stat-item {
-      margin-bottom: 1.5rem;
-    }
-
-    .stat-number {
-      font-size: 2.5rem;
-      font-weight: 700;
-      display: block;
-    }
-
-    .stat-label {
-      font-size: 0.9rem;
-      opacity: 0.9;
-    }
-
-    /* Flood Information Section */
-    .flood-info {
-      padding: 5rem 0;
-      background: linear-gradient(135deg, #fee2e2, #fef3c7);
-    }
-
-    .flood-impact {
-      background: white;
-      border-left: 5px solid var(--warning-color);
-      padding: 2rem;
-      border-radius: 10px;
-      margin: 1.5rem 0;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    }
-
-    /* System Benefits */
-    .benefits-section {
-      padding: 5rem 0;
-      background: var(--dark-color);
-      color: white;
-    }
-
-    .benefit-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-
-    .benefit-icon {
-      font-size: 1.5rem;
-      margin-right: 1rem;
-      color: var(--success-color);
-      width: 40px;
-    }
-
-    /* Quick Access Section */
-    .quick-access {
-      padding: 4rem 0;
-      background: var(--light-color);
-    }
-
-    .access-card {
-      background: white;
-      border-radius: 15px;
-      padding: 2rem;
-      text-align: center;
-      transition: all 0.3s ease;
-      border: 2px solid transparent;
-      height: 100%;
-    }
-
-    .access-card:hover {
-      border-color: var(--primary-color);
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    }
-
-    .access-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-
-    .access-card.drainage {
-      border-left: 4px solid var(--info-color);
-    }
-
-    .access-card.flood {
-      border-left: 4px solid var(--danger-color);
-    }
-
-    .access-card.emergency {
-      border-left: 4px solid var(--warning-color);
-    }
-
-    /* Footer */
-    .footer {
-      background: var(--dark-color);
-      color: white;
-      padding: 3rem 0 1rem;
-    }
-
-    .footer-section {
-      margin-bottom: 2rem;
-    }
-
-    .footer-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--info-color);
-    }
-
-    .footer-link {
-      color: #adb5bd;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-
-    .footer-link:hover {
-      color: white;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .hero-title {
-        font-size: 2.5rem;
-      }
-      
-      .hero-subtitle {
-        font-size: 1.1rem;
-      }
-      
-      .cta-button {
-        padding: 0.8rem 2rem;
-        font-size: 1rem;
-        margin: 0.3rem;
-      }
-      
-      .feature-card {
-        margin-bottom: 2rem;
-      }
-    }
-
-    /* Animations */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeInUp 1s ease forwards;
-    }
-
-    .fade-in.delay-1 { animation-delay: 0.2s; }
-    .fade-in.delay-2 { animation-delay: 0.4s; }
-    .fade-in.delay-3 { animation-delay: 0.6s; }
-
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Emergency Banner */
-    .emergency-banner {
-      background: var(--danger-color);
-      color: white;
-      text-align: center;
-      padding: 0.5rem;
-      font-weight: 600;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.8; }
-      100% { opacity: 1; }
-    }
-  </style>
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background: #28a745;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  
+  .stat-mini {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .stat-mini:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .stat-icon {
+    font-size: 1.5rem;
+    opacity: 0.8;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+  }</style>
 </head>
 <body>
-  <!-- Emergency Banner -->
-  <div class="emergency-banner" id="emergencyBanner" style="display: none;">
-    <i class="fas fa-exclamation-triangle me-2"></i>
-    FLOOD ALERT: Heavy rainfall expected. Report flooding immediately through our system.
+  <!-- Emergency Alert -->
+  <div class="emergency-alert" id="emergencyAlert">
+    <div class="container">
+      <i class="fas fa-exclamation-triangle me-2 alert-pulse"></i>
+      <span id="alertMessage">FLOOD ALERT: Heavy rainfall expected in Muar District. Monitor conditions closely.</span>
+      <button class="btn btn-sm btn-outline-light ms-3" onclick="dismissAlert()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
   </div>
 
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark position-fixed w-100" style="z-index: 1000; background: rgba(30, 64, 175, 0.95); backdrop-filter: blur(10px);">
+  <!-- Enhanced Navigation -->
+  <nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand fw-bold" href="#home">
-        <i class="fas fa-water me-2"></i>DrainTrack Muar
+      <a class="navbar-brand" href="#home">
+        <i class="fas fa-water me-2"></i>DrainTrack
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
-          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-          <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
-          <li class="nav-item"><a class="nav-link" href="#flood-info">Flood Info</a></li>
-          <li class="nav-item"><a class="nav-link" href="#access">Quick Access</a></li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#home">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="public/about.html">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="public/features.html">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="flood-info.html">Flood Info</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#emergency-contacts">Contact</a>
+          </li>
         </ul>
-        <div class="d-flex">
-          <a href="public/drainage-view.html" class="btn btn-outline-light me-2">
-            <i class="fas fa-map me-1"></i>View Drainage Data
+        <div class="d-flex gap-2">
+          <a href="public/public-map.html" class="btn btn-outline-info">
+            <i class="fas fa-map me-1"></i>Live Map
           </a>
-          <a href="login.html" class="btn btn-light">
-            <i class="fas fa-sign-in-alt me-1"></i>Staff Login
+          <a href="public/public-map.html" class="btn btn-warning">
+            <i class="fas fa-exclamation-triangle me-1"></i>Report
+          </a>
+          <a href="login.html" class="btn btn-outline-light">
+            <i class="fas fa-sign-in-alt me-1"></i>Login
           </a>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Section -->
+  <!-- Revolutionary Hero Section -->
   <section id="home" class="hero-section">
     <div class="container">
       <div class="row align-items-center">
-        <div class="col-lg-8">
-          <div class="hero-content fade-in">
+        <div class="col-lg-7">
+          <div class="hero-content">
             <h1 class="hero-title">
-              Centralized Drainage Information Management System
+              Drainage Management System
             </h1>
             <p class="hero-subtitle">
               <i class="fas fa-map-marker-alt me-2"></i>
-              For Muar District, Johor, Malaysia
+              Muar District, Johor
             </p>
-            <p class="lead">
-              Empowering our community with real-time drainage information and streamlined flood reporting. 
-              Together, we build a more resilient Muar against flooding challenges.
+            <p class="hero-description">
+              A centralized system for monitoring drainage infrastructure, managing maintenance, 
+              and coordinating flood response in Muar District.
             </p>
-            <div class="mt-4">
-              <a href="public/drainage-view.html" class="cta-button cta-primary">
-                <i class="fas fa-eye me-2"></i>View Drainage Data
+            <div class="d-flex flex-wrap gap-3 cta-container">
+              <a href="public/drainage-view.html" class="cta-btn cta-primary">
+                <i class="fas fa-map me-2"></i>View Map
               </a>
-              <a href="public/flood-report.html" class="cta-button cta-secondary">
-                <i class="fas fa-exclamation-triangle me-2"></i>Report Flooding
+              <a href="public/flood-report.html" class="cta-btn cta-secondary">
+                <i class="fas fa-exclamation-triangle me-2"></i>Report Issue
               </a>
             </div>
           </div>
         </div>
-        <div class="col-lg-4 text-center">
-          <div class="fade-in delay-1">
-            <i class="fas fa-water" style="font-size: 8rem; opacity: 0.3;"></i>
-            <div class="mt-3">
-              <i class="fas fa-map-pin me-2"></i>
-              <strong>Muar District</strong><br>
-              <small>Serving 330,000+ residents</small>
+        <div class="col-lg-5">
+          <div class="hero-dashboard">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="text-white mb-0">System Overview</h5>
+              <div class="status-badge">
+                <span class="status-dot"></span>
+                <span class="badge bg-success">Operational</span>
+              </div>
+            </div>
+            <div class="row text-center g-3">
+              <div class="col-4">
+                <div class="stat-mini">
+                  <div class="stat-icon mb-2">
+                    <i class="fas fa-map-marker-alt"></i>
+                  </div>
+                  <div class="h4 text-info mb-1">486</div>
+                  <small class="text-white-50">Active Points</small>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="stat-mini">
+                  <div class="stat-icon mb-2">
+                    <i class="fas fa-hard-hat"></i>
+                  </div>
+                  <div class="h4 text-warning mb-1">12</div>
+                  <small class="text-white-50">Maintenance Crews</small>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="stat-mini">
+                  <div class="stat-icon mb-2">
+                    <i class="fas fa-check-circle"></i>
+                  </div>
+                  <div class="h4 text-success mb-1">95%</div>
+                  <small class="text-white-50">Resolution Rate</small>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+  
 
-  <!-- Features Section -->
-  <section id="features" class="features-section">
+  <!-- Enhanced Features Section -->
+  <section class="features-section">
     <div class="container">
-      <div class="row">
-        <div class="col-12 text-center mb-5">
-          <h2 class="display-4 fw-bold">What We Offer</h2>
-          <p class="lead">Accessible tools for better flood preparedness and community awareness</p>
-        </div>
-      </div>
+      <h2 class="section-title">Key Features</h2>
       <div class="row g-4">
         <div class="col-lg-4 col-md-6">
-          <div class="card feature-card fade-in">
+          <div class="feature-card">
             <div class="feature-icon">
               <i class="fas fa-map-marked-alt"></i>
             </div>
-            <h4 class="feature-title">Interactive Drainage Map</h4>
-            <p>Explore real-time data on drainage infrastructure across Muar District. View locations, conditions, and maintenance status of drainage systems in your area.</p>
+            <h4 class="feature-title">Interactive Map</h4>
+            <p class="feature-description">
+              View drainage points, maintenance status, and flood-prone areas
+            </p>
           </div>
         </div>
+        
         <div class="col-lg-4 col-md-6">
-          <div class="card feature-card fade-in delay-1">
+          <div class="feature-card">
             <div class="feature-icon">
-              <i class="fas fa-mobile-alt"></i>
+              <i class="fas fa-tools"></i>
             </div>
-            <h4 class="feature-title">Quick Flood Reporting</h4>
-            <p>Report flooding incidents instantly through our user-friendly interface. Help authorities respond faster with accurate location data and incident details.</p>
+            <h4 class="feature-title">Maintenance Tracking</h4>
+            <p class="feature-description">
+              Schedule and monitor maintenance activities
+            </p>
           </div>
         </div>
+        
         <div class="col-lg-4 col-md-6">
-          <div class="card feature-card fade-in delay-2">
+          <div class="feature-card">
             <div class="feature-icon">
-              <i class="fas fa-users"></i>
+              <i class="fas fa-exclamation-circle"></i>
             </div>
-            <h4 class="feature-title">Community Driven</h4>
-            <p>Built for the people of Muar. Your reports and feedback help improve our drainage system and flood response capabilities for everyone.</p>
+            <h4 class="feature-title">Issue Reporting</h4>
+            <p class="feature-description">
+              Report flooding incidents and drainage problems
+            </p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- About Muar Section -->
-  <section id="about" class="about-muar">
+  <!-- Stats Section -->
+  <section class="stats-section">
     <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-6">
-          <h2 class="display-5 fw-bold mb-4">About Muar District</h2>
-          <p class="lead">
-            Muar, known as the "Royal Town" of Johor, is a historic district blessed with rich culture and natural beauty. 
-            However, its strategic location along the Muar River and coastal areas makes it particularly vulnerable to flooding.
+      <div class="stats-grid">
+        <div class="stat-card" data-aos="zoom-in" data-aos-delay="100">
+          <div class="stat-number" data-target="330000">0</div>
+          <div class="stat-label">Residents Protected</div>
+        </div>
+        <div class="stat-card" data-aos="zoom-in" data-aos-delay="200">
+          <div class="stat-number" data-target="180">0</div>
+          <div class="stat-label">Smart Sensors Deployed</div>
+        </div>
+        <div class="stat-card" data-aos="zoom-in" data-aos-delay="300">
+          <div class="stat-number" data-target="24">0</div>
+          <div class="stat-label">Hours Real-Time Monitoring</div>
+        </div>
+        <div class="stat-card" data-aos="zoom-in" data-aos-delay="400">
+          <div class="stat-number" data-target="99">0</div>
+          <div class="stat-label">System Uptime %</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technology Showcase -->
+  <section class="tech-section">
+    <div class="container">
+      <div data-aos="fade-up">
+        <h2 class="section-title">Powered by Innovation</h2>
+        <p class="section-subtitle">
+          Advanced technologies working together for flood prevention
+        </p>
+      </div>
+      
+      <div class="tech-grid">
+        <div class="tech-item" data-aos="fade-up" data-aos-delay="100">
+          <div class="tech-icon">
+            <i class="fas fa-cloud"></i>
+          </div>
+          <h4 class="tech-title">Cloud Infrastructure</h4>
+          <p class="tech-description">
+            Scalable cloud computing ensures 24/7 availability and real-time data processing 
+            for instant flood detection and community alerts.
           </p>
-          <p>
-            Our drainage management system serves over <strong>330,000 residents</strong> across the district, 
-            monitoring critical infrastructure including river drainage, urban stormwater systems, and coastal flood defenses.
+        </div>
+        
+        <div class="tech-item" data-aos="fade-up" data-aos-delay="200">
+          <div class="tech-icon">
+            <i class="fas fa-wifi"></i>
+          </div>
+          <h4 class="tech-title">5G Connectivity</h4>
+          <p class="tech-description">
+            Ultra-fast 5G networks enable instant sensor data transmission and 
+            seamless mobile app performance for critical emergency situations.
           </p>
-          <div class="muar-stats">
-            <div class="row">
-              <div class="col-4">
-                <div class="stat-item">
-                  <span class="stat-number">330K+</span>
-                  <span class="stat-label">Residents Served</span>
-                </div>
-              </div>
-              <div class="col-4">
-                <div class="stat-item">
-                  <span class="stat-number">180+</span>
-                  <span class="stat-label">Drainage Points</span>
-                </div>
-              </div>
-              <div class="col-4">
-                <div class="stat-item">
-                  <span class="stat-number">24/7</span>
-                  <span class="stat-label">Monitoring</span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-        <div class="col-lg-6">
-          <div class="text-center">
-            <i class="fas fa-city" style="font-size: 12rem; color: var(--muar-blue); opacity: 0.1;"></i>
-            <div class="mt-4">
-              <h5><i class="fas fa-water me-2 text-primary"></i>Muar River Basin</h5>
-              <p>Our primary water management challenge</p>
-              <h5><i class="fas fa-cloud-rain me-2 text-info"></i>Monsoon Season</h5>
-              <p>November to March critical period</p>
-              <h5><i class="fas fa-shield-alt me-2 text-success"></i>Flood Protection</h5>
-              <p>Proactive monitoring and response</p>
-            </div>
+        
+        <div class="tech-item" data-aos="fade-up" data-aos-delay="300">
+          <div class="tech-icon">
+            <i class="fas fa-shield-alt"></i>
           </div>
+          <h4 class="tech-title">Blockchain Security</h4>
+          <p class="tech-description">
+            Immutable data records and decentralized validation ensure complete 
+            transparency and security of all drainage system information.
+          </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Flood Information Section -->
-  <section id="flood-info" class="flood-info">
+  <section class="contact-section" id="emergency-contacts">
     <div class="container">
+      <h2 class="section-title">Emergency Contacts</h2>
       <div class="row">
-        <div class="col-12 text-center mb-5">
-          <h2 class="display-5 fw-bold">Understanding Flood Risks in Muar</h2>
-          <p class="lead">Knowledge is our best defense against flooding</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-6">
-          <div class="flood-impact">
-            <h4><i class="fas fa-exclamation-triangle text-warning me-2"></i>Flood-Prone Areas</h4>
-            <ul class="list-unstyled mt-3">
-              <li><i class="fas fa-map-pin me-2 text-danger"></i>Low-lying residential areas near Muar River</li>
-              <li><i class="fas fa-map-pin me-2 text-warning"></i>Commercial districts during high tide</li>
-              <li><i class="fas fa-map-pin me-2 text-info"></i>Agricultural areas during monsoon season</li>
-            </ul>
-          </div>
-          <div class="flood-impact">
-            <h4><i class="fas fa-calendar-alt text-info me-2"></i>Monsoon Season Impact</h4>
-            <p>From November to March, Muar experiences increased rainfall that can overwhelm drainage systems. 
-            Our monitoring helps predict and respond to potential flooding events.</p>
+        <div class="col-md-4">
+          <div class="contact-card">
+            <i class="fas fa-phone-alt"></i>
+            <h4>Emergency</h4>
+            <p>999</p>
           </div>
         </div>
-        <div class="col-lg-6">
-          <div class="flood-impact">
-            <h4><i class="fas fa-eye text-success me-2"></i>Early Warning Benefits</h4>
-            <ul class="list-unstyled mt-3">
-              <li><i class="fas fa-check me-2 text-success"></i>Faster emergency response</li>
-              <li><i class="fas fa-check me-2 text-success"></i>Better evacuation planning</li>
-              <li><i class="fas fa-check me-2 text-success"></i>Reduced property damage</li>
-              <li><i class="fas fa-check me-2 text-success"></i>Improved community safety</li>
-            </ul>
+        <div class="col-md-4">
+          <div class="contact-card">
+            <i class="fas fa-water"></i>
+            <h4>Flood Control</h4>
+            <p>06-951 4244</p>
           </div>
-          <div class="flood-impact">
-            <h4><i class="fas fa-hands-helping text-primary me-2"></i>How You Can Help</h4>
-            <p>Report any flooding, blocked drains, or unusual water accumulation immediately. 
-            Your timely reports help us maintain effective drainage systems for everyone.</p>
+        </div>
+        <div class="col-md-4">
+          <div class="contact-card">
+            <i class="fas fa-building"></i>
+            <h4>Local Authority</h4>
+            <p>06-951 2222</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- System Benefits -->
-  <section class="benefits-section">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-6">
-          <h2 class="display-5 fw-bold mb-4">Why This System Matters</h2>
-          <div class="benefit-item">
-            <i class="fas fa-clock benefit-icon"></i>
-            <div>
-              <h5>Real-Time Information</h5>
-              <p>Access current drainage system status and flood conditions across Muar District.</p>
-            </div>
-          </div>
-          <div class="benefit-item">
-            <i class="fas fa-shield-alt benefit-icon"></i>
-            <div>
-              <h5>Community Safety</h5>
-              <p>Early flood detection and reporting help protect lives and property.</p>
-            </div>
-          </div>
-          <div class="benefit-item">
-            <i class="fas fa-chart-line benefit-icon"></i>
-            <div>
-              <h5>Data-Driven Decisions</h5>
-              <p>Historical data helps improve drainage infrastructure and flood preparedness.</p>
-            </div>
-          </div>
-          <div class="benefit-item">
-            <i class="fas fa-mobile-alt benefit-icon"></i>
-            <div>
-              <h5>Easy Access</h5>
-              <p>Simple, mobile-friendly interface works on any device, anywhere.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6 text-center">
-          <i class="fas fa-water" style="font-size: 15rem; opacity: 0.1;"></i>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Quick Access Section -->
-  <section id="access" class="quick-access">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 text-center mb-5">
-          <h2 class="display-5 fw-bold">Quick Access</h2>
-          <p class="lead">Get the information you need, fast</p>
-        </div>
-      </div>
-      <div class="row g-4">
-        <div class="col-lg-4 col-md-6">
-          <div class="access-card drainage">
-            <div class="access-icon text-info">
-              <i class="fas fa-map-marked-alt"></i>
-            </div>
-            <h4>View Drainage Data</h4>
-            <p>Explore interactive maps showing drainage infrastructure status across Muar District.</p>
-            <a href="public/drainage-view.html" class="btn btn-info">
-              <i class="fas fa-eye me-2"></i>View Map
-            </a>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <div class="access-card flood">
-            <div class="access-icon text-danger">
-              <i class="fas fa-exclamation-triangle"></i>
-            </div>
-            <h4>Report Flooding</h4>
-            <p>Quickly report flooding incidents to help authorities respond faster to emergencies.</p>
-            <a href="public/flood-report.html" class="btn btn-danger">
-              <i class="fas fa-bullhorn me-2"></i>Report Now
-            </a>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <div class="access-card emergency">
-            <div class="access-icon text-warning">
-              <i class="fas fa-phone"></i>
-            </div>
-            <h4>Emergency Contacts</h4>
-            <p>Important phone numbers for flood emergencies and drainage-related issues.</p>
-            <button class="btn btn-warning" onclick="showEmergencyContacts()">
-              <i class="fas fa-address-book me-2"></i>View Contacts
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
+  <!-- Enhanced Footer -->
+  <footer class="footer" id="contact">
     <div class="container">
       <div class="row">
         <div class="col-lg-4">
@@ -654,178 +334,185 @@
             <h4 class="footer-title">
               <i class="fas fa-water me-2"></i>DrainTrack Muar
             </h4>
-            <p>Centralized Drainage Information Management System for Muar District. 
-            Building a more resilient community through technology and transparency.</p>
-            <div>
-              <i class="fas fa-map-marker-alt me-2"></i>
-              Muar District, Johor, Malaysia
+            <p class="text-white-50">
+              Next-generation drainage intelligence system protecting Muar District 
+              through innovative technology and community collaboration.
+            </p>
+            <div class="d-flex gap-3 mt-3">
+              <a href="#" class="text-info"><i class="fab fa-facebook-f fa-lg"></i></a>
+              <a href="#" class="text-info"><i class="fab fa-twitter fa-lg"></i></a>
+              <a href="#" class="text-info"><i class="fab fa-instagram fa-lg"></i></a>
+              <a href="#" class="text-info"><i class="fab fa-linkedin-in fa-lg"></i></a>
             </div>
           </div>
         </div>
         <div class="col-lg-2">
           <div class="footer-section">
-            <h5 class="footer-title">Quick Links</h5>
-            <ul class="list-unstyled">
-              <li><a href="#about" class="footer-link">About</a></li>
-              <li><a href="#features" class="footer-link">Features</a></li>
-              <li><a href="#flood-info" class="footer-link">Flood Info</a></li>
-              <li><a href="login.html" class="footer-link">Staff Login</a></li>
-            </ul>
+            <h4 class="footer-title">Quick Links</h4>
+            <a href="about.html" class="footer-link">About Us</a>
+            <a href="features.html" class="footer-link">Features</a>
+            <a href="flood-info.html" class="footer-link">Flood Info</a>
+            <a href="#contact" class="footer-link">Contact</a>
           </div>
         </div>
+        
         <div class="col-lg-3">
           <div class="footer-section">
-            <h5 class="footer-title">Public Access</h5>
-            <ul class="list-unstyled">
-              <li><a href="public/drainage-view.html" class="footer-link">View Drainage Data</a></li>
-              <li><a href="public/flood-report.html" class="footer-link">Report Flooding</a></li>
-              <li><a href="#" class="footer-link" onclick="showEmergencyContacts()">Emergency Contacts</a></li>
-            </ul>
+            <h4 class="footer-title">Emergency Contacts</h4>
+            <p class="text-white-50 mb-2">
+              <i class="fas fa-phone me-2"></i>Emergency: 999
+            </p>
+            <p class="text-white-50 mb-2">
+              <i class="fas fa-phone me-2"></i>Flood Control: 06-951 4244
+            </p>
+            <p class="text-white-50">
+              <i class="fas fa-phone me-2"></i>Local Authority: 06-951 2222
+            </p>
           </div>
         </div>
+        
         <div class="col-lg-3">
           <div class="footer-section">
-            <h5 class="footer-title">Emergency Numbers</h5>
-            <ul class="list-unstyled">
-              <li><i class="fas fa-phone me-2"></i>Emergency: 999</li>
-              <li><i class="fas fa-phone me-2"></i>Fire Dept: 994</li>
-              <li><i class="fas fa-phone me-2"></i>Muar MPK: 06-951 4244</li>
-              <li><i class="fas fa-envelope me-2"></i>info@draintrack-muar.gov.my</li>
-            </ul>
+            <h4 class="footer-title">Newsletter</h4>
+            <p class="text-white-50 mb-3">Subscribe for updates and alerts</p>
+            <form id="newsletterForm" onsubmit="return subscribeNewsletter(event)">
+              <div class="input-group">
+                <input type="email" class="form-control" placeholder="Your email" required>
+                <button class="btn btn-info" type="submit">
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+              </div>
+            </form>
           </div>
         </div>
-      </div>
-      <hr class="my-4">
-      <div class="row align-items-center">
-        <div class="col-md-6">
-          <p class="mb-0">&copy; 2025 DrainTrack Muar. All rights reserved.</p>
         </div>
-        <div class="col-md-6 text-md-end">
-          <small class="text-muted">Last updated: <span id="lastUpdated"></span></small>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Emergency Contacts Modal -->
-  <div class="modal fade" id="emergencyContactsModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header bg-warning">
-          <h5 class="modal-title">
-            <i class="fas fa-phone me-2"></i>Emergency Contacts
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row g-3">
-            <div class="col-12">
-              <div class="card border-danger">
-                <div class="card-body">
-                  <h6 class="card-title text-danger">
-                    <i class="fas fa-exclamation-triangle me-2"></i>Emergency Services
-                  </h6>
-                  <ul class="list-unstyled mb-0">
-                    <li><strong>Emergency Hotline:</strong> 999</li>
-                    <li><strong>Fire Department:</strong> 994</li>
-                    <li><strong>Police:</strong> 999</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="card border-info">
-                <div class="card-body">
-                  <h6 class="card-title text-info">
-                    <i class="fas fa-building me-2"></i>Local Authorities
-                  </h6>
-                  <ul class="list-unstyled mb-0">
-                    <li><strong>Muar Municipal Council:</strong> 06-951 4244</li>
-                    <li><strong>JPS Johor (Drainage):</strong> 07-223 4821</li>
-                    <li><strong>District Office:</strong> 06-951 2222</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="card border-success">
-                <div class="card-body">
-                  <h6 class="card-title text-success">
-                    <i class="fas fa-envelope me-2"></i>DrainTrack Support
-                  </h6>
-                  <ul class="list-unstyled mb-0">
-                    <li><strong>Email:</strong> info@draintrack-muar.gov.my</li>
-                    <li><strong>Report Issues:</strong> Use our online form</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+        
+        <div class="row mt-5">
+          <div class="col-12">
+            <hr class="border-info opacity-25">
+            <p class="text-center text-white-50 mb-0">
+              © 2025 DrainTrack Muar. All rights reserved.
+            </p>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bootstrap Bundle -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-  
-  <script>
-    // Initialize page
-    document.addEventListener('DOMContentLoaded', function() {
-      // Set last updated date
-      document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString();
-      
-      // Add smooth scrolling
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute('href'));
-          if (target) {
-            target.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            });
+        </div>
+        </footer>
+        
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        
+        <script>
+          // Initialize AOS
+          AOS.init({
+            duration: 800,
+            once: true
+          });
+        
+          // Navbar scroll effect
+          window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+              navbar.classList.add('scrolled');
+            } else {
+              navbar.classList.remove('scrolled');
+            }
+          });
+        
+          // Stats counter animation
+          const stats = document.querySelectorAll('.stat-number');
+          stats.forEach(stat => {
+            const target = parseInt(stat.getAttribute('data-target'));
+            const increment = target / 50;
+            let current = 0;
+        
+            const updateCount = () => {
+              if (current < target) {
+                current += increment;
+                stat.textContent = Math.round(current);
+                setTimeout(updateCount, 40);
+              } else {
+                stat.textContent = target;
+              }
+            };
+        
+            updateCount();
+          });
+        
+          // Mini chart in hero section
+          const ctx = document.getElementById('miniChart').getContext('2d');
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: ['6h', '5h', '4h', '3h', '2h', '1h', 'Now'],
+              datasets: [{
+                label: 'Water Level',
+                data: [65, 59, 80, 81, 56, 55, 74],
+                borderColor: '#06b6d4',
+                tension: 0.4,
+                fill: false
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  display: false
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  grid: {
+                    color: 'rgba(255,255,255,0.1)'
+                  },
+                  ticks: {
+                    color: 'rgba(255,255,255,0.7)'
+                  }
+                },
+                x: {
+                  grid: {
+                    display: false
+                  },
+                  ticks: {
+                    color: 'rgba(255,255,255,0.7)'
+                  }
+                }
+              }
+            }
+          });
+        
+          // Newsletter subscription
+          function subscribeNewsletter(event) {
+            event.preventDefault();
+            const email = event.target.querySelector('input[type="email"]').value;
+            // Add your newsletter subscription logic here
+            alert(`Thank you for subscribing with ${email}!`);
+            event.target.reset();
+            return false;
           }
-        });
-      });
-      
-      // Simulate checking for flood alerts
-      checkFloodAlerts();
-      
-      // Animate elements on scroll
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
+        
+          // Emergency alert management
+          function dismissAlert() {
+            document.getElementById('emergencyAlert').style.transform = 'translateY(-100%)';
           }
-        });
-      });
-      
-      document.querySelectorAll('.fade-in').forEach(el => {
-        observer.observe(el);
-      });
-    });
-    
-    function showEmergencyContacts() {
-      const modal = new bootstrap.Modal(document.getElementById('emergencyContactsModal'));
-      modal.show();
-    }
-    
-    function checkFloodAlerts() {
-      // Simulate checking for active flood alerts
-      // In production, this would fetch from your API
-      const currentHour = new Date().getHours();
-      const isRainySeasonMonth = new Date().getMonth() >= 10 || new Date().getMonth() <= 2;
-      
-      if (isRainySeasonMonth && (currentHour >= 6 && currentHour <= 10)) {
-        // Show emergency banner during potential flood risk times
-        document.getElementById('emergencyBanner').style.display = 'block';
-      }
-    }
-    
-    // Check for flood alerts every 30 minutes
-    setInterval(checkFloodAlerts, 30 * 60 * 1000);
-  </script>
-</body>
-</html>
+        
+          // Particle animation
+          function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+              const particle = document.createElement('div');
+              particle.className = 'particle';
+              particle.style.left = Math.random() * 100 + '%';
+              particle.style.width = Math.random() * 3 + 'px';
+              particle.style.height = particle.style.width;
+              particle.style.animationDelay = Math.random() * 15 + 's';
+              container.appendChild(particle);
+            }
+          }
+          createParticles();
+        </script>
+        
+        </body>
+        </html>

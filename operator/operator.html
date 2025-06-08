@@ -14,7 +14,7 @@
   <link href="../css/common.css" rel="stylesheet">
   
   <style>
-    /* Enhanced operator styles with inspection features */
+    /* Enhanced operator styles with full inspection features */
     .task-category-badge {
       position: absolute;
       top: 0.5rem;
@@ -37,7 +37,7 @@
     }
 
     .task-card {
-      border-left: 4px solid var(--success-color);
+      border-left: 4px solid var(--success-color, #28a745);
       transition: all 0.3s ease;
       cursor: pointer;
       position: relative;
@@ -49,19 +49,19 @@
     }
 
     .task-card.inspection-task {
-      border-left-color: var(--warning-color) !important;
+      border-left-color: var(--warning-color, #ffc107) !important;
     }
 
     .priority-high, .priority-critical {
-      border-left-color: var(--danger-color) !important;
+      border-left-color: var(--danger-color, #dc3545) !important;
     }
 
     .priority-medium {
-      border-left-color: var(--warning-color) !important;
+      border-left-color: var(--warning-color, #ffc107) !important;
     }
 
     .priority-low {
-      border-left-color: var(--success-color) !important;
+      border-left-color: var(--success-color, #28a745) !important;
     }
 
     .status-pending { 
@@ -88,8 +88,42 @@
       border-color: #bbdefb;
     }
 
+    .status-overdue {
+      background-color: #ffebee;
+      color: #c62828;
+      border-color: #ffcdd2;
+    }
+
+    /* Inspection status indicators */
+    .inspection-status {
+      font-size: 0.8rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .inspection-status.scheduled {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+
+    .inspection-status.in-progress {
+      background-color: #fff3e0;
+      color: #f57c00;
+    }
+
+    .inspection-status.completed {
+      background-color: #e8f5e8;
+      color: #2e7d32;
+    }
+
+    .inspection-status.overdue {
+      background-color: #ffebee;
+      color: #c62828;
+    }
+
     .quick-action-btn {
-      background: var(--gradient-primary);
+      background: linear-gradient(135deg, #007bff, #0056b3);
       border: none;
       border-radius: 10px;
       color: white;
@@ -121,7 +155,7 @@
 
     .notification-item.unread {
       background-color: #e3f2fd;
-      border-left: 3px solid var(--primary-color);
+      border-left: 3px solid #007bff;
     }
 
     .weather-widget {
@@ -135,10 +169,6 @@
     .weather-temp {
       font-size: 2rem;
       font-weight: 700;
-    }
-
-    .progress-ring {
-      transform: rotate(-90deg);
     }
 
     .loading-overlay {
@@ -156,7 +186,7 @@
 
     .loading-content {
       text-align: center;
-      color: var(--primary-color);
+      color: #007bff;
     }
 
     .loading-spinner {
@@ -178,7 +208,7 @@
     }
 
     .task-tabs .nav-link.active {
-      background: var(--gradient-primary);
+      background: linear-gradient(135deg, #007bff, #0056b3);
       color: white;
     }
 
@@ -189,12 +219,169 @@
 
     .task-tabs .nav-link:not(.active):hover {
       background: #e9ecef;
+      color: #007bff;
+    }
+
+    /* Today's schedule styling */
+    .today-schedule {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .schedule-item {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .schedule-time {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    /* Default fallback for CSS variables */
+    :root {
+      --primary-color: #007bff;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --danger-color: #dc3545;
+      --info-color: #17a2b8;
+    }
+
+    /* Stats cards */
+    .stats-card {
+      position: relative;
+      padding: 1.5rem;
+      border-radius: 15px;
+      background: white;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .stats-card.warning {
+      border-left: 4px solid var(--warning-color);
+    }
+
+    .stats-card.info {
+      border-left: 4px solid var(--info-color);
+    }
+
+    .stats-card.success {
+      border-left: 4px solid var(--success-color);
+    }
+
+    .stats-card.danger {
+      border-left: 4px solid var(--danger-color);
+    }
+
+    .stats-number {
+      font-size: 2.5rem;
+      font-weight: 700;
       color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .stats-label {
+      color: #6c757d;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stats-icon {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 2rem;
+      opacity: 0.2;
+    }
+
+    /* Dashboard card styling */
+    .dashboard-card {
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border: none;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header-custom {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: white;
+      border-radius: 15px 15px 0 0 !important;
+      padding: 1rem 1.5rem;
+      border: none;
+      font-weight: 600;
+    }
+
+    .navbar-dark {
+      background: linear-gradient(135deg, #007bff, #0056b3) !important;
+    }
+
+    .main-content {
+      padding: 2rem 0;
+      min-height: calc(100vh - 76px);
+      background: #f8f9fa;
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .animate-slide-in {
+      animation: slideIn 0.6s ease-out;
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
     }
 
     @media (max-width: 768px) {
       .task-card {
         margin-bottom: 1rem;
+      }
+      
+      .stats-card {
+        margin-bottom: 1rem;
+      }
+      
+      .main-content {
+        padding: 1rem 0;
       }
     }
   </style>
@@ -265,7 +452,7 @@
         </div>
       </div>
 
-      <!-- Enhanced Stats with Inspection Data -->
+      <!-- Enhanced Stats with Full Inspection Data -->
       <div class="row mb-4">
         <div class="col-xl-2 col-md-4 col-sm-6">
           <div class="card stats-card position-relative animate-slide-in">
@@ -315,7 +502,22 @@
       <div class="row">
         <!-- Left Column -->
         <div class="col-xl-8">
-          <!-- Task Management with Tabs -->
+          <!-- Today's Schedule -->
+          <div class="today-schedule">
+            <h4 class="mb-3">
+              <i class="fas fa-calendar-day me-2"></i>
+              Today's Schedule
+            </h4>
+            <div id="today-schedule-list">
+              <div class="text-center py-3">
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Task Management with Enhanced Tabs -->
           <div class="card dashboard-card animate-fade-in">
             <div class="card-header card-header-custom">
               <i class="fas fa-list-check"></i>
@@ -407,23 +609,6 @@
 
         <!-- Right Column -->
         <div class="col-xl-4">
-          <!-- Today's Schedule -->
-          <div class="card dashboard-card animate-fade-in">
-            <div class="card-header card-header-custom">
-              <i class="fas fa-calendar-day"></i>
-              Today's Schedule
-            </div>
-            <div class="card-body">
-              <div id="today-schedule">
-                <div class="text-center py-4">
-                  <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- Enhanced Quick Actions -->
           <div class="card dashboard-card animate-fade-in">
             <div class="card-header card-header-custom">
@@ -480,7 +665,7 @@
             <div class="card-header card-header-custom">
               <i class="fas fa-bell"></i>
               Notifications
-              <span class="badge bg-primary ms-2" id="unread-count">0</span>
+              <span class="badge bg-light text-primary ms-2" id="unread-count">0</span>
             </div>
             <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
               <div id="notifications-list">
@@ -492,12 +677,36 @@
               </div>
             </div>
           </div>
+
+          <!-- Performance Summary -->
+          <div class="card dashboard-card animate-fade-in">
+            <div class="card-header card-header-custom">
+              <i class="fas fa-chart-line"></i>
+              This Month's Performance
+            </div>
+            <div class="card-body">
+              <div class="row text-center">
+                <div class="col-6">
+                  <h4 class="text-primary" id="month-completed">0</h4>
+                  <small class="text-muted">Completed</small>
+                </div>
+                <div class="col-6">
+                  <h4 class="text-success" id="month-efficiency">0%</h4>
+                  <small class="text-muted">On Time</small>
+                </div>
+              </div>
+              <div class="progress mt-3">
+                <div class="progress-bar" role="progressbar" style="width: 0%" id="efficiency-bar">0%</div>
+              </div>
+              <small class="text-muted">Overall Efficiency</small>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Enhanced Task Update Modal -->
+  <!-- Enhanced Task Update Modal with Full Inspection Support -->
   <div class="modal fade" id="updateTaskModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -532,7 +741,7 @@
             </div>
             
             <div class="mb-3" id="inspection-fields" style="display: none;">
-              <label for="inspection-findings" class="form-label">Inspection Findings</label>
+              <label for="inspection-findings" class="form-label">Inspection Findings *</label>
               <textarea class="form-control" id="inspection-findings" rows="3" 
                         placeholder="Describe your inspection findings..."></textarea>
             </div>
@@ -541,6 +750,37 @@
               <label for="recommendations" class="form-label">Recommendations</label>
               <textarea class="form-control" id="recommendations" rows="2" 
                         placeholder="Any recommendations for maintenance or follow-up..."></textarea>
+            </div>
+
+            <div class="row" id="inspection-condition-fields" style="display: none;">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="condition-rating" class="form-label">Overall Condition</label>
+                  <select class="form-select" id="condition-rating">
+                    <option value="Excellent">Excellent</option>
+                    <option value="Good" selected>Good</option>
+                    <option value="Fair">Fair</option>
+                    <option value="Poor">Poor</option>
+                    <option value="Critical">Critical</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="maintenance-required" class="form-label">Maintenance Required</label>
+                  <select class="form-select" id="maintenance-required">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-check mb-3" id="maintenance-request-option" style="display: none;">
+              <input class="form-check-input" type="checkbox" id="create-maintenance-request">
+              <label class="form-check-label" for="create-maintenance-request">
+                Create maintenance request based on findings
+              </label>
             </div>
             
             <div class="mb-3">
@@ -566,11 +806,124 @@
     </div>
   </div>
 
+  <!-- Start Inspection Modal (transferred from inspector) -->
+  <div class="modal fade" id="startInspectionModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">
+            <i class="fas fa-play me-2"></i>Start Inspection
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="start-inspection-form">
+            <input type="hidden" id="inspection-id" name="inspection_id">
+            
+            <div class="mb-3">
+              <label class="form-label">Inspection Details</label>
+              <div id="inspection-details" class="bg-light p-3 rounded">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="start-notes" class="form-label">Initial Notes</label>
+              <textarea class="form-control" id="start-notes" rows="3" placeholder="Any initial observations or notes..."></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label for="start-images" class="form-label">Initial Photos</label>
+              <input type="file" class="form-control" id="start-images" multiple accept="image/*">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="startInspection()">
+            <i class="fas fa-play me-1"></i>Start Inspection
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complete Inspection Modal (transferred from inspector) -->
+  <div class="modal fade" id="completeInspectionModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title">
+            <i class="fas fa-check-circle me-2"></i>Complete Inspection
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="complete-inspection-form">
+            <input type="hidden" id="complete-inspection-id" name="inspection_id">
+            
+            <div class="mb-3">
+              <label for="complete-findings" class="form-label">Findings *</label>
+              <textarea class="form-control" id="complete-findings" rows="4" required placeholder="Describe your inspection findings..."></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label for="complete-recommendations" class="form-label">Recommendations</label>
+              <textarea class="form-control" id="complete-recommendations" rows="3" placeholder="Any recommendations for maintenance or follow-up..."></textarea>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="complete-condition-rating" class="form-label">Overall Condition</label>
+                  <select class="form-select" id="complete-condition-rating">
+                    <option value="Excellent">Excellent</option>
+                    <option value="Good" selected>Good</option>
+                    <option value="Fair">Fair</option>
+                    <option value="Poor">Poor</option>
+                    <option value="Critical">Critical</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="complete-maintenance-required" class="form-label">Maintenance Required</label>
+                  <select class="form-select" id="complete-maintenance-required">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="completion-images" class="form-label">Final Photos</label>
+              <input type="file" class="form-control" id="completion-images" multiple accept="image/*">
+            </div>
+            
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="complete-create-maintenance-request">
+              <label class="form-check-label" for="complete-create-maintenance-request">
+                Create maintenance request based on findings
+              </label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-success" onclick="completeInspection()">
+            <i class="fas fa-check me-1"></i>Complete Inspection
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Schedule Inspection Modal -->
   <div class="modal fade" id="scheduleInspectionModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header bg-warning">
+        <div class="modal-header bg-warning text-dark">
           <h5 class="modal-title">
             <i class="fas fa-clipboard-plus me-2"></i>Schedule Inspection
           </h5>
@@ -582,7 +935,6 @@
               <label for="inspection-drainage-point" class="form-label">Drainage Point</label>
               <select class="form-select" id="inspection-drainage-point" required>
                 <option value="">Select drainage point...</option>
-                <!-- Will be populated dynamically -->
               </select>
             </div>
             
@@ -640,11 +992,11 @@
     </div>
   </div>
 
-  <!-- Report Issue Modal (same as before) -->
+  <!-- Report Issue Modal -->
   <div class="modal fade" id="reportIssueModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header bg-warning">
+        <div class="modal-header bg-warning text-dark">
           <h5 class="modal-title">
             <i class="fas fa-exclamation-circle me-2"></i>Report Issue
           </h5>
@@ -704,15 +1056,15 @@
     </div>
   </div>
 
-  <!-- Work Log Modal (same as before) -->
+  <!-- Work Log Modal -->
   <div class="modal fade" id="workLogModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header bg-info">
+        <div class="modal-header bg-info text-white">
           <h5 class="modal-title">
             <i class="fas fa-clipboard-list me-2"></i>Log Work Hours
           </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" title="Close"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" title="Close"></button>
         </div>
         <div class="modal-body">
           <form id="workLogForm">
@@ -795,7 +1147,7 @@
           }
           
           currentUser = result.user;
-          document.getElementById('userName').textContent = currentUser.name;
+          document.getElementById('userName').textContent = result.user.first_name + ' ' + result.user.last_name || result.user.name || 'Operator';
           hideLoadingOverlay();
           initializeDashboard();
         } else {
@@ -863,7 +1215,7 @@
 
     async function loadDashboardData() {
       try {
-        const response = await fetch('operator-dashboard.php');
+        const response = await fetch('./operator-dashboard.php');
         const result = await response.json();
         
         if (result.success) {
@@ -871,6 +1223,7 @@
           updateStatistics();
           updateTodaySchedule();
           updateNotifications();
+          updatePerformanceMetrics();
         } else {
           throw new Error(result.message || 'Failed to load dashboard data');
         }
@@ -884,32 +1237,38 @@
             total_tasks: 0,
             pending_tasks: 0,
             in_progress_tasks: 0,
-            completed_this_week: 0
+            completed_this_week: 0,
+            total_inspections: 0,
+            overdue_tasks: 0
           },
           today_schedule: [],
           work_progress: [
-            {completed_tasks: 0},
-            {completed_tasks: 1},
-            {completed_tasks: 2},
-            {completed_tasks: 1}
+            {work_date: new Date().toISOString().split('T')[0], completed_tasks: 0, completed_maintenance: 0, completed_inspections: 0}
           ],
-          notifications: []
+          notifications: [],
+          performance: {
+            total_completed: 0,
+            on_time_completion_rate: 0
+          }
         };
         updateStatistics();
         updateTodaySchedule();
         updateNotifications();
+        updatePerformanceMetrics();
       }
     }
 
     async function loadAllTasks() {
       try {
-        const response = await fetch('operator-tasks.php');
+        const response = await fetch('./operator-tasks.php');
         const result = await response.json();
         
         if (result.success) {
           allTasksData = result.tasks || [];
           populateTaskSelects();
           renderTaskTabs();
+        } else {
+          throw new Error(result.message || 'Failed to load tasks');
         }
       } catch (error) {
         console.error('Error loading tasks data:', error);
@@ -938,17 +1297,66 @@
     }
 
     function updateStatistics() {
-      if (!dashboardData.statistics && !allTasksData.length) return;
-      
-      // Calculate stats from allTasksData if available
-      const stats = dashboardData.statistics || calculateStatsFromTasks();
+      const stats = dashboardData?.statistics || calculateStatsFromTasks();
       
       animateCounter('total-tasks', stats.total_tasks || allTasksData.length);
       animateCounter('pending-tasks', stats.pending_tasks || allTasksData.filter(t => t.status === 'Pending' || t.status === 'Scheduled').length);
       animateCounter('in-progress-tasks', stats.in_progress_tasks || allTasksData.filter(t => t.status === 'In Progress').length);
-      animateCounter('inspection-tasks', allTasksData.filter(t => t.task_category === 'Inspection').length);
+      animateCounter('inspection-tasks', stats.total_inspections || allTasksData.filter(t => t.task_category === 'Inspection').length);
       animateCounter('completed-tasks', stats.completed_this_week || allTasksData.filter(t => t.status === 'Completed').length);
-      animateCounter('overdue-tasks', allTasksData.filter(t => new Date(t.scheduled_date) < new Date() && t.status !== 'Completed').length);
+      animateCounter('overdue-tasks', stats.overdue_tasks || allTasksData.filter(t => new Date(t.scheduled_date) < new Date() && t.status !== 'Completed').length);
+    }
+
+    function updateTodaySchedule() {
+      const container = document.getElementById('today-schedule-list');
+      
+      if (!dashboardData?.today_schedule || dashboardData.today_schedule.length === 0) {
+        container.innerHTML = `
+          <div class="text-center text-muted py-4">
+            <i class="fas fa-calendar-check fa-3x mb-3"></i>
+            <p>No tasks scheduled for today</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = dashboardData.today_schedule.map(task => `
+        <div class="schedule-item">
+          <div>
+            <div class="schedule-time">${task.scheduled_time || '09:00'}</div>
+            <div>${task.drainage_point_name || 'Unknown Location'}</div>
+            <small>${task.task_type || task.request_type || 'Task'}</small>
+          </div>
+          <div>
+            <span class="inspection-status ${task.status.toLowerCase().replace(' ', '-')}">
+              ${task.status}
+            </span>
+            ${task.task_category === 'Inspection' ? (
+              task.status === 'Scheduled' ? 
+              `<button class="btn btn-sm btn-light ms-2" onclick="startInspectionModal(${task.id})">
+                <i class="fas fa-play"></i> Start
+              </button>` : 
+              task.status === 'In Progress' ?
+              `<button class="btn btn-sm btn-success ms-2" onclick="completeInspectionModal(${task.id})">
+                <i class="fas fa-check"></i> Complete
+              </button>` : ''
+            ) : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updatePerformanceMetrics() {
+      if (!dashboardData?.performance) return;
+      
+      const performance = dashboardData.performance;
+      document.getElementById('month-completed').textContent = performance.total_completed || 0;
+      document.getElementById('month-efficiency').textContent = Math.round(performance.on_time_completion_rate || 0) + '%';
+      
+      const efficiencyBar = document.getElementById('efficiency-bar');
+      const percentage = Math.round(performance.on_time_completion_rate || 0);
+      efficiencyBar.style.width = percentage + '%';
+      efficiencyBar.textContent = percentage + '%';
     }
 
     function calculateStatsFromTasks() {
@@ -963,6 +1371,11 @@
           t.status === 'Completed' && 
           t.completion_date && 
           new Date(t.completion_date) >= weekAgo
+        ).length,
+        total_inspections: allTasksData.filter(t => t.task_category === 'Inspection').length,
+        overdue_tasks: allTasksData.filter(t => 
+          new Date(t.scheduled_date) < new Date() && 
+          t.status !== 'Completed'
         ).length
       };
     }
@@ -992,26 +1405,26 @@
 
     function createTaskCard(task) {
       const isOverdue = new Date(task.scheduled_date) < new Date() && task.status !== 'Completed';
-      const priorityClass = task.priority ? task.priority.toLowerCase().replace(' ', '-') + '-priority' : '';
+      const priorityClass = `priority-${(task.priority || 'medium').toLowerCase().replace(' ', '-')}`;
       const categoryClass = task.task_category === 'Inspection' ? 'inspection-task' : '';
       
       return `
         <div class="task-card card mb-3 ${priorityClass} ${categoryClass}" onclick="showTaskDetails(${task.id}, '${task.task_category}')">
           <div class="card-body position-relative">
-            <span class="task-category-badge ${task.task_category.toLowerCase()}">${task.task_category}</span>
+            <span class="task-category-badge ${(task.task_category || 'maintenance').toLowerCase()}">${task.task_category || 'Maintenance'}</span>
             
             <div class="d-flex justify-content-between align-items-start mb-2">
               <div class="flex-grow-1">
                 <h6 class="card-title mb-1">${task.drainage_point_name || 'Unknown Location'}</h6>
                 <div class="d-flex align-items-center gap-2 mb-2">
-                  <span class="badge bg-${getPriorityColor(task.priority)}">${task.priority}</span>
-                  <span class="badge ${getStatusBadgeClass(task.status)}">${task.status}</span>
+                  <span class="badge bg-${getPriorityColor(task.priority)}">${task.priority || 'Medium'}</span>
+                  <span class="badge ${getStatusBadgeClass(task.status)}">${task.status || 'Pending'}</span>
                   ${isOverdue ? '<span class="badge bg-danger">OVERDUE</span>' : ''}
                 </div>
-                <p class="card-text small">${task.task_type} - ${task.description || 'No description'}</p>
+                <p class="card-text small">${(task.task_type || task.request_type || 'Task')} - ${task.description || 'No description'}</p>
                 <small class="text-muted">
                   <i class="fas fa-calendar me-1"></i>
-                  Due: ${task.scheduled_date}
+                  Due: ${task.scheduled_date || 'Not set'}
                   ${task.scheduled_time ? ` at ${task.scheduled_time}` : ''}
                 </small>
               </div>
@@ -1025,9 +1438,15 @@
                 <i class="fas fa-eye me-1"></i>Details
               </button>
               ${task.task_category === 'Inspection' ? `
-                <button class="btn btn-sm btn-outline-warning" onclick="event.stopPropagation(); startInspection(${task.id})">
-                  <i class="fas fa-play me-1"></i>Start
-                </button>
+                ${task.status === 'Scheduled' ? `
+                  <button class="btn btn-sm btn-outline-warning" onclick="event.stopPropagation(); startInspectionModal(${task.id})">
+                    <i class="fas fa-play me-1"></i>Start
+                  </button>
+                ` : task.status === 'In Progress' ? `
+                  <button class="btn btn-sm btn-outline-success" onclick="event.stopPropagation(); completeInspectionModal(${task.id})">
+                    <i class="fas fa-check me-1"></i>Complete
+                  </button>
+                ` : ''}
               ` : ''}
             </div>
           </div>
@@ -1035,43 +1454,11 @@
       `;
     }
 
-    function updateTodaySchedule() {
-      const container = document.getElementById('today-schedule');
-      
-      if (!dashboardData.today_schedule || dashboardData.today_schedule.length === 0) {
-        container.innerHTML = `
-          <div class="text-center text-muted py-4">
-            <i class="fas fa-calendar-check fa-3x mb-3"></i>
-            <p>No tasks scheduled for today</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = dashboardData.today_schedule.map(task => `
-        <div class="task-card card mb-2" onclick="showTaskDetails(${task.id}, '${task.task_category || 'Maintenance'}')">
-          <div class="card-body py-2">
-            <div class="d-flex justify-content-between align-items-start">
-              <div>
-                <h6 class="mb-1">${task.drainage_point_name || 'Unknown Location'}</h6>
-                <small class="text-muted">${task.task_type || task.request_type || 'Task'}</small>
-              </div>
-              <span class="badge bg-${getPriorityColor(task.priority)}">${task.priority || 'Medium'}</span>
-            </div>
-            <p class="mb-2 mt-2 small">${task.description || 'No description'}</p>
-            <button class="btn btn-sm btn-success" onclick="event.stopPropagation(); updateSpecificTask(${task.id}, '${task.task_category || 'Maintenance'}')">
-              <i class="fas fa-play me-1"></i>Start Task
-            </button>
-          </div>
-        </div>
-      `).join('');
-    }
-
     function updateNotifications() {
       const container = document.getElementById('notifications-list');
       const unreadCount = document.getElementById('unread-count');
       
-      if (!dashboardData.notifications || dashboardData.notifications.length === 0) {
+      if (!dashboardData?.notifications || dashboardData.notifications.length === 0) {
         container.innerHTML = '<div class="text-center text-muted py-4">No notifications</div>';
         unreadCount.textContent = '0';
         return;
@@ -1102,7 +1489,7 @@
       
       const options = '<option value="">Choose a task...</option>' + 
         activeTasks.map(task => `
-          <option value="${task.id}" data-category="${task.task_category}">${task.drainage_point_name || 'Unknown'} - ${task.task_type || task.request_type}</option>
+          <option value="${task.id}" data-category="${task.task_category || 'Maintenance'}">${task.drainage_point_name || 'Unknown'} - ${task.task_type || task.request_type || 'Task'}</option>
         `).join('');
       
       taskSelect.innerHTML = options;
@@ -1118,22 +1505,28 @@
         if (task) {
           document.getElementById('task-type-display').style.display = 'block';
           document.getElementById('task-type-info').innerHTML = `
-            <strong>${task.drainage_point_name}</strong><br>
-            <span class="text-muted">${task.task_type} (${task.task_category})</span><br>
-            <span class="badge bg-${getPriorityColor(task.priority)}">${task.priority}</span>
+            <strong>${task.drainage_point_name || 'Unknown Location'}</strong><br>
+            <span class="text-muted">${task.task_type || task.request_type || 'Task'} (${task.task_category || 'Maintenance'})</span><br>
+            <span class="badge bg-${getPriorityColor(task.priority)}">${task.priority || 'Medium'}</span>
           `;
         }
         
         // Show/hide inspection specific fields
         const inspectionFields = document.getElementById('inspection-fields');
         const inspectionRecommendations = document.getElementById('inspection-recommendations');
+        const inspectionConditionFields = document.getElementById('inspection-condition-fields');
+        const maintenanceRequestOption = document.getElementById('maintenance-request-option');
         
         if (taskCategory === 'Inspection') {
           inspectionFields.style.display = 'block';
           inspectionRecommendations.style.display = 'block';
+          inspectionConditionFields.style.display = 'block';
+          maintenanceRequestOption.style.display = 'block';
         } else {
           inspectionFields.style.display = 'none';
           inspectionRecommendations.style.display = 'none';
+          inspectionConditionFields.style.display = 'none';
+          maintenanceRequestOption.style.display = 'none';
         }
       });
     }
@@ -1147,28 +1540,39 @@
     }
 
     function initializeCharts() {
-      if (!dashboardData || !dashboardData.work_progress) return;
+      if (!dashboardData?.work_progress) return;
       
-      const ctx = document.getElementById('workProgressChart').getContext('2d');
+      const ctx = document.getElementById('workProgressChart');
+      if (!ctx) return;
+      
       new Chart(ctx, {
         type: 'line',
         data: {
-          labels: dashboardData.work_progress.map((_, index) => `Week ${index + 1}`),
-          datasets: [{
-            label: 'Tasks Completed',
-            data: dashboardData.work_progress.map(week => week.completed_tasks || 0),
-            borderColor: '#28a745',
-            backgroundColor: 'rgba(40, 167, 69, 0.1)',
-            tension: 0.4,
-            fill: true
-          }]
+          labels: dashboardData.work_progress.map(item => item.work_date || 'Date'),
+          datasets: [
+            {
+              label: 'Maintenance',
+              data: dashboardData.work_progress.map(week => week.completed_maintenance || 0),
+              borderColor: '#28a745',
+              backgroundColor: 'rgba(40, 167, 69, 0.1)',
+              tension: 0.4
+            },
+            {
+              label: 'Inspections',
+              data: dashboardData.work_progress.map(week => week.completed_inspections || 0),
+              borderColor: '#ffc107',
+              backgroundColor: 'rgba(255, 193, 7, 0.1)',
+              tension: 0.4
+            }
+          ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              display: false
+              display: true,
+              position: 'top'
             }
           },
           scales: {
@@ -1209,6 +1613,29 @@
       modal.show();
     }
 
+    function startInspectionModal(inspectionId) {
+      const inspection = allTasksData.find(i => i.id === inspectionId);
+      if (!inspection) return;
+      
+      document.getElementById('inspection-id').value = inspectionId;
+      document.getElementById('inspection-details').innerHTML = `
+        <strong>${inspection.drainage_point_name}</strong><br>
+        <span class="text-muted">${inspection.inspection_type || inspection.task_type}</span><br>
+        <small>Priority: ${inspection.priority}</small>
+      `;
+      
+      new bootstrap.Modal(document.getElementById('startInspectionModal')).show();
+    }
+
+    function completeInspectionModal(inspectionId) {
+      const inspection = allTasksData.find(i => i.id === inspectionId);
+      if (!inspection) return;
+      
+      document.getElementById('complete-inspection-id').value = inspectionId;
+      
+      new bootstrap.Modal(document.getElementById('completeInspectionModal')).show();
+    }
+
     function updateSpecificTask(taskId, taskCategory) {
       const taskSelect = document.getElementById('task-select');
       taskSelect.value = taskId;
@@ -1220,12 +1647,16 @@
       showUpdateTaskModal();
     }
 
+    // Enhanced task action functions with full inspection support
     async function updateTaskStatus() {
       const taskId = document.getElementById('task-select').value;
       const status = document.getElementById('task-status').value;
       const notes = document.getElementById('task-notes').value;
       const findings = document.getElementById('inspection-findings').value;
       const recommendations = document.getElementById('recommendations').value;
+      const conditionRating = document.getElementById('condition-rating').value;
+      const maintenanceRequired = document.getElementById('maintenance-required').value === 'true';
+      const createMaintenanceRequest = document.getElementById('create-maintenance-request').checked;
 
       if (!taskId || !status) {
         showNotification('Please fill in all required fields', 'warning');
@@ -1242,21 +1673,49 @@
       }
 
       try {
-        const updateData = {
-          task_id: parseInt(taskId),
-          status: status,
-          notes: notes,
-          task_category: task ? task.task_category : 'Maintenance'
-        };
+        let updateData;
+        let endpoint = './operator-tasks.php';
+        let method = 'PUT';
 
-        // Add inspection-specific fields
-        if (isInspection) {
-          updateData.findings = findings;
-          updateData.recommendations = recommendations;
+        if (isInspection && status === 'Completed') {
+          // Use complete inspection endpoint for full inspection completion
+          updateData = {
+            action: 'complete_inspection',
+            inspection_id: parseInt(taskId),
+            findings: findings,
+            recommendations: recommendations,
+            condition_rating: conditionRating,
+            maintenance_required: maintenanceRequired,
+            create_maintenance_request: createMaintenanceRequest
+          };
+        } else if (isInspection && status === 'In Progress') {
+          // Use start inspection endpoint
+          updateData = {
+            action: 'start_inspection',
+            inspection_id: parseInt(taskId),
+            notes: notes
+          };
+        } else {
+          // Regular task status update
+          updateData = {
+            task_id: parseInt(taskId),
+            status: status,
+            notes: notes,
+            task_category: task ? task.task_category : 'Maintenance'
+          };
+
+          // Add inspection-specific fields for non-completion updates
+          if (isInspection) {
+            updateData.findings = findings;
+            updateData.recommendations = recommendations;
+            updateData.condition_rating = conditionRating;
+            updateData.maintenance_required = maintenanceRequired;
+            updateData.create_maintenance_request = createMaintenanceRequest;
+          }
         }
 
-        const response = await fetch('operator-tasks.php', {
-          method: 'PUT',
+        const response = await fetch(endpoint, {
+          method: method,
           headers: {
             'Content-Type': 'application/json',
           },
@@ -1271,6 +1730,12 @@
           document.getElementById('updateTaskForm').reset();
           document.getElementById('task-type-display').style.display = 'none';
           
+          // Hide inspection fields
+          document.getElementById('inspection-fields').style.display = 'none';
+          document.getElementById('inspection-recommendations').style.display = 'none';
+          document.getElementById('inspection-condition-fields').style.display = 'none';
+          document.getElementById('maintenance-request-option').style.display = 'none';
+          
           // Reload dashboard data
           await Promise.all([loadDashboardData(), loadAllTasks()]);
         } else {
@@ -1279,6 +1744,83 @@
       } catch (error) {
         console.error('Task update error:', error);
         showNotification(`Error updating task: ${error.message}`, 'danger');
+      }
+    }
+
+    async function startInspection() {
+      const inspectionId = document.getElementById('inspection-id').value;
+      const notes = document.getElementById('start-notes').value;
+      
+      try {
+        const response = await fetch('./operator-tasks.php', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'start_inspection',
+            inspection_id: parseInt(inspectionId),
+            notes: notes
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          showNotification('Inspection started successfully', 'success');
+          bootstrap.Modal.getInstance(document.getElementById('startInspectionModal')).hide();
+          
+          // Reload data
+          await Promise.all([loadDashboardData(), loadAllTasks()]);
+        } else {
+          throw new Error(result.message);
+        }
+      } catch (error) {
+        console.error('Start inspection error:', error);
+        showNotification(`Error starting inspection: ${error.message}`, 'danger');
+      }
+    }
+
+    async function completeInspection() {
+      const inspectionId = document.getElementById('complete-inspection-id').value;
+      const findings = document.getElementById('complete-findings').value;
+      const recommendations = document.getElementById('complete-recommendations').value;
+      const conditionRating = document.getElementById('complete-condition-rating').value;
+      const maintenanceRequired = document.getElementById('complete-maintenance-required').value === 'true';
+      const createMaintenanceRequest = document.getElementById('complete-create-maintenance-request').checked;
+      
+      if (!findings.trim()) {
+        showNotification('Please provide inspection findings', 'warning');
+        return;
+      }
+      
+      try {
+        const response = await fetch('./operator-tasks.php', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'complete_inspection',
+            inspection_id: parseInt(inspectionId),
+            findings: findings,
+            recommendations: recommendations,
+            condition_rating: conditionRating,
+            maintenance_required: maintenanceRequired,
+            create_maintenance_request: createMaintenanceRequest
+          })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          showNotification('Inspection completed successfully', 'success');
+          bootstrap.Modal.getInstance(document.getElementById('completeInspectionModal')).hide();
+          
+          // Reload data
+          await Promise.all([loadDashboardData(), loadAllTasks()]);
+        } else {
+          throw new Error(result.message);
+        }
+      } catch (error) {
+        console.error('Complete inspection error:', error);
+        showNotification(`Error completing inspection: ${error.message}`, 'danger');
       }
     }
 
@@ -1298,7 +1840,7 @@
       }
 
       try {
-        const response = await fetch('operator-tasks.php', {
+        const response = await fetch('./operator-tasks.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1341,7 +1883,7 @@
       }
 
       try {
-        const response = await fetch('operator-tasks.php', {
+        const response = await fetch('./operator-tasks.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1368,8 +1910,10 @@
     }
 
     async function submitWorkLog() {
+      const task = allTasksData.find(t => t.id == document.getElementById('worklog-task').value);
       const worklogData = {
         task_id: document.getElementById('worklog-task').value,
+        task_category: task ? task.task_category : 'Maintenance',
         work_description: document.getElementById('work-description').value,
         hours_worked: document.getElementById('hours-worked').value,
         completion_percentage: document.getElementById('completion-percentage').value,
@@ -1382,13 +1926,13 @@
       }
 
       try {
-        const response = await fetch('operator-tasks.php', {
+        const response = await fetch('./operator-tasks.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            action: 'work_log',
+            action: 'log_work_hours',
             ...worklogData
           })
         });
@@ -1410,7 +1954,7 @@
 
     async function markNotificationRead(notificationId, type) {
       try {
-        const response = await fetch('operator-dashboard.php', {
+        const response = await fetch('./operator-dashboard.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1434,6 +1978,8 @@
     // Utility functions
     function animateCounter(elementId, targetValue) {
       const element = document.getElementById(elementId);
+      if (!element) return;
+      
       const startValue = 0;
       const duration = 1500;
       const startTime = performance.now();
@@ -1485,16 +2031,20 @@
     }
 
     function formatTimeAgo(dateString) {
-      const date = new Date(dateString);
-      const now = new Date();
-      const diffMs = now - date;
-      const diffMins = Math.floor(diffMs / 60000);
-      const diffHours = Math.floor(diffMs / 3600000);
-      const diffDays = Math.floor(diffMs / 86400000);
+      try {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
 
-      if (diffMins < 60) return `${diffMins}m ago`;
-      if (diffHours < 24) return `${diffHours}h ago`;
-      return `${diffDays}d ago`;
+        if (diffMins < 60) return `${diffMins}m ago`;
+        if (diffHours < 24) return `${diffHours}h ago`;
+        return `${diffDays}d ago`;
+      } catch (error) {
+        return 'Recently';
+      }
     }
 
     function showNotification(message, type) {
@@ -1523,12 +2073,7 @@
       showTaskDetails(taskId, taskCategory);
     }
 
-    function startInspection(taskId) {
-      showNotification(`Starting inspection task ${taskId}`, 'info');
-      updateSpecificTask(taskId, 'Inspection');
-    }
-
-    // Sample data functions
+    // Sample data functions (for fallback)
     function getSampleTasks() {
       return [
         {
