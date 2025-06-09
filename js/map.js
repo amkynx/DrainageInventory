@@ -1299,7 +1299,7 @@ function initializeOverlayLayers() {
     zoomToBoundsOnClick: true,
   }).addTo(map);
 
-  floodProneAreasLayer = L.layerGroup().addTo(map);
+  floodProneAreasLayer = L.layerGroup();
   maintenanceRoutesLayer = L.layerGroup();
 }
 
@@ -1552,9 +1552,98 @@ function createMarkerIcon(status) {
 
 function createPopupContent(point) {
   const statusClass = getStatusBadgeClass(point.status);
+  let imagesHtml = "";
 
+  // Parse and handle images
+  let images = [];
+  if (point.images) {
+    try {
+      // Handle string URLs separated by spaces
+      if (typeof point.images === "string") {
+        if (point.images.startsWith("http") || point.images.startsWith("/")) {
+          // Single URL or multiple URLs separated by spaces
+          images = point.images.split(" ").filter((url) => url.trim());
+        } else {
+          // Try parsing as JSON
+          try {
+            const parsed = JSON.parse(point.images);
+            images = Array.isArray(parsed) ? parsed : [parsed];
+          } catch (e) {
+            // If JSON parsing fails, treat as single URL
+            images = [point.images];
+          }
+        }
+      } else if (Array.isArray(point.images)) {
+        // Already an array
+        images = point.images;
+      }
+
+      // Clean up URLs and filter out empty ones
+      images = images
+        .map((url) => url.trim())
+        .filter((url) => url && url.length > 0)
+        .map((url) => {
+          // Ensure URL starts with proper path
+          if (!url.startsWith("http") && !url.startsWith("/")) {
+            return `/DrainageInventory/${url}`;
+          }
+          return url;
+        });
+    } catch (e) {
+      console.error("Error parsing images for point", point.id, e);
+      images = [];
+    }
+  }
+
+  // Create image carousel if there are images
+  if (images && images.length > 0) {
+    imagesHtml = `
+      <div class="popup-image-carousel mb-3">
+        <div class="carousel slide" id="carousel-${
+          point.id
+        }" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            ${images
+              .map(
+                (img, index) => `
+              <div class="carousel-item ${
+                index === 0 ? "active" : ""
+              }" style="height: 200px;">
+                <div class="portrait-image-container">
+                  <img src="${img}" 
+                       class="d-block w-100" 
+                       style="object-fit: contain; height: 100%; max-height: 200px;"
+                       alt="Drainage point image ${index + 1}"
+                       onerror="this.onerror=null; this.src='/DrainageInventory/images/no-image.png';">
+                </div>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+          ${
+            images.length > 1
+              ? `
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-${point.id}" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carousel-${point.id}" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          `
+              : ""
+          }
+        </div>
+      </div>
+    `;
+  }
+
+  // Rest of your popup content...
   return `
     <div class="popup-content">
+      ${imagesHtml}
       <h5><i class="fas fa-map-pin me-2"></i>${point.name}</h5>
       <div class="mb-2">
         <span class="badge ${statusClass}">${point.status}</span>
@@ -1581,7 +1670,6 @@ function createPopupContent(point) {
     </div>
   `;
 }
-
 function getStatusBadgeClass(status) {
   const classes = {
     Good: "bg-success",
@@ -1644,43 +1732,219 @@ function populatePointDetailsWithImages(point) {
   `;
 }
 
-function populateMaintenanceHistory(point) {
+// Updated populateMaintenanceHistory function with better error handling and formatting
+async function populateMaintenanceHistory(point) {
   const maintenanceTable = document.getElementById("maintenance-history-table");
   if (!maintenanceTable) return;
 
-  if (point.maintenance_history && point.maintenance_history.length > 0) {
-    let tableContent = `
-      <thead class="table-primary">
-        <tr><th>Date</th><th>Type</th><th>Description</th><th>Status</th></tr>
-      </thead>
-      <tbody>
-    `;
+  try {
+    console.log("Fetching maintenance history for point:", point.id); // Debug log
 
-    point.maintenance_history.forEach((record) => {
-      tableContent += `
-        <tr>
-          <td>${record.date}</td>
-          <td>${record.type}</td>
-          <td>${record.description}</td>
-          <td><span class="badge ${getStatusBadgeClass(record.status)}">${
-        record.status
-      }</span></td>
-        </tr>
+    // Fetch maintenance history for this point
+    const response = await fetch(
+      `/DrainageInventory/api/maintenance-requests.php?drainage_point_id=${point.id}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Maintenance history response:", data); // Debug log
+
+    // Check if we have data and it's an array
+    if (data && Array.isArray(data) && data.length > 0) {
+      let tableContent = `
+        <thead class="table-primary">
+          <tr>
+            <th>Request #</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Cost</th>
+          </tr>
+        </thead>
+        <tbody>
       `;
-    });
 
-    tableContent += "</tbody>";
-    maintenanceTable.innerHTML = tableContent;
-  } else {
+      data.forEach((record) => {
+        const statusClass = getMaintenanceStatusBadgeClass(record.status);
+        const priorityClass = getPriorityBadgeClass(record.priority);
+        tableContent += `
+          <tr>
+            <td>${record.request_number || record.id}</td>
+            <td>${formatMaintenanceDate(
+              record.scheduled_date || record.created_at
+            )}</td>
+            <td>${record.request_type}</td>
+            <td title="${record.description}">${truncateText(
+          record.description,
+          50
+        )}</td>
+            <td><span class="badge ${priorityClass}">${
+          record.priority
+        }</span></td>
+            <td><span class="badge ${statusClass}">${record.status}</span></td>
+            <td>${
+              record.estimated_cost
+                ? `RM ${parseFloat(record.estimated_cost).toFixed(2)}`
+                : "-"
+            }</td>
+          </tr>
+        `;
+      });
+
+      tableContent += "</tbody>";
+      maintenanceTable.innerHTML = tableContent;
+
+      // Add summary statistics
+      const completedTasks = data.filter(
+        (r) => r.status === "Completed"
+      ).length;
+      const pendingTasks = data.filter((r) => r.status === "Pending").length;
+      const inProgressTasks = data.filter(
+        (r) => r.status === "In Progress"
+      ).length;
+      const totalCost = data.reduce(
+        (sum, r) => sum + (parseFloat(r.estimated_cost) || 0),
+        0
+      );
+
+      const summaryHtml = `
+        <div class="maintenance-summary mt-3">
+          <div class="row g-2">
+            <div class="col-md-3">
+              <div class="card bg-light">
+                <div class="card-body">
+                  <h6 class="card-title">Total Records</h6>
+                  <p class="card-text h4">${data.length}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-success text-white">
+                <div class="card-body">
+                  <h6 class="card-title">Completed</h6>
+                  <p class="card-text h4">${completedTasks}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-warning text-dark">
+                <div class="card-body">
+                  <h6 class="card-title">Pending</h6>
+                  <p class="card-text h4">${pendingTasks}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-info text-white">
+                <div class="card-body">
+                  <h6 class="card-title">Total Cost</h6>
+                  <p class="card-text h4">RM ${totalCost.toFixed(2)}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      maintenanceTable.insertAdjacentHTML("afterend", summaryHtml);
+    } else {
+      maintenanceTable.innerHTML = `
+        <tbody>
+          <tr>
+            <td colspan="7" class="text-center text-muted py-4">
+              <i class="fas fa-history fa-2x mb-2 d-block"></i>
+              <p class="mb-0">No maintenance history available</p>
+              <button class="btn btn-sm btn-primary mt-2" onclick="showRequestMaintenanceModal('${point.id}')">
+                <i class="fas fa-plus me-1"></i>Request Maintenance
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      `;
+    }
+  } catch (error) {
+    console.error("Error fetching maintenance history:", error);
     maintenanceTable.innerHTML = `
       <tbody>
-        <tr><td colspan="4" class="text-center text-muted py-4">
-          <i class="fas fa-calendar-times fa-2x mb-2 d-block"></i>
-          No maintenance history available
-        </td></tr>
+        <tr>
+          <td colspan="7" class="text-center text-danger py-4">
+            <i class="fas fa-exclamation-triangle fa-2x mb-2 d-block"></i>
+            <p class="mb-0">Error loading maintenance history</p>
+            <p class="text-muted small">${error.message}</p>
+            <button class="btn btn-sm btn-outline-primary mt-2" onclick="populateMaintenanceHistory(${JSON.stringify(
+              point
+            ).replace(/"/g, "&quot;")})">
+              <i class="fas fa-refresh me-1"></i>Try Again
+            </button>
+          </td>
+        </tr>
       </tbody>
     `;
   }
+  const existingSummary = document.querySelector(".maintenance-summary");
+  if (existingSummary) {
+    existingSummary.outerHTML = summaryHtml;
+  } else {
+    maintenanceTable.insertAdjacentHTML("afterend", summaryHtml);
+  }
+}
+
+// Helper function to get maintenance status badge classes
+function getMaintenanceStatusBadgeClass(status) {
+  const classes = {
+    Pending: "bg-warning text-dark",
+    "In Progress": "bg-info",
+    Completed: "bg-success",
+    Cancelled: "bg-secondary",
+    "On Hold": "bg-dark",
+  };
+  return classes[status] || "bg-secondary";
+}
+
+// Helper function to get priority badge classes
+function getPriorityBadgeClass(priority) {
+  const classes = {
+    Low: "bg-light text-dark",
+    Medium: "bg-primary",
+    High: "bg-warning text-dark",
+    Critical: "bg-danger",
+  };
+  return classes[priority] || "bg-secondary";
+}
+
+// Helper function to format maintenance dates
+function formatMaintenanceDate(dateString) {
+  if (!dateString) return "N/A";
+
+  try {
+    return new Date(dateString).toLocaleDateString("en-MY", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  } catch (error) {
+    return dateString;
+  }
+}
+
+// Helper function to truncate text
+function truncateText(text, maxLength) {
+  if (!text) return "";
+  if (text.length <= maxLength) return text;
+  return text.substring(0, maxLength) + "...";
+}
+// Helper function to format dates
+function formatDate(dateString) {
+  return new Date(dateString).toLocaleDateString("en-MY", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }
 
 function handleEditPoint() {
@@ -3104,6 +3368,22 @@ function getSampleFloodProneAreas() {
       ],
     },
   ];
+}
+
+async function logout() {
+  try {
+    showNotification("Logging out...", "info");
+
+    if (refreshInterval) {
+      clearInterval(refreshInterval);
+    }
+
+    await fetch("../api/logout.php", { method: "POST" });
+    window.location.href = "../login.html?logout=1";
+  } catch (error) {
+    console.error("Logout failed:", error);
+    window.location.href = "../login.html?logout=1";
+  }
 }
 
 // Initialize everything when DOM is ready

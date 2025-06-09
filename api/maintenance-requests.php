@@ -82,6 +82,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     LEFT JOIN users u1 ON mr.requested_by = u1.id
                     LEFT JOIN users u2 ON mr.assigned_to = u2.id
                     WHERE mr.id = $id";
+                    
+            file_put_contents($logFile, "Fetching maintenance request by ID: $id\n", FILE_APPEND);
+            
+        } else if (isset($_GET['drainage_point_id'])) {
+            // NEW: Handle filtering by drainage point ID
+            $drainage_point_id = $conn->real_escape_string($_GET['drainage_point_id']);
+            $sql = "SELECT mr.*, dp.name as drainage_point_name, dp.latitude, dp.longitude,
+                           u1.first_name as requested_by_name, u1.last_name as requested_by_lastname,
+                           u2.first_name as assigned_to_name, u2.last_name as assigned_to_lastname
+                    FROM maintenance_requests mr
+                    LEFT JOIN drainage_points dp ON mr.drainage_point_id = dp.id
+                    LEFT JOIN users u1 ON mr.requested_by = u1.id
+                    LEFT JOIN users u2 ON mr.assigned_to = u2.id
+                    WHERE mr.drainage_point_id = '$drainage_point_id'
+                    ORDER BY mr.created_at DESC";
+                    
+            file_put_contents($logFile, "Fetching maintenance requests for drainage point: $drainage_point_id\n", FILE_APPEND);
+            
         } else {
             // Get all maintenance requests with related data
             $sql = "SELECT mr.*, dp.name as drainage_point_name, dp.latitude, dp.longitude,
@@ -92,6 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     LEFT JOIN users u1 ON mr.requested_by = u1.id
                     LEFT JOIN users u2 ON mr.assigned_to = u2.id
                     ORDER BY mr.created_at DESC";
+                    
+            file_put_contents($logFile, "Fetching all maintenance requests\n", FILE_APPEND);
         }
         
         $result = $conn->query($sql);
@@ -101,6 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             while ($row = $result->fetch_assoc()) {
                 $requests[] = [
                     'id' => (int)$row['id'],
+                    'request_number' => $row['request_number'],
                     'drainage_point_id' => $row['drainage_point_id'],
                     'drainage_point_name' => $row['drainage_point_name'],
                     'drainage_point_coordinates' => [
@@ -201,7 +222,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode([
                 'success' => true,
                 'message' => 'Maintenance request submitted successfully',
-                'id' => $requestId
+                'id' => $requestId,
+                'request_number' => $request_number
             ]);
         } else {
             throw new Exception('Database error: ' . $stmt->error);

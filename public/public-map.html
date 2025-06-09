@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DrainTrack - Interactive Inventory Map</title>
+  <title>DrainTrack Public Map - Muar Drainage Information</title>
+  <meta name="description" content="View drainage infrastructure information and report flooding issues in Muar District">
+  
   <!-- Bootstrap CSS -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome for icons -->
@@ -13,122 +15,345 @@
   <!-- Leaflet MarkerCluster CSS -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css"
+  
+  <!-- Unified Design System CSS -->
+  <link href="../css/map-common.css" rel="stylesheet">
+  
+  <style>
+    /* Public-specific additional styles */
+    .public-notice {
+      background: linear-gradient(135deg, #e6f7ff, #bae7ff);
+      border: 1px solid #40a9ff;
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .emergency-banner {
+      background: linear-gradient(135deg, #fff2e8, #ffd8bf);
+      border: 2px solid #fa8c16;
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .emergency-banner .btn {
+      margin: 0.25rem;
+    }
+
+    .info-card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid #e9ecef;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition-normal);
+    }
+
+    .info-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .status-good {
+      background: #f6ffed;
+      color: #52c41a;
+      border: 1px solid #b7eb8f;
+    }
+
+    .status-maintenance {
+      background: #fff7e6;
+      color: #fa8c16;
+      border: 1px solid #ffd591;
+    }
+
+    .status-critical {
+      background: #fff2f0;
+      color: #ff4d4f;
+      border: 1px solid #ffb3b3;
+    }
+
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 1rem;
+      background: white;
+      border-radius: var(--border-radius-sm);
+      border: 1px solid #e9ecef;
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1890ff;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .report-success {
+      background: #f6ffed;
+      border: 1px solid #b7eb8f;
+      color: #52c41a;
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      text-align: center;
+      margin: 1rem 0;
+    }
+
+    /* Public theme navigation */
+    .navbar.public {
+      background: linear-gradient(135deg, #001529 0%, #1890ff 100%) !important;
+    }
+
+    /* Public control panel theme */
+    .control-panel-header.public {
+      background: linear-gradient(135deg, #001529 0%, #1890ff 100%) !important;
+    }
+
+    .panel-toggle.public {
+      background: linear-gradient(135deg, #001529 0%, #1890ff 100%) !important;
+    }
+
+    .filter-badge.public {
+      border-color: #1890ff;
+      color: #1890ff;
+    }
+
+    .filter-badge.public:hover,
+    .filter-badge.public.active {
+      background: linear-gradient(135deg, #001529 0%, #1890ff 100%);
+      color: white;
+      border-color: transparent;
+    }
+
+    .content-section.public {
+      border: 2px solid #1890ff;
+    }
+
+    .btn-public {
+      background: linear-gradient(135deg, #001529 0%, #1890ff 100%);
+      color: white;
+    }
+
+    .modal-header.public {
+      background: linear-gradient(135deg, #001529 0%, #1890ff 100%) !important;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .quick-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .emergency-banner .btn {
+        display: block;
+        width: 100%;
+        margin: 0.25rem 0;
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">
+  <nav class="navbar navbar-expand-lg navbar-dark public">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="../index.html">
         <i class="fas fa-water"></i>
-        DrainTrack
+        DrainTrack Public
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" title="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
+        <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link" href="home.html">Home</a>
+            <a class="nav-link" href="../index.html">
+              <i class="fas fa-home me-1"></i>Home
+            </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="#">Map</a>
+            <a class="nav-link active" href="#">
+              <i class="fas fa-map me-1"></i>Drainage Map
+            </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Help</a>
+            <a class="nav-link" href="#" onclick="showEmergencyInfo()">
+              <i class="fas fa-phone me-1"></i>Emergency
+            </a>
           </li>
         </ul>
+        <div class="ms-3">
+          <button class="btn btn-warning me-2" onclick="showFloodReportModal()">
+            <i class="fas fa-exclamation-triangle me-1"></i>Report Flood
+          </button>
+          <a class="btn btn-outline-light" href="../login.html">
+            <i class="fas fa-sign-in-alt me-1"></i>Staff Login
+          </a>
         </div>
       </div>
     </div>
   </nav>
 
-  <div class="full-screen-container">
-   
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner-container">
+      <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+      <div class="mt-3 fw-bold">Loading drainage information...</div>
+    </div>
+  </div>
 
+  <div class="full-screen-container">
     <div class="map-container">
       <!-- Map Element -->
       <div id="map"></div>
       
-      <!-- Search and Filter Overlay -->
-      <div class="map-overlay collapsed" id="filter-overlay">
-        <button type="button" class="collapse-btn" id="collapse-overlay" title="Collapse Overlay">
-          <i class="fas fa-chevron-right"></i> 
-        </button>
-        
-        <h4 class="mb-3">Map Controls</h4>
-        
-        <!-- Search Box -->
-        <div class="search-box mb-4">
-          <i class="fas fa-search"></i>
-          <input type="text" class="form-control" id="search-input" placeholder="Search drainage points...">
+      <!-- Control Panel -->
+      <div class="control-panel" id="controlPanel">
+        <div class="control-panel-header public">
+          <h4><i class="fas fa-info-circle me-2"></i>Drainage Information</h4>
+          <button type="button" class="panel-toggle public" id="panelToggle" title="Toggle Control Panel">
+            <i class="fas fa-chevron-left" id="toggleIcon"></i>
+          </button>
         </div>
         
-        <!-- Filters -->
-        <div class="filter-control">
-          <h5><i class="fas fa-filter me-2"></i> Filters</h5>
-          
-          <div class="mb-3">
-            <label class="form-label">Drainage Type</label>
-            <div>
-              <span class="filter-badge active" data-filter="all">All</span>
-              <span class="filter-badge" data-filter="concrete">Concrete</span>
-              <span class="filter-badge" data-filter="earth">Earth</span>
-              <span class="filter-badge" data-filter="box-culvert">Box Culvert</span>
-              <span class="filter-badge" data-filter="pipe">Pipe</span>
+        <div class="control-panel-body">
+          <!-- Public Notice -->
+          <div class="public-notice">
+            <h6><i class="fas fa-users me-2"></i>Public Information Portal</h6>
+            <p class="mb-0 small">View drainage infrastructure information for Muar District. Report flooding issues to help us respond quickly.</p>
+          </div>
+
+          <!-- Emergency Banner -->
+          <div class="emergency-banner">
+            <h6><i class="fas fa-exclamation-triangle me-2"></i>Emergency Contacts</h6>
+            <div class="d-flex flex-wrap gap-2 justify-content-center">
+              <a href="tel:999" class="btn btn-danger btn-sm">
+                <i class="fas fa-phone me-1"></i>999 Emergency
+              </a>
+              <a href="tel:06-951-4244" class="btn btn-warning btn-sm">
+                <i class="fas fa-water me-1"></i>Flood Control
+              </a>
             </div>
           </div>
-          
-          <div class="mb-3">
-            <label class="form-label">Status</label>
-            <div>
-              <span class="filter-badge active" data-filter="all">All</span>
-              <span class="filter-badge" data-filter="good">Good</span>
-              <span class="filter-badge" data-filter="needs-maintenance">Needs Maintenance</span>
-              <span class="filter-badge" data-filter="critical">Critical</span>
+
+          <!-- Quick Stats -->
+          <div class="info-card">
+            <h6><i class="fas fa-chart-bar me-2"></i>System Overview</h6>
+            <div class="quick-stats" id="quickStats">
+              <div class="stat-item">
+                <div class="stat-number" id="totalPoints">-</div>
+                <div class="stat-label">Total Points</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" id="goodCondition">-</div>
+                <div class="stat-label">Good</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" id="needsMaintenance">-</div>
+                <div class="stat-label">Maintenance</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" id="criticalCondition">-</div>
+                <div class="stat-label">Critical</div>
+              </div>
             </div>
           </div>
-          
-          <div class="mb-3">
-            <label class="form-label">Depth Range</label>
-            <div class="d-flex align-items-center">
-              <label for="depth-range" class="form-label">Adjust Depth Range</label>
-              <input type="range" class="form-range" id="depth-range" min="0" max="10" step="0.5">
-              <span class="ms-2" id="depth-value">0-10m</span>
+
+          <!-- Search Container -->
+          <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="form-control" id="search-input" placeholder="Search drainage points...">
+            <button class="clear-search" id="clear-search-btn" title="Clear search">
+              <i class="fas fa-times"></i>
+            </button>
+            <div class="search-dropdown" id="search-dropdown">
+              <!-- Dropdown items will be populated here -->
             </div>
           </div>
-        </div>
-        
-        <!-- Legend -->
-        <div class="legend">
-          <h5><i class="fas fa-info-circle me-2"></i> Legend</h5>
-          <div class="legend-item">
-            <div class="legend-color" style="background-color: #28a745;"></div>
-            <span>Good Condition</span>
+
+          <!-- Quick Filters -->
+          <div class="filter-section">
+            <h6><i class="fas fa-filter me-2"></i>Filter by Type</h6>
+            <div class="mb-3">
+              <div class="filter-badges">
+                <span class="filter-badge public active" data-filter="all" data-type="type">All Types</span>
+                <span class="filter-badge public" data-filter="concrete" data-type="type">Concrete</span>
+                <span class="filter-badge public" data-filter="earth" data-type="type">Earth</span>
+                <span class="filter-badge public" data-filter="box-culvert" data-type="type">Box Culvert</span>
+                <span class="filter-badge public" data-filter="pipe" data-type="type">Pipe</span>
+              </div>
+            </div>
+
+            <h6><i class="fas fa-heartbeat me-2"></i>Filter by Condition</h6>
+            <div class="mb-3">
+              <div class="filter-badges">
+                <span class="filter-badge public active" data-filter="all" data-type="status">All Status</span>
+                <span class="filter-badge public" data-filter="good" data-type="status">Good</span>
+                <span class="filter-badge public" data-filter="needs-maintenance" data-type="status">Maintenance</span>
+                <span class="filter-badge public" data-filter="critical" data-type="status">Critical</span>
+              </div>
+            </div>
+
+            <div class="range-container">
+              <label class="form-label mb-2">Depth Range</label>
+              <div class="d-flex align-items-center">
+                <input type="range" class="form-range" id="depth-range" min="0" max="10" step="0.5" value="10">
+                <span class="range-value ms-2" id="depth-value">0-10m</span>
+              </div>
+            </div>
           </div>
-          <div class="legend-item">
-            <div class="legend-color" style="background-color: #ffc107;"></div>
-            <span>Needs Maintenance</span>
+
+          <!-- Legend -->
+          <div class="legend">
+            <h6><i class="fas fa-info-circle me-2"></i>Map Legend</h6>
+            <div class="legend-item">
+              <div class="legend-color" style="background-color: #38a169;"></div>
+              <span>Good Condition</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background-color: #ed8936;"></div>
+              <span>Needs Maintenance</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background-color: #e53e3e;"></div>
+              <span>Critical Condition</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background-color: #17a2b8;"></div>
+              <span>Flood-prone Area</span>
+            </div>
           </div>
-          <div class="legend-item">
-            <div class="legend-color" style="background-color: #dc3545;"></div>
-            <span>Critical Condition</span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-color" style="background-color: #17a2b8;"></div>
-            <span>Flood-prone Area</span>
-          </div>
-        </div>
-        
-        <!-- Recent Activity -->
-        
+
+          
         </div>
       </div>
       
-      
-      
       <!-- Map Controls -->
-      <div class="controls-container">
+      <div class="map-controls">
         <button class="map-control-btn" id="zoom-in-btn" title="Zoom In">
           <i class="fas fa-plus"></i>
         </button>
@@ -141,398 +366,295 @@
         <button class="map-control-btn" id="full-extent-btn" title="Full Extent">
           <i class="fas fa-expand"></i>
         </button>
-        <button class="map-control-btn" id="toggle-layers-btn" title="Toggle Layers">
+        <button class="map-control-btn" id="layers-btn" title="Map Layers">
           <i class="fas fa-layer-group"></i>
         </button>
       </div>
       
-      <!-- Flood Report Button -->
-      <button class="btn btn-danger flood-report-btn">
-        <i class="fas fa-exclamation-triangle"></i> Report Flooding
-      </button>
-
-      <div class="point-control">
-        
-        
-      </div>
-    </div>
-
-    
-    
-  </div>
-  
-  <!-- Loading Overlay -->
-  <div class="loading-overlay" id="loading-overlay">
-    <div class="spinner-container">
-      <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
-      <div class="mt-3">Loading map data...</div>
-    </div>
-  </div>
-
-  <!-- Add Point Modal -->
- <!-- <div class="modal fade" id="addPointModal" tabindex="-1" aria-labelledby="addPointModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addPointModalLabel">Add New Drainage Point</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="add-point-form">
-            <div class="mb-3">
-              <label for="point-name" class="form-label">Name</label>
-              <input type="text" class="form-control" id="point-name" required>
-            </div>
-            <div class="mb-3">
-              <label for="point-type" class="form-label">Type</label>
-              <select class="form-select" id="point-type" required>
-                <option value="">Select type</option>
-                <option value="Concrete Drain">Concrete Drain</option>
-                <option value="Earth Drain">Earth Drain</option>
-                <option value="Box Culvert">Box Culvert</option>
-                <option value="Pipe Drain">Pipe Drain</option>
-              </select>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label for="point-depth" class="form-label">Depth (m)</label>
-                  <input type="number" class="form-control" id="point-depth" step="0.1" min="0">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label for="point-status" class="form-label">Status</label>
-                  <select class="form-select" id="point-status" required>
-                    <option value="Good">Good</option>
-                    <option value="Needs Maintenance">Needs Maintenance</option>
-                    <option value="Critical">Critical</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label for="point-il" class="form-label">Invert Level</label>
-                  <input type="text" class="form-control" id="point-il">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label for="point-rl" class="form-label">Reduced Level</label>
-                  <input type="text" class="form-control" id="point-rl">
-                </div>
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="point-coordinates" class="form-label">Coordinates</label>
-              <div class="input-group">
-                <input type="text" class="form-control" id="point-lat" placeholder="Latitude" readonly>
-                <input type="text" class="form-control" id="point-lng" placeholder="Longitude" readonly>
-                <button class="btn btn-outline-secondary" type="button" id="pick-location-btn">
-                  <i class="fas fa-map-marker-alt"></i>
-                </button>
-              </div>
-              <div class="form-text">Click "Pick Location" to select a point on the map</div>
-            </div>
-            <div class="mb-3">
-              <label for="point-description" class="form-label">Description</label>
-              <textarea class="form-control" id="point-description" rows="3"></textarea>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Upload Images</label>
-              <input type="file" class="form-control" id="point-images" multiple accept="image/*">
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" id="save-point-btn">Save Point</button>
-        </div>
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="action-btn btn-danger-custom" onclick="showFloodReportModal()">
+          <i class="fas fa-exclamation-triangle"></i>
+          Report Flood
+        </button>
+        <button class="action-btn btn-public" onclick="showEmergencyInfo()">
+          <i class="fas fa-phone"></i>
+          Emergency
+        </button>
       </div>
     </div>
   </div>
--->
-  <!-- Flood Report Modal -->
-  <div class="modal fade" id="floodReportModal" tabindex="-1" aria-labelledby="floodReportModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+
+  <!-- Point Details Modal (Public View) -->
+  <div class="modal fade" id="pointDetailsModal" tabindex="-1" aria-labelledby="pointDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content">
-        <div class="modal-header bg-danger text-white">
-          <h5 class="modal-title" id="floodReportModalLabel">Report Flooding</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-header public">
+          <h5 class="modal-title" id="pointDetailsModalLabel">
+            <i class="fas fa-info-circle me-2"></i>Drainage Point Information
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <div class="alert alert-warning">
-            <i class="fas fa-info-circle me-2"></i> Please provide as much detail as possible to help us respond quickly.
-          </div>
-          <form id="flood-report-form">
-            <div class="mb-3">
-              <label for="flood-location" class="form-label">Location</label>
-              <div class="input-group">
-                <input type="text" class="form-control" id="flood-location-input" placeholder="Address or description" required>
-                <button class="btn btn-outline-secondary" type="button" id="flood-pick-location-btn">
-                  <i class="fas fa-map-marker-alt"></i>
-                </button>
-              </div>
-              <div class="form-text">Click the map marker button to select a location on the map</div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label for="flood-severity" class="form-label">Severity</label>
-                  <select class="form-select" id="flood-severity" required>
-                    <option value="">Select severity</option>
-                    <option value="Minor">Minor - Small puddles</option>
-                    <option value="Moderate">Moderate - Road partially flooded</option>
-                    <option value="Severe">Severe - Road impassable</option>
-                    <option value="Extreme">Extreme - Property flooding</option>
-                  </select>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card mb-3">
+                <div class="card-header public">
+                  <h5 class="mb-0"><i class="fas fa-list me-2"></i>General Information</h5>
+                </div>
+                <div class="card-body">
+                  <table class="table table-borderless">
+                    <tbody id="point-details-table">
+                      <!-- Populated dynamically -->
+                    </tbody>
+                  </table>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="mb-3">
-                  <label for="flood-water-depth" class="form-label">Approximate Water Depth</label>
-                  <div class="input-group">
-                    <input type="number" class="form-control" id="flood-water-depth" min="0" step="0.1">
-                    <span class="input-group-text">cm</span>
+              
+              <div class="card">
+                <div class="card-header public">
+                  <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Maintenance</h5>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-sm" id="maintenance-history-table">
+                      <!-- Populated dynamically -->
+                    </table>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="mb-3">
-              <label for="flood-description" class="form-label">Description</label>
-              <textarea class="form-control" id="flood-description" rows="3" required></textarea>
+            
+            <div class="col-md-6">
+              <div class="card mb-3">
+                <div class="card-header public">
+                  <h5 class="mb-0"><i class="fas fa-images me-2"></i>Photo Gallery</h5>
+                </div>
+                <div class="card-body">
+                  <div id="point-image-gallery">
+                    <!-- Populated dynamically -->
+                  </div>
+                </div>
+              </div>
+              
+              <div class="card">
+                <div class="card-header public">
+                  <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Report Issue</h5>
+                </div>
+                <div class="card-body">
+                  <p class="text-muted mb-3">Notice a problem with this drainage point?</p>
+                  <div class="d-grid gap-2">
+                    <button class="btn btn-warning" onclick="reportPointIssue(currentPointId)">
+                      <i class="fas fa-flag me-2"></i>Report Issue
+                    </button>
+                    <button class="btn btn-danger" onclick="reportFloodingHere(currentPointId)">
+                      <i class="fas fa-water me-2"></i>Report Flooding Here
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flood Report Modal -->
+  <div class="modal fade" id="floodReportModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-danger">
+          <h5 class="modal-title text-white">
+            <i class="fas fa-exclamation-triangle me-2"></i>Report Flooding Incident
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-warning">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>Emergency:</strong> If this is a life-threatening situation, call 999 immediately.
+          </div>
+          
+          <form id="floodReportForm">
             <div class="mb-3">
-              <label class="form-label">Upload Photos</label>
+              <label for="flood-location" class="form-label">Location *</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="flood-location" required 
+                       placeholder="Enter street address or description">
+                <button class="btn btn-outline-primary" type="button" id="pick-location-btn">
+                  <i class="fas fa-map-marker-alt"></i> Pick on Map
+                </button>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="flood-severity" class="form-label">Severity *</label>
+                  <select class="form-select" id="flood-severity" required>
+                    <option value="">Select severity...</option>
+                    <option value="Minor">Minor - Small puddles</option>
+                    <option value="Moderate">Moderate - Road partially blocked</option>
+                    <option value="Severe">Severe - Road impassable</option>
+                    <option value="Extreme">Extreme - Property damage risk</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="flood-depth" class="form-label">Water Depth (cm)</label>
+                  <input type="number" class="form-control" id="flood-depth" min="0" placeholder="Estimated depth">
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="flood-description" class="form-label">Description *</label>
+              <textarea class="form-control" id="flood-description" rows="4" required
+                        placeholder="Describe the flooding situation in detail..."></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label for="reporter-name" class="form-label">Your Name</label>
+              <input type="text" class="form-control" id="reporter-name" placeholder="Optional">
+            </div>
+            
+            <div class="mb-3">
+              <label for="reporter-contact" class="form-label">Contact Number</label>
+              <input type="tel" class="form-control" id="reporter-contact" placeholder="Optional">
+            </div>
+            
+            <div class="mb-3">
+              <label for="flood-images" class="form-label">Upload Photos</label>
               <input type="file" class="form-control" id="flood-images" multiple accept="image/*">
-            </div>
-            <div class="mb-3">
-              <label for="reporter-contact" class="form-label">Your Contact Info (optional)</label>
-              <input type="text" class="form-control" id="reporter-contact" placeholder="Phone or email">
+              <div class="form-text">Upload photos to help us assess the situation</div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-danger" id="submit-flood-report-btn">Submit Report</button>
+          <button type="button" class="btn btn-danger" onclick="submitFloodReport()">
+            <i class="fas fa-paper-plane me-1"></i>Submit Report
+          </button>
         </div>
       </div>
     </div>
   </div>
-  
-  <!-- Layer Control Modal (continuation) -->
-<div class="modal fade" id="layerControlModal" tabindex="-1" aria-labelledby="layerControlModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="layerControlModalLabel">Map Layers</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="form-check form-switch mb-2">
-          <input class="form-check-input" type="checkbox" id="layer-drainage" checked>
-          <label class="form-check-label" for="layer-drainage">Drainage Points</label>
-        </div>
-        <div class="form-check form-switch mb-2">
-          <input class="form-check-input" type="checkbox" id="layer-flood-prone" checked>
-          <label class="form-check-label" for="layer-flood-prone">Flood-prone Areas</label>
-        </div>
-        <div class="form-check form-switch mb-2">
-          <input class="form-check-input" type="checkbox" id="layer-maintenance">
-          <label class="form-check-label" for="layer-maintenance">Maintenance Routes</label>
-        </div>
-        <div class="form-check form-switch mb-2">
-          <input class="form-check-input" type="checkbox" id="layer-catchments">
-          <label class="form-check-label" for="layer-catchments">Catchment Areas</label>
-        </div>
-        <div class="form-check form-switch mb-2">
-          <input class="form-check-input" type="checkbox" id="layer-rainfall">
-          <label class="form-check-label" for="layer-rainfall">Rainfall Intensity</label>
-        </div>
-        <hr />
-        <h6>Base Maps</h6>
-        <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="basemap" id="basemap-street" checked>
-          <label class="form-check-label" for="basemap-street">Street Map</label>
-        </div>
-        <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="basemap" id="basemap-satellite">
-          <label class="form-check-label" for="basemap-satellite">Satellite Imagery</label>
-        </div>
-        <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="basemap" id="basemap-terrain">
-          <label class="form-check-label" for="basemap-terrain">Terrain</label>
-        </div>
-        <div class="form-check mb-2">
-          <input class="form-check-input" type="radio" name="basemap" id="basemap-topo">
-          <label class="form-check-label" for="basemap-topo">Topographic</label>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="reset-layers-btn">Reset to Default</button>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- Point Details Modal -->
-<div class="modal fade" id="pointDetailsModal" tabindex="-1" aria-labelledby="pointDetailsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="pointDetailsModalLabel">Drainage Point Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="card mb-3">
-              <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">General Information</h5>
-              </div>
-              <div class="card-body">
-                <table class="table table-bordered">
-                  <tbody id="point-details-table">
-                    <!-- Will be populated dynamically -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            
-            <div class="card mb-3">
-              <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Maintenance History</h5>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table table-sm table-hover" id="maintenance-history-table">
-                    <!-- Will be populated dynamically -->
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-6">
-            <div class="card mb-3">
-              <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Media Gallery</h5>
-              </div>
-              <div class="card-body">
-                <div id="point-image-gallery" class="media-gallery">
-                  <!-- Will be populated dynamically -->
-                </div>
+  <!-- Emergency Info Modal -->
+  <div class="modal fade" id="emergencyModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-danger">
+          <h5 class="modal-title text-white">
+            <i class="fas fa-phone me-2"></i>Emergency Contacts
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="d-grid gap-3">
+            <div class="card">
+              <div class="card-body text-center">
+                <i class="fas fa-ambulance fa-2x text-danger mb-2"></i>
+                <h5>Emergency Services</h5>
+                <p class="text-muted">Life-threatening emergencies</p>
+                <a href="tel:999" class="btn btn-danger">
+                  <i class="fas fa-phone me-1"></i>999
+                </a>
               </div>
             </div>
             
             <div class="card">
-              <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Actions</h5>
+              <div class="card-body text-center">
+                <i class="fas fa-water fa-2x text-warning mb-2"></i>
+                <h5>Flood Control Centre</h5>
+                <p class="text-muted">Flooding emergencies & drainage issues</p>
+                <a href="tel:06-951-4244" class="btn btn-warning">
+                  <i class="fas fa-phone me-1"></i>06-951 4244
+                </a>
               </div>
-              <div class="card-body">
-                <div class="d-grid gap-2">
-                  <button class="btn btn-outline-primary" id="schedule-inspection-btn">
-                    <i class="fas fa-clipboard-check me-2"></i>Schedule Inspection
-                  </button>
-                  <button class="btn btn-outline-primary" id="maintenance-request-btn">
-                    <i class="fas fa-tools me-2"></i>Request Maintenance
-                  </button>
-                  <button class="btn btn-outline-secondary" id="download-report-btn">
-                    <i class="fas fa-file-download me-2"></i>Download Report
-                  </button>
-                </div>
+            </div>
+            
+            <div class="card">
+              <div class="card-body text-center">
+                <i class="fas fa-building fa-2x text-primary mb-2"></i>
+                <h5>Local Authority Muar</h5>
+                <p class="text-muted">General inquiries & services</p>
+                <a href="tel:06-951-2222" class="btn btn-primary">
+                  <i class="fas fa-phone me-1"></i>06-951 2222
+                </a>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="edit-point-btn">Edit Point</button>
-        <button type="button" class="btn btn-danger" id="delete-point-btn">Delete Point</button>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Export Data Modal -->
-<div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exportModalLabel">Export Data</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <label for="export-format" class="form-label">Export Format</label>
-          <select class="form-select" id="export-format">
-            <option value="csv">CSV</option>
-            <option value="xlsx">Excel (XLSX)</option>
-            <option value="geojson">GeoJSON</option>
-            <option value="shp">Shapefile</option>
-            <option value="pdf">PDF Report</option>
-          </select>
+  <!-- Layer Control Modal -->
+  <div class="modal fade" id="layerModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header public">
+          <h5 class="modal-title">
+            <i class="fas fa-layer-group me-2"></i>Map Layers
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
-        
-        <div class="mb-3">
-          <label class="form-label">Include Data</label>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="export-drainage" checked>
-            <label class="form-check-label" for="export-drainage">Drainage Points</label>
+        <div class="modal-body">
+          <h6 class="mb-3">Show/Hide Layers</h6>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="layer-drainage" checked>
+            <label class="form-check-label" for="layer-drainage">
+              <i class="fas fa-map-pin me-2 text-primary"></i>Drainage Points
+            </label>
           </div>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="export-flood-prone" checked>
-            <label class="form-check-label" for="export-flood-prone">Flood-prone Areas</label>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="layer-flood-areas" >
+            <label class="form-check-label" for="layer-flood-areas">
+              <i class="fas fa-water me-2 text-info"></i>Flood-prone Areas
+            </label>
           </div>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="export-maintenance">
-            <label class="form-check-label" for="export-maintenance">Maintenance Records</label>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="layer-drainage-lines">
+            <label class="form-check-label" for="layer-drainage-lines">
+              <i class="fas fa-route me-2 text-success"></i>Drainage Network
+            </label>
           </div>
-        </div>
-        
-        <div class="mb-3">
-          <label class="form-label">Filter Options</label>
-          <div class="row">
-            <div class="col-md-6">
-              <select class="form-select mb-2" id="export-filter-type">
-                <option value="all">All Types</option>
-                <option value="concrete">Concrete Drains</option>
-                <option value="earth">Earth Drains</option>
-                <option value="box-culvert">Box Culverts</option>
-                <option value="pipe">Pipe Drains</option>
-              </select>
-            </div>
-            <div class="col-md-6">
-              <select class="form-select mb-2" id="export-filter-status">
-                <option value="all">All Statuses</option>
-                <option value="good">Good</option>
-                <option value="needs-maintenance">Needs Maintenance</option>
-                <option value="critical">Critical</option>
-              </select>
-            </div>
+          
+          <hr>
+          <h6 class="mb-3">Base Map</h6>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="basemap" id="basemap-street" checked>
+            <label class="form-check-label" for="basemap-street">
+              <i class="fas fa-road me-2"></i>Street Map
+            </label>
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="basemap" id="basemap-satellite">
+            <label class="form-check-label" for="basemap-satellite">
+              <i class="fas fa-satellite me-2"></i>Satellite
+            </label>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="confirm-export-btn">Export</button>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Scripts section would follow here -->
-<!-- Bootstrap Bundle with Popper -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<!-- Leaflet JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.js"></script>
-<!-- Leaflet MarkerCluster JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
-<!-- Your custom JS file would be linked here -->
- <script src="js/public-map.js"></script>
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+  <script src="../js/public-map.js"></script>
 </body>
 </html>

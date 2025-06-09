@@ -1,552 +1,243 @@
-// Initialize the map
-const map = L.map("map", {
-  zoomControl: false,
-  attributionControl: false,
-}).setView([1.9911, 102.5875], 13); // Default center
-
-// Add a tile layer (OpenStreetMap by default)
-const osmTileLayer = L.tileLayer(
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  {
-    maxZoom: 19,
-  }
-).addTo(map);
-
-// Define additional base maps
-const satelliteTileLayer = L.tileLayer(
-  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-  {
-    maxZoom: 19,
-  }
-);
-
-const terrainTileLayer = L.tileLayer(
-  "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-  {
-    maxZoom: 17,
-  }
-);
-
-const topoTileLayer = L.tileLayer(
-  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
-  {
-    maxZoom: 19,
-  }
-);
-
-// Layer groups
-const drainagePointsLayer = L.markerClusterGroup().addTo(map);
-const floodProneAreasLayer = L.layerGroup().addTo(map);
-const maintenanceRoutesLayer = L.layerGroup();
-const catchmentsLayer = L.layerGroup();
-const rainfallLayer = L.layerGroup();
+// ==========================================
+// DRAINTRACK PUBLIC MAP SYSTEM
+// ==========================================
 
 // Global variables
-let pickLocationMode = false;
-let floodReportLocationMode = false;
+let map;
+let drainageData = [];
+let allDrainageData = [];
 let currentPointId = null;
-let drainageData = []; // Store all drainage points data
+let pickLocationMode = false;
+let recentReports = [];
 
-// Function to get status badge class
-function getStatusBadgeClass(status) {
-  switch (status) {
-    case "Good":
-      return "bg-success";
-    case "Needs Maintenance":
-      return "bg-warning";
-    case "Critical":
-      return "bg-danger";
-    default:
-      return "bg-secondary";
+// Enhanced Search Variables
+let searchDropdownVisible = false;
+let selectedDrainagePoint = null;
+
+// Enhanced Image Gallery Variables
+let currentImageIndex = 0;
+let currentPointImages = [];
+
+// Layer groups
+let drainagePointsLayer, floodProneAreasLayer, drainageLinesLayer;
+let osmTileLayer, satelliteTileLayer;
+
+// Filter state
+let currentFilters = {
+  type: "all",
+  status: "all",
+  depth: 10,
+  search: "",
+};
+
+// ==========================================
+// INITIALIZATION
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", function () {
+  initializePublicMap();
+});
+
+async function initializePublicMap() {
+  try {
+    showLoading(true);
+
+    // Initialize map components
+    initializeMap();
+    initializeControlPanel();
+    setupEventListeners();
+    injectEnhancedSearchCSS();
+    injectImageGalleryCSS();
+
+    // Load data
+    await Promise.all([
+      fetchDrainageData(),
+      fetchFloodProneAreas(),
+      fetchDrainageLines(),
+    ]);
+
+    showLoading(false);
+    showNotification("Drainage information loaded successfully", "success");
+
+    // Initialize search dropdown with all data after loading
+    if (allDrainageData.length > 0) {
+      populateSearchDropdown(allDrainageData);
+      updateQuickStats();
+    }
+  } catch (error) {
+    console.error("Error initializing public map:", error);
+    showLoading(false);
+    showNotification("Error loading map data", "danger");
   }
 }
 
-// Function to create marker icons based on status
-function createMarkerIcon(status) {
-  return L.divIcon({
-    className: "custom-div-icon",
-    html: `<div style="background-color: ${
-      status === "Good"
-        ? "#28a745"
-        : status === "Needs Maintenance"
-        ? "#ffc107"
-        : "#dc3545"
-    }; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>`,
-    iconSize: [16, 16],
-    iconAnchor: [8, 8],
-  });
+// ==========================================
+// MAP INITIALIZATION
+// ==========================================
+
+function initializeMap() {
+  map = L.map("map", {
+    zoomControl: false,
+    attributionControl: false,
+  }).setView([2.05788, 102.57471], 13);
+
+  // Initialize base layers
+  osmTileLayer = L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      maxZoom: 19,
+      attribution: "© OpenStreetMap contributors",
+    }
+  ).addTo(map);
+
+  satelliteTileLayer = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    { maxZoom: 19 }
+  );
+
+  // Initialize overlay layers
+  drainagePointsLayer = L.markerClusterGroup({
+    chunkedLoading: true,
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: false,
+    zoomToBoundsOnClick: true,
+  }).addTo(map);
+
+  floodProneAreasLayer = L.layerGroup();
+  drainageLinesLayer = L.layerGroup();
+
+  // Setup map event handlers
+  map.on("click", handleMapClick);
+  map.on("zoomend", updateZoomLevel);
+
+  console.log("Map initialized successfully");
 }
 
-// Fetch drainage data from the server
+function handleMapClick(e) {
+  if (pickLocationMode) {
+    handleLocationPick(e);
+  }
+}
+
+function handleLocationPick(e) {
+  const lat = e.latlng.lat.toFixed(6);
+  const lng = e.latlng.lng.toFixed(6);
+
+  document.getElementById("map").style.cursor = "";
+  pickLocationMode = false;
+
+  const locationInput = document.getElementById("flood-location");
+  if (locationInput) {
+    locationInput.value = `${lat}, ${lng}`;
+    locationInput.setAttribute("data-lat", lat);
+    locationInput.setAttribute("data-lng", lng);
+  }
+
+  showModal("floodReportModal");
+  showNotification(`Location selected: ${lat}, ${lng}`, "success");
+}
+
+function updateZoomLevel() {
+  const zoom = map.getZoom();
+  if (zoom > 15) {
+    drainagePointsLayer.options.disableClusteringAtZoom = 16;
+  }
+}
+
+// ==========================================
+// DATA LOADING FUNCTIONS
+// ==========================================
+
 async function fetchDrainageData() {
   try {
-    const response = await fetch("/DrainageInventory/api/drainage-points.php");
+    const response = await fetch("../api/drainage-points.php");
     const data = await response.json();
-    console.log("Server Response:", data); // Debugging: Check the server response
 
     if (!Array.isArray(data)) {
-      throw new Error("Invalid data format received from the server");
+      throw new Error("Invalid data format received");
     }
 
-    drainageData = data; // Store the data globally
-    console.log("Drainage Data:", drainageData); // Debugging: Check the drainageData array
-    renderDrainagePoints(data);
+    allDrainageData = data;
+    drainageData = [...data];
+    renderDrainagePoints(drainageData);
+    updateFilterCounts();
   } catch (error) {
     console.error("Error fetching drainage data:", error);
     showNotification(
-      "Could not load drainage data. Please try again.",
-      "danger"
+      "Could not load drainage data. Using sample data.",
+      "warning"
     );
+
+    // Use fallback sample data
+    allDrainageData = getSampleDrainageData();
+    drainageData = [...allDrainageData];
+    renderDrainagePoints(drainageData);
   }
 }
 
-// Render drainage points on the map
+async function fetchFloodProneAreas() {
+  try {
+    const response = await fetch("../api/flood-prone-areas.php");
+    if (!response.ok) throw new Error("API not available");
+
+    const data = await response.json();
+    renderFloodProneAreas(data);
+  } catch (error) {
+    console.error("Error fetching flood-prone areas:", error);
+    renderFloodProneAreas(getSampleFloodProneAreas());
+  }
+}
+
+async function fetchDrainageLines() {
+  try {
+    const response = await fetch("../api/drainage-lines.php");
+    if (!response.ok) throw new Error("Failed to fetch drainage lines");
+
+    const geojsonData = await response.json();
+    const lineLayer = L.geoJSON(geojsonData, {
+      style: {
+        color: "#007bff",
+        weight: 3,
+        opacity: 0.8,
+      },
+    });
+
+    drainageLinesLayer.addLayer(lineLayer);
+  } catch (error) {
+    console.error("Error fetching drainage lines:", error);
+  }
+}
+
+// ==========================================
+// DATA RENDERING FUNCTIONS
+// ==========================================
+
 function renderDrainagePoints(data) {
-  // Clear existing markers
   drainagePointsLayer.clearLayers();
 
-  // Add drainage points to the map
   data.forEach((point) => {
     const marker = L.marker(point.coordinates, {
-      icon: createMarkerIcon(point.status),
-      draggable: false,
+      icon: createPublicMarkerIcon(point.status),
       title: point.name,
     });
 
-    // Create popup content
-    const popupContent = `
-        <div class="popup-content">
-          <h5>${point.name} <span class="badge ${getStatusBadgeClass(
-      point.status
-    )}">${point.status}</span></h5>
-          <div class="property-row">
-            <div class="property-label">Type:</div>
-            <div>${point.type}</div>
-          </div>
-          <div class="property-row">
-            <div class="property-label">Depth:</div>
-            <div>${point.depth}m</div>
-          </div>
-          <div class="property-row">
-            <div class="property-label">Description:</div>
-            <div>${point.description || "No description available"}</div>
-          </div>
-          <div class="text-center mt-2">
-            <button class="btn btn-sm btn-primary view-details-btn" data-id="${
-              point.id
-            }">View Details</button>
-          </div>
-        </div>
-      `;
+    const popupContent = createPublicPopupContent(point);
+    marker.bindPopup(popupContent, {
+      maxWidth: 320,
+      className: "custom-popup public-popup",
+    });
 
-    marker.bindPopup(popupContent);
-    marker.on("popupopen", function () {
-      setTimeout(() => {
-        const detailsBtn = document.querySelector(".view-details-btn");
-        if (detailsBtn) {
-          console.log("View Details button found:", detailsBtn); // Debugging
-          detailsBtn.addEventListener("click", function () {
-            const pointId = this.getAttribute("data-id");
-            console.log("View Details button clicked. Point ID:", pointId); // Debugging
-            showPointDetails(pointId); // Call the function to show details
-          });
-        } else {
-          console.error("View Details button not found in popup.");
-        }
-      }, 100); // Delay to ensure the popup content is rendered
+    marker.on("popupopen", () => {
+      setTimeout(() => setupPublicPopupHandlers(point.id), 100);
     });
 
     drainagePointsLayer.addLayer(marker);
   });
 }
 
-// Function to show point details modal
-// Function to show point details modal
-function showPointDetails(pointId) {
-  console.log("showPointDetails called with Point ID:", pointId);
-
-  // Set the current point ID global variable
-  currentPointId = pointId;
-  console.log("currentPointId set to:", currentPointId);
-
-  const point = drainageData.find((p) => p.id == pointId);
-  if (!point) {
-    console.error("Point not found in drainageData. Point ID:", pointId);
-    return;
-  }
-
-  console.log("Point details found:", point);
-
-  // Populate details table
-  const detailsTable = document.getElementById("point-details-table");
-  detailsTable.innerHTML = `
-        <tr>
-          <th>ID</th>
-          <td>${point.id}</td>
-        </tr>
-        <tr>
-          <th>Name</th>
-          <td>${point.name}</td>
-        </tr>
-        <tr>
-          <th>Type</th>
-          <td>${point.type}</td>
-        </tr>
-        <tr>
-          <th>Status</th>
-          <td><span class="badge ${getStatusBadgeClass(point.status)}">${
-    point.status
-  }</span></td>
-        </tr>
-        <tr>
-          <th>Depth</th>
-          <td>${point.depth}m</td>
-        </tr>
-        <tr>
-          <th>Invert Level</th>
-          <td>${point.invert_level || "N/A"}</td>
-        </tr>
-        <tr>
-          <th>Reduced Level</th>
-          <td>${point.reduced_level || "N/A"}</td>
-        </tr>
-        <tr>
-          <th>Coordinates</th>
-          <td>${point.coordinates[0]}, ${point.coordinates[1]}</td>
-        </tr>
-        <tr>
-          <th>Description</th>
-          <td>${point.description || "No description available"}</td>
-        </tr>
-        <tr>
-          <th>Last Updated</th>
-          <td>${point.last_updated || "N/A"}</td>
-        </tr>
-      `;
-
-  // Rest of your showPointDetails function remains the same...
-  // Populate maintenance history
-  const maintenanceTable = document.getElementById("maintenance-history-table");
-  if (point.maintenance_history && point.maintenance_history.length > 0) {
-    let tableContent = `
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Type</th>
-              <th>Description</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-        `;
-
-    point.maintenance_history.forEach((record) => {
-      tableContent += `
-            <tr>
-              <td>${record.date}</td>
-              <td>${record.type}</td>
-              <td>${record.description}</td>
-              <td><span class="badge ${getStatusBadgeClass(record.status)}">${
-        record.status
-      }</span></td>
-            </tr>
-          `;
-    });
-
-    tableContent += "</tbody>";
-    maintenanceTable.innerHTML = tableContent;
-  } else {
-    maintenanceTable.innerHTML =
-      '<tr><td colspan="4" class="text-center">No maintenance history available</td></tr>';
-  }
-
-  // Populate image gallery
-  const imageGallery = document.getElementById("point-image-gallery");
-  if (point.images) {
-    // Check if it's a string (as in your database example)
-    if (typeof point.images === "string") {
-      // Split by space to separate multiple URLs
-      const imageUrls = point.images.split(" https://");
-
-      let galleryContent = "";
-      imageUrls.forEach((url, index) => {
-        // For all URLs except the first one, we need to add back the "https://"
-        // that was removed by the split
-        const fullUrl = index === 0 ? url : "https://" + url;
-        galleryContent += `<img src="${fullUrl}" alt="Drainage point image" class="img-thumbnail gallery-img">`;
-      });
-
-      imageGallery.innerHTML = galleryContent;
-    }
-    // If it's already an array (as your original code expected)
-    else if (Array.isArray(point.images) && point.images.length > 0) {
-      let galleryContent = "";
-      point.images.forEach((image) => {
-        galleryContent += `<img src="${image}" alt="Drainage point image" class="img-thumbnail gallery-img">`;
-      });
-      imageGallery.innerHTML = galleryContent;
-    } else {
-      imageGallery.innerHTML =
-        '<div class="text-center p-3">No images available</div>';
-    }
-  } else {
-    imageGallery.innerHTML =
-      '<div class="text-center p-3">No images available</div>';
-  }
-
-  // Make edit and delete buttons visible
-  document.getElementById("edit-point-btn").style.display = "inline-block";
-  document.getElementById("delete-point-btn").style.display = "inline-block";
-
-  // Show modal
-  const modal = new bootstrap.Modal(
-    document.getElementById("pointDetailsModal")
-  );
-  modal.show();
-}
-
-// Delete point functionality
-document.addEventListener("DOMContentLoaded", function () {
-  // Make sure the button exists in the DOM
-  const deleteButton = document.getElementById("delete-point-btn");
-  if (deleteButton) {
-    deleteButton.addEventListener("click", function () {
-      console.log("Delete button clicked, currentPointId:", currentPointId);
-
-      if (!currentPointId) {
-        showNotification("No point selected for deletion", "warning");
-        return;
-      }
-
-      const confirmDelete = confirm(
-        "Are you sure you want to delete this point?"
-      );
-      if (!confirmDelete) return;
-
-      deletePoint(currentPointId);
-    });
-  } else {
-    console.error("Delete button not found in the DOM");
-  }
-
-  // Edit point functionality
-  const editButton = document.getElementById("edit-point-btn");
-  if (editButton) {
-    editButton.addEventListener("click", function () {
-      console.log("Edit button clicked, currentPointId:", currentPointId);
-
-      if (!currentPointId) {
-        showNotification("No point selected for editing", "warning");
-        return;
-      }
-
-      editPoint(currentPointId);
-    });
-  } else {
-    console.error("Edit button not found in the DOM");
-  }
-});
-
-// Function to delete a point
-async function deletePoint(pointId) {
-  try {
-    console.log("Deleting point with ID:", pointId);
-
-    // Create FormData object for the request
-    const formData = new FormData();
-    formData.append("id", pointId);
-
-    // Send the DELETE request using fetch
-    const response = await fetch(
-      `/DrainageInventory/api/delete.php?id=${pointId}`,
-      {
-        method: "DELETE",
-        headers: {
-          // No Content-Type header for FormData
-        },
-        // No body for DELETE request as we're using URL parameters
-      }
-    );
-
-    console.log("Delete response status:", response.status);
-
-    // Check if response is OK and parse as JSON
-    if (!response.ok) {
-      const text = await response.text();
-      console.error("Server error response:", text);
-      throw new Error(`Server returned ${response.status}: ${text}`);
-    }
-
-    const result = await response.json();
-    console.log("Delete result:", result);
-
-    if (result.success) {
-      // Close the details modal
-      const detailsModal = bootstrap.Modal.getInstance(
-        document.getElementById("pointDetailsModal")
-      );
-      if (detailsModal) {
-        detailsModal.hide();
-      }
-
-      showNotification("Point deleted successfully", "success");
-      // Refresh the drainage data
-      fetchDrainageData();
-    } else {
-      showNotification("Failed to delete point: " + result.message, "danger");
-    }
-  } catch (error) {
-    console.error("Error in deletePoint function:", error);
-    showNotification("Error deleting point: " + error.message, "danger");
-  }
-}
-
-// Function to edit a point
-function editPoint(pointId) {
-  console.log("Editing point with ID:", pointId);
-
-  // Find the point in the data
-  const point = drainageData.find((p) => p.id == pointId);
-  if (!point) {
-    showNotification("Point not found", "danger");
-    return;
-  }
-
-  console.log("Point data to edit:", point);
-
-  // Populate the Add Point Modal with the current point's details
-  document.getElementById("point-name").value = point.name;
-  document.getElementById("point-type").value = point.type;
-  document.getElementById("point-depth").value = point.depth;
-  document.getElementById("point-status").value = point.status;
-  document.getElementById("point-il").value = point.invert_level || "";
-  document.getElementById("point-rl").value = point.reduced_level || "";
-  document.getElementById("point-lat").value = point.coordinates[0];
-  document.getElementById("point-lng").value = point.coordinates[1];
-  document.getElementById("point-description").value = point.description || "";
-
-  // Close the details modal first
-  const detailsModal = bootstrap.Modal.getInstance(
-    document.getElementById("pointDetailsModal")
-  );
-  if (detailsModal) {
-    detailsModal.hide();
-  }
-
-  // Show the Add Point Modal for editing
-  setTimeout(() => {
-    const editModal = new bootstrap.Modal(
-      document.getElementById("addPointModal")
-    );
-    editModal.show();
-
-    // Function to save the updated point to the server
-    async function saveUpdatedPoint(updatedPoint) {
-      try {
-        const response = await fetch(
-          "/DrainageInventory/api/drainage-points.php",
-          {
-            method: "PUT", // Use PUT for updating
-            headers: {
-              "Content-Type": "application/json", // Send JSON data
-            },
-            body: JSON.stringify(updatedPoint), // Convert the updated point to JSON
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to update drainage point");
-        }
-
-        const result = await response.json();
-        if (result.success) {
-          showNotification("Point updated successfully", result);
-          return true;
-        } else {
-          showNotification(
-            "Failed to update point: " + result.message,
-            "danger"
-          );
-          return false;
-        }
-      } catch (error) {
-        console.error("Error updating point:", error);
-        showNotification("Error updating point. Please try again.", "danger");
-        return false;
-      }
-    }
-    // Update the Save button to handle editing
-    // Replace the save button with a fresh clone to remove all existing listeners
-    const oldSaveButton = document.getElementById("save-point-btn");
-    const newSaveButton = oldSaveButton.cloneNode(true);
-    oldSaveButton.parentNode.replaceChild(newSaveButton, oldSaveButton);
-
-    // Attach a new handler specifically for updating
-    newSaveButton.addEventListener("click", async function () {
-      const updatedPoint = {
-        id: pointId,
-        name: document.getElementById("point-name").value,
-        type: document.getElementById("point-type").value,
-        depth: parseFloat(document.getElementById("point-depth").value) || 0,
-        status: document.getElementById("point-status").value,
-        invert_level: document.getElementById("point-il").value || "N/A",
-        reduced_level: document.getElementById("point-rl").value || "N/A",
-        coordinates: [
-          parseFloat(document.getElementById("point-lat").value),
-          parseFloat(document.getElementById("point-lng").value),
-        ],
-        description: document.getElementById("point-description").value || "",
-      };
-
-      console.log("Saving updated point:", updatedPoint);
-
-      const success = await saveUpdatedPoint(updatedPoint);
-      if (success) {
-        const modal = bootstrap.Modal.getInstance(
-          document.getElementById("addPointModal")
-        );
-        if (modal) {
-          modal.hide();
-        }
-
-        fetchDrainageData(); // Reload map data
-      }
-    }); // Small delay to ensure the details modal has closed
-  }, 500);
-}
-
-// Fetch flood-prone areas from the server
-async function fetchFloodProneAreas() {
-  try {
-    // In a real app, you would fetch from your API
-    let response;
-    try {
-      response = await fetch("/DrainageInventory/api/flood-prone-areas.php");
-      if (!response.ok) throw new Error("API not available");
-    } catch (err) {
-      // If API fails, use sample data
-      renderFloodProneAreas(getSampleFloodProneAreas());
-      return;
-    }
-
-    const data = await response.json();
-    renderFloodProneAreas(data);
-  } catch (error) {
-    console.error("Error fetching flood-prone areas:", error);
-    showNotification(
-      "Could not load flood-prone areas. Using sample data instead.",
-      "warning"
-    );
-    renderFloodProneAreas(getSampleFloodProneAreas());
-  }
-}
-
-// Render flood-prone areas on the map
 function renderFloodProneAreas(data) {
-  // Clear existing layers
   floodProneAreasLayer.clearLayers();
 
-  // Add flood-prone areas to the map
   data.forEach((area) => {
     const polygon = L.polygon(area.coordinates, {
       color: "#17a2b8",
@@ -556,493 +247,1390 @@ function renderFloodProneAreas(data) {
     }).addTo(floodProneAreasLayer);
 
     const popupContent = `
-        <div class="popup-content">
-          <h5>${area.name}</h5>
-          <div class="property-row">
-            <div class="property-label">Risk Level:</div>
-            <div>${area.risk_level}</div>
-          </div>
-          <div class="property-row">
-            <div class="property-label">Last Flood:</div>
-            <div>${area.last_flood}</div>
-          </div>
+      <div class="popup-content">
+        <h5><i class="fas fa-water me-2"></i>${area.name}</h5>
+        <div class="property-row">
+          <div class="property-label">Risk Level:</div>
+          <div><span class="badge bg-warning">${area.risk_level}</span></div>
         </div>
-      `;
+        <div class="property-row">
+          <div class="property-label">Last Flood:</div>
+          <div>${area.last_flood || "No record"}</div>
+        </div>
+        <div class="text-center mt-3">
+          <button class="btn btn-sm btn-danger" onclick="reportFloodingInArea('${
+            area.name
+          }')">
+            <i class="fas fa-exclamation-triangle me-1"></i>Report Flooding Here
+          </button>
+        </div>
+      </div>
+    `;
 
     polygon.bindPopup(popupContent);
   });
 }
 
-// Save new drainage point
-async function saveNewDrainagePoint(newPoint) {
-  try {
-    const response = await fetch("/DrainageInventory/api/drainage-points.php", {
-      method: "POST", // Ensure the method is POST
-      headers: {
-        "Content-Type": "application/json", // Set the content type to JSON
-      },
-      body: JSON.stringify(newPoint), // Send the newPoint object as JSON
+function createPublicMarkerIcon(status) {
+  const colors = {
+    Good: "#28a745",
+    "Needs Maintenance": "#ffc107",
+    Critical: "#dc3545",
+  };
+
+  const color = colors[status] || "#6c757d";
+
+  return L.divIcon({
+    className: "custom-div-icon public-marker",
+    html: `
+      <div style="
+        background: ${color}; 
+        width: 16px; 
+        height: 16px; 
+        border-radius: 50%; 
+        border: 3px solid white;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      "></div>
+    `,
+    iconSize: [22, 22],
+    iconAnchor: [11, 11],
+  });
+}
+
+function createPublicPopupContent(point) {
+  const statusClass = getStatusBadgeClass(point.status);
+
+  // Parse images for preview
+  let images = [];
+  if (point.images) {
+    try {
+      if (typeof point.images === "string" && point.images.startsWith("[")) {
+        images = JSON.parse(point.images);
+      } else if (Array.isArray(point.images)) {
+        images = point.images;
+      } else if (typeof point.images === "string") {
+        images = point.images.split(" ").filter((url) => url.trim());
+      }
+    } catch (e) {
+      console.error("Error parsing images:", e);
+      images = [];
+    }
+  }
+
+  const imagePreview =
+    images.length > 0
+      ? `
+    <div class="popup-image-preview mb-2">
+      <img src="${images[0]}" 
+           style="width: 100%; height: 120px; object-fit: cover; border-radius: 5px; cursor: pointer;"
+           onclick="showPointDetails('${point.id}')"
+           alt="Drainage point preview">
+      ${
+        images.length > 1
+          ? `<div class="image-count-badge">${images.length} photos</div>`
+          : ""
+      }
+    </div>
+  `
+      : "";
+
+  return `
+    <div class="popup-content">
+      ${imagePreview}
+      <h5><i class="fas fa-map-pin me-2"></i>${point.name}</h5>
+      <div class="mb-2">
+        <span class="badge ${statusClass}">${point.status}</span>
+      </div>
+      <div class="property-row">
+        <div class="property-label">Type:</div>
+        <div>${point.type}</div>
+      </div>
+      <div class="property-row">
+        <div class="property-label">Depth:</div>
+        <div>${point.depth}m</div>
+      </div>
+      <div class="property-row">
+        <div class="property-label">Description:</div>
+        <div>${point.description || "No description available"}</div>
+      </div>
+      <div class="text-center mt-3">
+        <button class="btn btn-sm btn-primary view-details-btn" data-id="${
+          point.id
+        }">
+          <i class="fas fa-eye me-1"></i>View Details
+        </button>
+        <button class="btn btn-sm btn-warning ms-1" onclick="reportPointIssue('${
+          point.id
+        }')">
+          <i class="fas fa-flag me-1"></i>Report Issue
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function setupPublicPopupHandlers(pointId) {
+  const detailsBtn = document.querySelector(".view-details-btn");
+  if (detailsBtn) {
+    detailsBtn.addEventListener("click", () => showPointDetails(pointId));
+  }
+}
+
+// ==========================================
+// ENHANCED SEARCH FUNCTIONALITY
+// ==========================================
+
+function setupEnhancedSearch() {
+  const searchInput = document.getElementById("search-input");
+  const searchDropdown = document.getElementById("search-dropdown");
+  const clearSearchBtn = document.getElementById("clear-search-btn");
+
+  if (!searchInput || !searchDropdown || !clearSearchBtn) {
+    console.warn("Search elements not found");
+    return;
+  }
+
+  // Show dropdown when input is focused
+  searchInput.addEventListener("focus", function () {
+    if (this.value.trim() === "") {
+      populateSearchDropdown(allDrainageData);
+    }
+    showSearchDropdown();
+  });
+
+  // Handle typing in search input
+  let searchTimeout;
+  searchInput.addEventListener("input", function () {
+    clearTimeout(searchTimeout);
+
+    const searchTerm = this.value.trim();
+
+    if (searchTerm === "") {
+      populateSearchDropdown(allDrainageData);
+      clearSearchBtn.classList.remove("show");
+      currentFilters.search = "";
+      applyFilters();
+    } else {
+      const filteredData = filterDrainagePoints(searchTerm);
+      populateSearchDropdown(filteredData);
+      clearSearchBtn.classList.add("show");
+
+      searchTimeout = setTimeout(() => {
+        currentFilters.search = searchTerm;
+        applyFilters();
+      }, 300);
+    }
+
+    showSearchDropdown();
+  });
+
+  // Clear search functionality
+  clearSearchBtn.addEventListener("click", function () {
+    searchInput.value = "";
+    selectedDrainagePoint = null;
+    populateSearchDropdown(allDrainageData);
+    clearSearchBtn.classList.remove("show");
+    currentFilters.search = "";
+    applyFilters();
+    searchInput.focus();
+    showNotification("Search cleared", "info");
+  });
+
+  // Hide dropdown when clicking outside
+  document.addEventListener("click", function (e) {
+    if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+      hideSearchDropdown();
+    }
+  });
+
+  // Handle keyboard navigation
+  searchInput.addEventListener("keydown", function (e) {
+    const dropdownItems = searchDropdown.querySelectorAll(
+      ".search-dropdown-item"
+    );
+    const currentActive = searchDropdown.querySelector(
+      ".search-dropdown-item.active"
+    );
+    let activeIndex = -1;
+
+    if (currentActive) {
+      activeIndex = Array.from(dropdownItems).indexOf(currentActive);
+    }
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      activeIndex = Math.min(activeIndex + 1, dropdownItems.length - 1);
+      setActiveDropdownItem(dropdownItems, activeIndex);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      activeIndex = Math.max(activeIndex - 1, 0);
+      setActiveDropdownItem(dropdownItems, activeIndex);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (currentActive) {
+        const pointId = currentActive.getAttribute("data-point-id");
+        selectDrainagePoint(pointId);
+      }
+    } else if (e.key === "Escape") {
+      hideSearchDropdown();
+      searchInput.blur();
+    }
+  });
+}
+
+function filterDrainagePoints(searchTerm) {
+  const term = searchTerm.toLowerCase();
+  return allDrainageData.filter(
+    (point) =>
+      point.name.toLowerCase().includes(term) ||
+      point.type.toLowerCase().includes(term) ||
+      point.status.toLowerCase().includes(term) ||
+      (point.description && point.description.toLowerCase().includes(term)) ||
+      point.id.toString().includes(term)
+  );
+}
+
+function populateSearchDropdown(data) {
+  const dropdown = document.getElementById("search-dropdown");
+
+  if (!dropdown) return;
+
+  if (data.length === 0) {
+    dropdown.innerHTML =
+      '<div class="search-dropdown-empty"><i class="fas fa-search me-2"></i>No drainage points found</div>';
+    return;
+  }
+
+  let dropdownHTML = "";
+  data.forEach((point) => {
+    const statusBadgeClass = getStatusBadgeClass(point.status);
+    const typeIcon = getTypeIcon(point.type);
+
+    dropdownHTML += `
+      <div class="search-dropdown-item" data-point-id="${point.id}" title="Click to locate on map">
+        <div class="dropdown-item-main">
+          <div class="dropdown-item-name">
+            <i class="${typeIcon} me-2"></i>${point.name}
+          </div>
+          <div class="dropdown-item-details">
+            ${point.type} • ${point.depth}m depth • ID: ${point.id}
+          </div>
+        </div>
+        <div class="dropdown-item-status">
+          <span class="badge ${statusBadgeClass}">${point.status}</span>
+        </div>
+      </div>
+    `;
+  });
+
+  dropdown.innerHTML = dropdownHTML;
+
+  dropdown.querySelectorAll(".search-dropdown-item").forEach((item) => {
+    item.addEventListener("click", function () {
+      const pointId = this.getAttribute("data-point-id");
+      selectDrainagePoint(pointId);
     });
+
+    item.addEventListener("mouseenter", function () {
+      removeActiveFromDropdownItems();
+      this.classList.add("active");
+    });
+  });
+}
+
+function selectDrainagePoint(pointId) {
+  const point = allDrainageData.find((p) => p.id == pointId);
+  if (!point) {
+    showNotification("Drainage point not found", "danger");
+    return;
+  }
+
+  selectedDrainagePoint = point;
+
+  const searchInput = document.getElementById("search-input");
+  searchInput.value = point.name;
+
+  map.closePopup();
+
+  map.flyTo(point.coordinates, 17, {
+    duration: 1.5,
+    easeLinearity: 0.5,
+  });
+
+  setTimeout(() => {
+    drainagePointsLayer.eachLayer((layer) => {
+      if (
+        layer.getLatLng &&
+        Math.abs(layer.getLatLng().lat - point.coordinates[0]) < 0.0001 &&
+        Math.abs(layer.getLatLng().lng - point.coordinates[1]) < 0.0001
+      ) {
+        layer.openPopup();
+
+        const originalIcon = layer.options.icon;
+        const highlightIcon = createHighlightMarkerIcon(point.status);
+
+        layer.setIcon(highlightIcon);
+
+        setTimeout(() => {
+          layer.setIcon(originalIcon);
+        }, 3000);
+      }
+    });
+  }, 1000);
+
+  hideSearchDropdown();
+  showNotification(`Located: ${point.name}`, "success");
+  document.getElementById("clear-search-btn").classList.add("show");
+}
+
+function createHighlightMarkerIcon(status) {
+  const colors = {
+    Good: "#28a745",
+    "Needs Maintenance": "#ffc107",
+    Critical: "#dc3545",
+  };
+
+  const color = colors[status] || "#6c757d";
+
+  return L.divIcon({
+    className: "custom-div-icon highlight-marker",
+    html: `
+      <div style="
+        background: ${color}; 
+        width: 20px; 
+        height: 20px; 
+        border-radius: 50%; 
+        border: 4px solid #ffffff;
+        box-shadow: 0 0 0 3px ${color}, 0 4px 12px rgba(0,0,0,0.4);
+        animation: pulse 2s infinite;
+      "></div>
+      <style>
+        @keyframes pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.2); }
+          100% { transform: scale(1); }
+        }
+      </style>
+    `,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+  });
+}
+
+// ==========================================
+// ENHANCED IMAGE GALLERY SYSTEM
+// ==========================================
+
+function populateImageGalleryEnhanced(point) {
+  const imageGallery = document.getElementById("point-image-gallery");
+  if (!imageGallery) return;
+
+  let images = [];
+
+  // Parse images from different formats
+  if (point.images) {
+    try {
+      if (
+        typeof point.images === "string" &&
+        (point.images.startsWith("[") || point.images.startsWith('"'))
+      ) {
+        images = JSON.parse(point.images);
+        if (typeof images === "string") {
+          images = JSON.parse(images);
+        }
+        if (!Array.isArray(images)) {
+          images = [images];
+        }
+      } else if (Array.isArray(point.images)) {
+        images = point.images;
+      } else if (typeof point.images === "string") {
+        images = point.images.split(" ").filter((url) => url.trim() !== "");
+      }
+    } catch (e) {
+      console.error("Error parsing images:", e);
+      if (typeof point.images === "string") {
+        images = point.images.split(" ").filter((url) => url.trim() !== "");
+      }
+    }
+  }
+
+  // Clean and filter valid images
+  images = images
+    .map((url) => {
+      let cleanUrl = url.trim();
+      if (cleanUrl.startsWith('"') && cleanUrl.endsWith('"')) {
+        cleanUrl = cleanUrl.slice(1, -1);
+      }
+      return cleanUrl;
+    })
+    .filter((url) => url && url.length > 0);
+
+  currentPointImages = images;
+  currentImageIndex = 0;
+
+  if (images.length > 0) {
+    imageGallery.innerHTML = createPublicImageGalleryHTML(images, point);
+    setupImageGalleryEvents();
+  } else {
+    imageGallery.innerHTML = `
+      <div class="no-images-placeholder">
+        <i class="fas fa-images"></i>
+        <h6>No images available</h6>
+        <p class="mb-0">No photos have been uploaded for this drainage point</p>
+      </div>
+    `;
+  }
+}
+
+function createPublicImageGalleryHTML(images, point) {
+  const totalImages = images.length;
+
+  return `
+    <div class="image-gallery-container">
+      <div class="image-gallery-header">
+        <h6 class="mb-0"><i class="fas fa-images me-2"></i>Photo Gallery</h6>
+        <div class="d-flex align-items-center gap-3">
+          <span class="image-counter">${
+            currentImageIndex + 1
+          } of ${totalImages}</span>
+          <div class="gallery-controls">
+            <button class="gallery-btn" onclick="downloadCurrentImage()" title="Download Image">
+              <i class="fas fa-download"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="main-image-container">
+        <img src="${images[currentImageIndex]}" 
+             alt="Drainage point image ${currentImageIndex + 1}" 
+             class="main-image"
+             onclick="openFullscreenImage()"
+             onerror="handleImageError(this)">
+        
+        ${
+          totalImages > 1
+            ? `
+          <button class="image-navigation nav-prev" onclick="previousImage()" title="Previous Image">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="image-navigation nav-next" onclick="nextImage()" title="Next Image">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        `
+            : ""
+        }
+        
+        <div class="image-overlay">
+          <div class="image-filename">Image ${currentImageIndex + 1}</div>
+          <div class="image-date">Point: ${point.name} (${point.id})</div>
+        </div>
+      </div>
+      
+      ${
+        totalImages > 1
+          ? `
+        <div class="thumbnail-strip">
+          ${images
+            .map(
+              (img, index) => `
+            <div class="thumbnail-item ${
+              index === currentImageIndex ? "active" : ""
+            }" 
+                 onclick="selectImage(${index})">
+              <img src="${img}" alt="Thumbnail ${
+                index + 1
+              }" class="thumbnail-image"
+                   onerror="handleThumbnailError(this)">
+            </div>
+          `
+            )
+            .join("")}
+        </div>
+      `
+          : ""
+      }
+    </div>
+  `;
+}
+
+// Image gallery navigation functions (same as admin/operator maps)
+function setupImageGalleryEvents() {
+  document.removeEventListener("keydown", handleGalleryKeyboard);
+  document.addEventListener("keydown", handleGalleryKeyboard);
+}
+
+function handleGalleryKeyboard(e) {
+  if (currentPointImages.length <= 1) return;
+  const modalElement = document.getElementById("pointDetailsModal");
+  const isModalOpen = modalElement && modalElement.classList.contains("show");
+  if (!isModalOpen) return;
+
+  switch (e.key) {
+    case "ArrowLeft":
+      e.preventDefault();
+      previousImage();
+      break;
+    case "ArrowRight":
+      e.preventDefault();
+      nextImage();
+      break;
+    case "Escape":
+      closeFullscreenModal();
+      break;
+  }
+}
+
+function selectImage(index) {
+  if (index >= 0 && index < currentPointImages.length) {
+    currentImageIndex = index;
+    updateMainImage();
+    updateThumbnailSelection();
+    updateImageCounter();
+  }
+}
+
+function previousImage() {
+  if (currentPointImages.length <= 1) return;
+  currentImageIndex =
+    (currentImageIndex - 1 + currentPointImages.length) %
+    currentPointImages.length;
+  updateMainImage();
+  updateThumbnailSelection();
+  updateImageCounter();
+}
+
+function nextImage() {
+  if (currentPointImages.length <= 1) return;
+  currentImageIndex = (currentImageIndex + 1) % currentPointImages.length;
+  updateMainImage();
+  updateThumbnailSelection();
+  updateImageCounter();
+}
+
+function updateMainImage() {
+  const mainImage = document.querySelector(".main-image");
+  if (mainImage && currentPointImages[currentImageIndex]) {
+    mainImage.src = currentPointImages[currentImageIndex];
+    mainImage.alt = `Drainage point image ${currentImageIndex + 1}`;
+  }
+}
+
+function updateThumbnailSelection() {
+  document.querySelectorAll(".thumbnail-item").forEach((thumb, index) => {
+    thumb.classList.toggle("active", index === currentImageIndex);
+  });
+}
+
+function updateImageCounter() {
+  const counter = document.querySelector(".image-counter");
+  if (counter) {
+    counter.textContent = `${currentImageIndex + 1} of ${
+      currentPointImages.length
+    }`;
+  }
+}
+
+function downloadCurrentImage() {
+  if (currentPointImages[currentImageIndex]) {
+    const link = document.createElement("a");
+    link.href = currentPointImages[currentImageIndex];
+    link.download = `drainage-point-image-${currentImageIndex + 1}.jpg`;
+    link.target = "_blank";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showNotification("Image download started", "info");
+  }
+}
+
+function openFullscreenImage() {
+  if (!currentPointImages[currentImageIndex]) return;
+  createFullscreenModal();
+}
+
+function createFullscreenModal() {
+  const existingModal = document.querySelector(".image-fullscreen-modal");
+  if (existingModal) {
+    existingModal.remove();
+  }
+
+  const modal = document.createElement("div");
+  modal.className = "image-fullscreen-modal";
+  modal.innerHTML = `
+    <button class="fullscreen-close" onclick="closeFullscreenModal()">
+      <i class="fas fa-times"></i>
+    </button>
+    
+    ${
+      currentPointImages.length > 1
+        ? `
+      <button class="fullscreen-nav fullscreen-prev" onclick="fullscreenPrevious()">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="fullscreen-nav fullscreen-next" onclick="fullscreenNext()">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    `
+        : ""
+    }
+    
+    <img src="${currentPointImages[currentImageIndex]}" 
+         alt="Fullscreen image" 
+         class="fullscreen-image">
+    
+    <div class="fullscreen-info">
+      <div>Image ${currentImageIndex + 1} of ${currentPointImages.length}</div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  setTimeout(() => {
+    modal.classList.add("show");
+  }, 10);
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      closeFullscreenModal();
+    }
+  });
+}
+
+function closeFullscreenModal() {
+  const modal = document.querySelector(".image-fullscreen-modal");
+  if (modal) {
+    modal.classList.remove("show");
+    setTimeout(() => {
+      modal.remove();
+    }, 300);
+  }
+}
+
+function fullscreenPrevious() {
+  if (currentPointImages.length <= 1) return;
+  currentImageIndex =
+    (currentImageIndex - 1 + currentPointImages.length) %
+    currentPointImages.length;
+  updateFullscreenImage();
+}
+
+function fullscreenNext() {
+  if (currentPointImages.length <= 1) return;
+  currentImageIndex = (currentImageIndex + 1) % currentPointImages.length;
+  updateFullscreenImage();
+}
+
+function updateFullscreenImage() {
+  const fullscreenImage = document.querySelector(".fullscreen-image");
+  const fullscreenInfo = document.querySelector(".fullscreen-info div");
+
+  if (fullscreenImage) {
+    fullscreenImage.src = currentPointImages[currentImageIndex];
+  }
+
+  if (fullscreenInfo) {
+    fullscreenInfo.textContent = `Image ${currentImageIndex + 1} of ${
+      currentPointImages.length
+    }`;
+  }
+
+  updateMainImage();
+  updateThumbnailSelection();
+  updateImageCounter();
+}
+
+function handleImageError(img) {
+  img.style.display = "none";
+  const container = img.parentElement;
+  if (container) {
+    container.innerHTML = `
+      <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+        <div class="text-center">
+          <i class="fas fa-exclamation-triangle fa-2x mb-2"></i>
+          <p>Image not found</p>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function handleThumbnailError(img) {
+  img.style.display = "none";
+  const container = img.parentElement;
+  if (container) {
+    container.innerHTML = `
+      <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+    `;
+  }
+}
+
+// ==========================================
+// POINT DETAILS MODAL
+// ==========================================
+
+function showPointDetails(pointId) {
+  currentPointId = pointId;
+  const point = allDrainageData.find((p) => p.id == pointId);
+
+  if (!point) {
+    showNotification("Point not found", "danger");
+    return;
+  }
+
+  populatePointDetails(point);
+  populateMaintenanceHistory(point);
+  populateImageGalleryEnhanced(point);
+
+  showModal("pointDetailsModal");
+}
+
+function populatePointDetails(point) {
+  const detailsTable = document.getElementById("point-details-table");
+  if (!detailsTable) return;
+
+  const statusBadge = `<span class="badge ${getStatusBadgeClass(
+    point.status
+  )}">${point.status}</span>`;
+
+  detailsTable.innerHTML = `
+    <tr><th style="width: 40%;">ID</th><td>${point.id}</td></tr>
+    <tr><th>Name</th><td>${point.name}</td></tr>
+    <tr><th>Type</th><td>${point.type}</td></tr>
+    <tr><th>Status</th><td>${statusBadge}</td></tr>
+    <tr><th>Depth</th><td>${point.depth}m</td></tr>
+    <tr><th>Invert Level</th><td>${point.invert_level || "N/A"}</td></tr>
+    <tr><th>Reduced Level</th><td>${point.reduced_level || "N/A"}</td></tr>
+    <tr><th>Coordinates</th><td>${point.coordinates[0]}, ${
+    point.coordinates[1]
+  }</td></tr>
+    <tr><th>Description</th><td>${
+      point.description || "No description available"
+    }</td></tr>
+    <tr><th>Last Updated</th><td>${point.last_updated || "N/A"}</td></tr>
+  `;
+}
+
+async function populateMaintenanceHistory(point) {
+  const maintenanceTable = document.getElementById("maintenance-history-table");
+  if (!maintenanceTable) return;
+
+  try {
+    const response = await fetch(
+      `../api/maintenance-requests.php?drainage_point_id=${point.id}&public=1`
+    );
 
     if (!response.ok) {
-      throw new Error("Failed to save drainage point to the server");
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const result = await response.json();
-    if (result.success) {
-      return true; // Successfully saved
-    } else {
-      console.error("Server error:", result.message);
-      return false; // Server returned an error
-    }
-  } catch (error) {
-    console.error("Error saving drainage point:", error);
-    return false; // Network or other error
-  }
-}
-// Submit flood report
-async function submitFloodReport(reportData) {
-  try {
-    const response = await fetch("/DrainageInventory/api/flood-reports.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(reportData),
-    });
-    const result = await response.json();
-    if (result.success) {
-      showNotification("Flood report submitted successfully.", "success");
-      return true;
-    } else {
-      showNotification(
-        "Failed to submit flood report: " + result.message,
-        "danger"
-      );
-      return false;
-    }
-  } catch (error) {
-    showNotification("Error submitting flood report.", "danger");
-    return false;
-  }
-}
+    const data = await response.json();
 
-// Utility function to show notifications
-function showNotification(message, type) {
-  const notification = document.createElement("div");
-  notification.className = `alert alert-${type} alert-dismissible fade show notification`;
-  notification.role = "alert";
-  notification.innerHTML = `
-      ${message}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    if (data && Array.isArray(data) && data.length > 0) {
+      let tableContent = `
+        <thead class="table-primary">
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Priority</th>
+          </tr>
+        </thead>
+        <tbody>
+      `;
+
+      // Show only completed maintenance (for public)
+      const publicData = data
+        .filter((record) => record.status === "Completed")
+        .slice(0, 5);
+
+      publicData.forEach((record) => {
+        const statusClass = getMaintenanceStatusBadgeClass(record.status);
+        const priorityClass = getPriorityBadgeClass(record.priority);
+        tableContent += `
+          <tr>
+            <td>${formatMaintenanceDate(
+              record.scheduled_date || record.created_at
+            )}</td>
+            <td>${record.request_type}</td>
+            <td><span class="badge ${statusClass}">${record.status}</span></td>
+            <td><span class="badge ${priorityClass}">${
+          record.priority
+        }</span></td>
+          </tr>
+        `;
+      });
+
+      tableContent += "</tbody>";
+      maintenanceTable.innerHTML = tableContent;
+    } else {
+      maintenanceTable.innerHTML = `
+        <tbody>
+          <tr>
+            <td colspan="4" class="text-center text-muted py-4">
+              <i class="fas fa-history fa-2x mb-2 d-block"></i>
+              <p class="mb-0">No maintenance history available</p>
+            </td>
+          </tr>
+        </tbody>
+      `;
+    }
+  } catch (error) {
+    console.error("Error fetching maintenance history:", error);
+    maintenanceTable.innerHTML = `
+      <tbody>
+        <tr>
+          <td colspan="4" class="text-center text-muted py-4">
+            <i class="fas fa-info-circle fa-2x mb-2 d-block"></i>
+            <p class="mb-0">Maintenance history not available</p>
+          </td>
+        </tr>
+      </tbody>
     `;
-  document.body.appendChild(notification);
-
-  // Position the notification
-  notification.style.position = "fixed";
-  notification.style.top = "20px";
-  notification.style.right = "20px";
-  notification.style.zIndex = "9999";
-  notification.style.maxWidth = "400px";
-
-  // Automatically remove the notification after 5 seconds
-  setTimeout(() => {
-    notification.remove();
-  }, 5000);
+  }
 }
 
-// Show/hide loading overlay
-// Show/hide loading overlay
-function showLoading(show) {
-  let loadingOverlay = document.getElementById("loading-overlay");
+// ==========================================
+// FLOOD REPORTING FUNCTIONALITY
+// ==========================================
 
-  if (!loadingOverlay) {
-    // Create loading overlay if it doesn't exist
-    loadingOverlay = document.createElement("div");
-    loadingOverlay.id = "loading-overlay";
-    loadingOverlay.className = "loading-overlay";
-    loadingOverlay.innerHTML = `
-        <div class="spinner-container">
-          <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
-          <div class="mt-3">Loading map data...</div>
-        </div>
-      `;
-    document.body.appendChild(loadingOverlay);
+async function submitFloodReport() {
+  const locationInput = document.getElementById("flood-location");
+  const severitySelect = document.getElementById("flood-severity");
+  const depthInput = document.getElementById("flood-depth");
+  const descriptionTextarea = document.getElementById("flood-description");
+  const nameInput = document.getElementById("reporter-name");
+  const contactInput = document.getElementById("reporter-contact");
+  const imagesInput = document.getElementById("flood-images");
+
+  // Validation
+  if (!locationInput.value.trim()) {
+    showNotification("Please enter a flood location", "warning");
+    locationInput.focus();
+    return;
   }
 
-  loadingOverlay.style.display = show ? "flex" : "none";
-}
-
-// Usage:
-document.addEventListener("DOMContentLoaded", function () {
-  showLoading(true); // Show loading
-
-  setTimeout(() => {
-    showLoading(false); // Hide after 1.5 seconds
-  }, 1500);
-
-  // Rest of your initialization code...
-});
-
-// Event Handlers for UI Elements
-document.addEventListener("DOMContentLoaded", function () {
-  // Initialize map data
-  fetchDrainageData();
-  fetchFloodProneAreas();
-
-  // Filter overlay toggle
-  const collapseBtn = document.getElementById("collapse-overlay");
-  const overlay = document.getElementById("filter-overlay");
-
-  collapseBtn.addEventListener("click", () => {
-    overlay.classList.toggle("collapsed");
-    const icon = collapseBtn.querySelector("i");
-    icon.classList.toggle("fa-chevron-right");
-    icon.classList.toggle("fa-chevron-left");
-  });
-
-  // Add point modal
-
-  // Pick location button
-  /*  document
-    .getElementById("pick-location-btn")
-    .addEventListener("click", function () {
-      pickLocationMode = true;
-      map.closePopup();
-
-      // Change cursor and add message
-      document.getElementById("map").style.cursor = "crosshair";
-
-      // Show notification
-      showNotification("Click on the map to select a location", "info");
-
-      // Hide modal temporarily
-      const modal = bootstrap.Modal.getInstance(
-        document.getElementById("addPointModal")
-      );
-      modal.hide();
-    });
-
-  // Map click event for picking location
-  */
-  map.on("click", function (e) {
-    if (pickLocationMode) {
-      // Get coordinates
-      const lat = e.latlng.lat.toFixed(6);
-      const lng = e.latlng.lng.toFixed(6);
-
-      // Update form fields
-      document.getElementById("point-lat").value = lat;
-      document.getElementById("point-lng").value = lng;
-
-      // Reset cursor and mode
-      document.getElementById("map").style.cursor = "";
-      pickLocationMode = false;
-
-      // Show modal again
-      const modal = new bootstrap.Modal(
-        document.getElementById("addPointModal")
-      );
-      modal.show();
-
-      // Show confirmation
-      showNotification("Location selected: " + lat + ", " + lng, "success");
-    } else if (floodReportLocationMode) {
-      // Get coordinates for flood report
-      const lat = e.latlng.lat.toFixed(6);
-      const lng = e.latlng.lng.toFixed(6);
-
-      // Reset cursor and mode
-      document.getElementById("map").style.cursor = "";
-      floodReportLocationMode = false;
-
-      // Update form field (this would typically store the coordinates)
-      document.getElementById("flood-location-input").value = `${lat}, ${lng}`;
-      document
-        .getElementById("flood-location-input")
-        .setAttribute("data-lat", lat);
-      document
-        .getElementById("flood-location-input")
-        .setAttribute("data-lng", lng);
-
-      // Show modal again
-      const modal = new bootstrap.Modal(
-        document.getElementById("floodReportModal")
-      );
-      modal.show();
-
-      // Show confirmation
-      showNotification(
-        "Flood location selected: " + lat + ", " + lng,
-        "success"
-      );
-    }
-  });
-  /*
-  // Save point button
-  document
-    .getElementById("save-point-btn")
-    .addEventListener("click", function () {
-      // Get form values
-      const name = document.getElementById("point-name").value;
-      const type = document.getElementById("point-type").value;
-      const depth = document.getElementById("point-depth").value;
-      const status = document.getElementById("point-status").value;
-      const il = document.getElementById("point-il").value;
-      const rl = document.getElementById("point-rl").value;
-      const lat = document.getElementById("point-lat").value;
-      const lng = document.getElementById("point-lng").value;
-      const description = document.getElementById("point-description").value;
-
-      // Validate form
-      if (!name || !type || !status || !lat || !lng) {
-        showNotification("Please fill all required fields", "warning");
-        return;
-      }
-
-      // Create new point object
-      const newPoint = {
-        name,
-        type,
-        status,
-        depth: parseFloat(depth) || 0,
-        invert_level: il || "N/A",
-        reduced_level: rl || "N/A",
-        coordinates: [parseFloat(lat), parseFloat(lng)],
-        description: description || "No description available",
-        last_updated: new Date().toISOString().split("T")[0],
-      };
-
-      // Save to server/database
-      saveNewDrainagePoint(newPoint).then((result) => {
-        if (result.success) {
-          // Add the new point to the map
-          const marker = L.marker(newPoint.coordinates, {
-            icon: createMarkerIcon(newPoint.status),
-            draggable: false,
-            title: newPoint.name,
-          });
-
-          // Create popup content
-          const popupContent = `
-        <div class="popup-content">
-          <h5>${newPoint.name} <span class="badge ${getStatusBadgeClass(
-            newPoint.status
-          )}">${newPoint.status}</span></h5>
-          <div class="property-row">
-            <div class="property-label">Type:</div>
-            <div>${newPoint.type}</div>
-          </div>
-          <div class="property-row">
-            <div class="property-label">Depth:</div>
-            <div>${newPoint.depth}m</div>
-          </div>
-          <div class="property-row">
-            <div class="property-label">Description:</div>
-            <div>${newPoint.description || "No description available"}</div>
-          </div>
-        </div>
-      `;
-
-          marker.bindPopup(popupContent);
-          drainagePointsLayer.addLayer(marker);
-
-          // Hide modal
-          const modal = bootstrap.Modal.getInstance(
-            document.getElementById("addPointModal")
-          );
-          modal.hide();
-
-          // Reset form
-          document.getElementById("add-point-form").reset();
-
-          // Show success notification
-          showNotification("New point added successfully!", "success");
-        } else {
-          // Show error notification
-          showNotification(
-            "Failed to add new point: " + result.message,
-            "danger"
-          );
-        }
-      });
-    });
-
-  // Adjusted saveNewDrainagePoint function
-  async function saveNewDrainagePoint(newPoint) {
-    try {
-      const response = await fetch(
-        "/DrainageInventory/api/drainage-points.php",
-        {
-          method: "POST", // Ensure the method is POST
-          headers: {
-            "Content-Type": "application/json", // Set the content type to JSON
-          },
-          body: JSON.stringify(newPoint), // Send the newPoint object as JSON
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to save drainage point to the server");
-      }
-
-      const result = await response.json();
-      return result; // Return the server response
-    } catch (error) {
-      console.error("Error saving drainage point:", error);
-      return { success: false, message: error.message }; // Return error response
-    }
+  if (!severitySelect.value) {
+    showNotification("Please select flood severity", "warning");
+    severitySelect.focus();
+    return;
   }
-*/
-  // Report Flooding button
-  document
-    .querySelector(".flood-report-btn")
-    .addEventListener("click", function () {
-      const modal = new bootstrap.Modal(
-        document.getElementById("floodReportModal")
-      );
-      modal.show();
-    });
 
-  // Flood report pick location button
-  document
-    .getElementById("flood-pick-location-btn")
-    .addEventListener("click", function () {
-      floodReportLocationMode = true;
-      map.closePopup();
+  if (!descriptionTextarea.value.trim()) {
+    showNotification("Please provide a description", "warning");
+    descriptionTextarea.focus();
+    return;
+  }
 
-      // Change cursor
-      document.getElementById("map").style.cursor = "crosshair";
+  showLoading(true);
 
-      // Show notification
-      showNotification("Click on the map to select the flood location", "info");
+  try {
+    const floodData = {
+      location: locationInput.value.trim(),
+      severity: severitySelect.value,
+      water_depth: depthInput.value ? parseInt(depthInput.value) : null,
+      description: descriptionTextarea.value.trim(),
+      reporter_name: nameInput.value.trim(),
+      reporter_contact: contactInput.value.trim(),
+      timestamp: new Date().toISOString(),
+      source: "public_web",
+    };
 
-      // Hide modal temporarily
-      const modal = bootstrap.Modal.getInstance(
-        document.getElementById("floodReportModal")
-      );
-      modal.hide();
-    });
+    // Add coordinates if available
+    const lat = locationInput.getAttribute("data-lat");
+    const lng = locationInput.getAttribute("data-lng");
+    if (lat && lng) {
+      floodData.coordinates = [parseFloat(lat), parseFloat(lng)];
+    }
 
-  // Submit flood report button
-  document
-    .getElementById("submit-flood-report-btn")
-    .addEventListener("click", function () {
-      // Get form values
-      const locationInput = document.getElementById(
-        "flood-location-input"
-      ).value;
-      const severity = document.getElementById("flood-severity").value;
-      const waterDepth = document.getElementById("flood-water-depth").value;
-      const description = document.getElementById("flood-description").value;
-      const contact = document.getElementById("reporter-contact").value;
-
-      // Get coordinates if they were set
-      const lat = document
-        .getElementById("flood-location-input")
-        .getAttribute("data-lat");
-      const lng = document
-        .getElementById("flood-location-input")
-        .getAttribute("data-lng");
-
-      // Validate form
-      if (!locationInput || !severity || !description) {
-        showNotification("Please fill all required fields", "warning");
-        return;
-      }
-
-      // Create report object
-      const reportData = {
-        location: locationInput,
-        coordinates: lat && lng ? [parseFloat(lat), parseFloat(lng)] : null,
-        severity,
-        water_depth: parseFloat(waterDepth) || 0,
-        description,
-        contact,
-        timestamp: new Date().toISOString(),
-      };
-
-      // Submit report
-      submitFloodReport(reportData).then((success) => {
-        if (success) {
-          // Hide modal
-          const modal = bootstrap.Modal.getInstance(
-            document.getElementById("floodReportModal")
-          );
-          modal.hide();
-
-          // Reset form
-          document.getElementById("flood-report-form").reset();
+    // Handle image upload if any
+    if (imagesInput.files && imagesInput.files.length > 0) {
+      try {
+        const imageUrls = await uploadFloodImages(imagesInput.files);
+        if (imageUrls.length > 0) {
+          floodData.images = JSON.stringify(imageUrls);
         }
-      });
-    });
-
-  // Map control buttons
-  document.getElementById("zoom-in-btn").addEventListener("click", function () {
-    map.zoomIn();
-  });
-
-  document
-    .getElementById("zoom-out-btn")
-    .addEventListener("click", function () {
-      map.zoomOut();
-    });
-
-  document
-    .getElementById("locate-me-btn")
-    .addEventListener("click", function () {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          function (position) {
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-            map.setView([lat, lng], 16);
-            showNotification("Location found", "success");
-          },
-          function (error) {
-            console.error("Error getting location:", error);
-            showNotification(
-              "Could not get your location. Please check your device settings.",
-              "warning"
-            );
-          }
-        );
-      } else {
+      } catch (imageError) {
+        console.error("Error uploading images:", imageError);
         showNotification(
-          "Geolocation is not supported by your browser",
+          "Warning: Could not upload images, but report will be submitted",
           "warning"
         );
       }
+    }
+
+    const response = await fetch("../api/flood-reports.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(floodData),
     });
 
-  document
-    .getElementById("full-extent-btn")
-    .addEventListener("click", function () {
-      map.setView([2.05788, 102.57471], 13);
-    });
+    const result = await response.json();
 
-  document
-    .getElementById("toggle-layers-btn")
-    .addEventListener("click", function () {
-      const modal = new bootstrap.Modal(
-        document.getElementById("layerControlModal")
+    if (result.success) {
+      showNotification(
+        "Flood report submitted successfully! Authorities have been notified.",
+        "success"
       );
-      modal.show();
-    });
 
-  // Layer control modal
-  document
-    .getElementById("layer-drainage")
-    .addEventListener("change", function () {
-      if (this.checked) {
-        map.addLayer(drainagePointsLayer);
-      } else {
-        map.removeLayer(drainagePointsLayer);
+      // Show success message in modal
+      const modalBody = document.querySelector("#floodReportModal .modal-body");
+      modalBody.innerHTML = `
+        <div class="report-success">
+          <i class="fas fa-check-circle fa-3x mb-3"></i>
+          <h4>Report Submitted Successfully!</h4>
+          <p>Thank you for reporting this flooding incident. The relevant authorities have been notified and will respond as appropriate.</p>
+          <p><strong>Report ID:</strong> #${
+            result.report_id || "FLD" + Date.now()
+          }</p>
+          <p class="mb-0">You can close this window now.</p>
+        </div>
+      `;
+
+      // Reset form
+      document.getElementById("floodReportForm").reset();
+
+      // Add marker to map if coordinates available
+      if (floodData.coordinates) {
+        addFloodReportMarker(floodData);
+      }
+
+      // Close modal after delay
+      setTimeout(() => {
+        hideModal("floodReportModal");
+      }, 5000);
+    } else {
+      throw new Error(result.message || "Failed to submit flood report");
+    }
+  } catch (error) {
+    console.error("Error submitting flood report:", error);
+    showNotification(
+      `Error submitting flood report: ${error.message}`,
+      "danger"
+    );
+  } finally {
+    showLoading(false);
+  }
+}
+
+async function uploadFloodImages(files) {
+  const uploadedUrls = [];
+  const maxFileSize = 5 * 1024 * 1024; // 5MB
+  const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+
+  for (let file of files) {
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error(
+        `Invalid file type: ${file.name}. Only JPG and PNG files are allowed.`
+      );
+    }
+    if (file.size > maxFileSize) {
+      throw new Error(`File too large: ${file.name}. Maximum size is 5MB.`);
+    }
+  }
+
+  for (let file of files) {
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await fetch("../api/upload-image.php", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        uploadedUrls.push(`/${result.url}`);
+      }
+    } catch (error) {
+      console.error(`Failed to upload ${file.name}:`, error);
+    }
+  }
+
+  return uploadedUrls;
+}
+
+function addFloodReportMarker(floodData) {
+  const floodIcon = L.divIcon({
+    className: "flood-report-marker",
+    html: `
+      <div style="
+        background: #dc3545; 
+        width: 20px; 
+        height: 20px; 
+        border-radius: 50%; 
+        border: 3px solid white;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        position: relative;
+      ">
+        <i class="fas fa-exclamation" style="
+          color: white; 
+          font-size: 10px; 
+          position: absolute; 
+          top: 50%; 
+          left: 50%; 
+          transform: translate(-50%, -50%);
+        "></i>
+      </div>
+    `,
+    iconSize: [26, 26],
+    iconAnchor: [13, 13],
+  });
+
+  const marker = L.marker(floodData.coordinates, { icon: floodIcon }).addTo(
+    map
+  );
+
+  marker.bindPopup(`
+    <div class="popup-content">
+      <h6><i class="fas fa-exclamation-triangle me-2 text-danger"></i>Flood Report</h6>
+      <p><strong>Severity:</strong> ${floodData.severity}</p>
+      <p><strong>Description:</strong> ${floodData.description}</p>
+      <p><strong>Reported:</strong> Just now</p>
+    </div>
+  `);
+
+  map.setView(floodData.coordinates, 16);
+
+  // Remove marker after 30 seconds
+  setTimeout(() => {
+    map.removeLayer(marker);
+  }, 30000);
+}
+
+function showFloodReportModal() {
+  // Reset form
+  document.getElementById("floodReportForm").reset();
+
+  // Reset modal body in case it was showing success message
+  const modalBody = document.querySelector("#floodReportModal .modal-body");
+  if (modalBody.innerHTML.includes("report-success")) {
+    location.reload(); // Reload to reset modal
+    return;
+  }
+
+  showModal("floodReportModal");
+}
+
+function handlePickLocation() {
+  pickLocationMode = true;
+  map.closePopup();
+  document.getElementById("map").style.cursor = "crosshair";
+  showNotification("Click on the map to select the flood location", "info");
+  hideModal("floodReportModal");
+}
+
+function reportPointIssue(pointId) {
+  const point = allDrainageData.find((p) => p.id == pointId);
+  if (point) {
+    document.getElementById(
+      "flood-location"
+    ).value = `Near ${point.name} (${point.id})`;
+    document
+      .getElementById("flood-location")
+      .setAttribute("data-lat", point.coordinates[0]);
+    document
+      .getElementById("flood-location")
+      .setAttribute("data-lng", point.coordinates[1]);
+    document.getElementById(
+      "flood-description"
+    ).value = `Issue reported near drainage point: ${point.name}`;
+    showFloodReportModal();
+  }
+}
+
+function reportFloodingHere(pointId) {
+  const point = allDrainageData.find((p) => p.id == pointId);
+  if (point) {
+    document.getElementById(
+      "flood-location"
+    ).value = `${point.name} (${point.id})`;
+    document
+      .getElementById("flood-location")
+      .setAttribute("data-lat", point.coordinates[0]);
+    document
+      .getElementById("flood-location")
+      .setAttribute("data-lng", point.coordinates[1]);
+    document.getElementById(
+      "flood-description"
+    ).value = `Flooding reported at drainage point: ${point.name}`;
+    showFloodReportModal();
+  }
+}
+
+function reportFloodingInArea(areaName) {
+  document.getElementById("flood-location").value = `${areaName} area`;
+  document.getElementById(
+    "flood-description"
+  ).value = `Flooding reported in ${areaName}`;
+  showFloodReportModal();
+}
+
+// ==========================================
+// FILTERING AND INTERFACE FUNCTIONS
+// ==========================================
+
+function applyFilters() {
+  let filteredData = [...allDrainageData];
+
+  if (currentFilters.search) {
+    const searchTerm = currentFilters.search.toLowerCase();
+    filteredData = filteredData.filter(
+      (point) =>
+        point.name.toLowerCase().includes(searchTerm) ||
+        point.type.toLowerCase().includes(searchTerm) ||
+        (point.description &&
+          point.description.toLowerCase().includes(searchTerm))
+    );
+  }
+
+  if (currentFilters.type !== "all") {
+    filteredData = filteredData.filter((point) => {
+      const type = point.type.toLowerCase();
+      switch (currentFilters.type) {
+        case "concrete":
+          return type.includes("concrete");
+        case "earth":
+          return type.includes("earth");
+        case "box-culvert":
+          return type.includes("culvert");
+        case "pipe":
+          return type.includes("pipe");
+        default:
+          return true;
       }
     });
+  }
+
+  if (currentFilters.status !== "all") {
+    filteredData = filteredData.filter((point) => {
+      const status = point.status.toLowerCase().replace(/\s+/g, "-");
+      return status === currentFilters.status;
+    });
+  }
+
+  filteredData = filteredData.filter(
+    (point) => parseFloat(point.depth) <= currentFilters.depth
+  );
+
+  drainageData = filteredData;
+  renderDrainagePoints(drainageData);
+  updateFilterCounts();
+
+  if (filteredData.length === 0) {
+    showNotification("No drainage points match the current filters", "info");
+  }
+}
+
+function updateQuickStats() {
+  const total = allDrainageData.length;
+  const good = allDrainageData.filter((p) => p.status === "Good").length;
+  const maintenance = allDrainageData.filter(
+    (p) => p.status === "Needs Maintenance"
+  ).length;
+  const critical = allDrainageData.filter(
+    (p) => p.status === "Critical"
+  ).length;
+
+  document.getElementById("totalPoints").textContent = total;
+  document.getElementById("goodCondition").textContent = good;
+  document.getElementById("needsMaintenance").textContent = maintenance;
+  document.getElementById("criticalCondition").textContent = critical;
+}
+
+function updateFilterCounts() {
+  const totalCount = allDrainageData.length;
+  const filteredCount = drainageData.length;
+  console.log(`Showing ${filteredCount} of ${totalCount} drainage points`);
+}
+
+function getActivityIcon(type) {
+  const icons = {
+    flood_report: "exclamation-triangle",
+    maintenance: "tools",
+    inspection: "clipboard-check",
+    system: "cog",
+  };
+  return icons[type] || "info-circle";
+}
+
+function formatActivityDate(timestamp) {
+  try {
+    return new Date(timestamp).toLocaleDateString("en-MY", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch (error) {
+    return timestamp;
+  }
+}
+
+// ==========================================
+// CONTROL PANEL AND EVENT LISTENERS
+// ==========================================
+
+function initializeControlPanel() {
+  const panel = document.getElementById("controlPanel");
+  const toggleBtn = document.getElementById("panelToggle");
+  const toggleIcon = document.getElementById("toggleIcon");
+
+  if (!panel || !toggleBtn || !toggleIcon) {
+    console.warn("Control panel elements not found");
+    return;
+  }
+
+  const isCollapsed = localStorage.getItem("publicPanelCollapsed") === "true";
+  if (isCollapsed) {
+    panel.classList.add("collapsed");
+    toggleIcon.className = "fas fa-chevron-right";
+  }
+
+  function togglePanel() {
+    const isCurrentlyCollapsed = panel.classList.contains("collapsed");
+
+    if (isCurrentlyCollapsed) {
+      panel.classList.remove("collapsed");
+      toggleIcon.className = "fas fa-chevron-left";
+      localStorage.setItem("publicPanelCollapsed", "false");
+    } else {
+      panel.classList.add("collapsed");
+      toggleIcon.className = "fas fa-chevron-right";
+      localStorage.setItem("publicPanelCollapsed", "true");
+    }
+  }
+
+  toggleBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    togglePanel();
+  });
+
+  // Close panel on mobile when clicking outside
+  if (window.innerWidth <= 768) {
+    document.addEventListener("click", function (e) {
+      const isClickInsidePanel = panel.contains(e.target);
+      const isClickOnToggle = toggleBtn.contains(e.target);
+
+      if (
+        !isClickInsidePanel &&
+        !isClickOnToggle &&
+        !panel.classList.contains("collapsed")
+      ) {
+        setTimeout(() => {
+          panel.classList.add("collapsed");
+          toggleIcon.className = "fas fa-chevron-right";
+          localStorage.setItem("publicPanelCollapsed", "true");
+        }, 100);
+      }
+    });
+  }
+
+  console.log("Control panel initialized successfully");
+}
+
+function setupEventListeners() {
+  setupEnhancedSearch();
+
+  // Filter functionality
+  document.querySelectorAll(".filter-badge").forEach((badge) => {
+    badge.addEventListener("click", function () {
+      const filterType = this.getAttribute("data-type");
+      const filterValue = this.getAttribute("data-filter");
+
+      document.querySelectorAll(`[data-type="${filterType}"]`).forEach((b) => {
+        b.classList.remove("active");
+      });
+      this.classList.add("active");
+
+      currentFilters[filterType] = filterValue;
+      applyFilters();
+    });
+  });
+
+  // Depth range filter
+  const depthRange = document.getElementById("depth-range");
+  const depthValue = document.getElementById("depth-value");
+
+  if (depthRange && depthValue) {
+    depthRange.addEventListener("input", function () {
+      const value = this.value;
+      depthValue.textContent = `0-${value}m`;
+      currentFilters.depth = parseFloat(value);
+      applyFilters();
+    });
+  }
+
+  // Map controls
+  const controls = [
+    { id: "zoom-in-btn", action: () => map.zoomIn() },
+    { id: "zoom-out-btn", action: () => map.zoomOut() },
+    { id: "locate-me-btn", action: handleLocateMe },
+    {
+      id: "full-extent-btn",
+      action: () => map.setView([2.05788, 102.57471], 13),
+    },
+    { id: "layers-btn", action: () => showModal("layerModal") },
+  ];
+
+  controls.forEach(({ id, action }) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.addEventListener("click", action);
+    }
+  });
+
+  // Flood report location picker
+  const pickLocationBtn = document.getElementById("pick-location-btn");
+  if (pickLocationBtn) {
+    pickLocationBtn.addEventListener("click", handlePickLocation);
+  }
+
+  // Layer controls
+  setupLayerControls();
+  setupBasemapControls();
+
+  console.log("Event listeners setup complete");
+}
+
+function handleLocateMe() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        map.setView([lat, lng], 16);
+        showNotification("Location found", "success");
+      },
+      (error) => {
+        showNotification("Could not get your location", "warning");
+      }
+    );
+  } else {
+    showNotification("Geolocation is not supported", "warning");
+  }
+}
+
+function setupLayerControls() {
+  document.getElementById("layer-drainage").addEventListener("change", (e) => {
+    if (e.target.checked) {
+      map.addLayer(drainagePointsLayer);
+    } else {
+      map.removeLayer(drainagePointsLayer);
+    }
+  });
 
   document
-    .getElementById("layer-flood-prone")
-    .addEventListener("change", function () {
-      if (this.checked) {
+    .getElementById("layer-flood-areas")
+    .addEventListener("change", (e) => {
+      if (e.target.checked) {
         map.addLayer(floodProneAreasLayer);
       } else {
         map.removeLayer(floodProneAreasLayer);
@@ -1050,436 +1638,604 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
   document
-    .getElementById("layer-maintenance")
-    .addEventListener("change", function () {
-      if (this.checked) {
-        map.addLayer(maintenanceRoutesLayer);
-        // Here you would load the maintenance routes data if it's not already loaded
+    .getElementById("layer-drainage-lines")
+    .addEventListener("change", (e) => {
+      if (e.target.checked) {
+        map.addLayer(drainageLinesLayer);
       } else {
-        map.removeLayer(maintenanceRoutesLayer);
+        map.removeLayer(drainageLinesLayer);
       }
     });
+}
 
-  document
-    .getElementById("layer-catchments")
-    .addEventListener("change", function () {
-      if (this.checked) {
-        map.addLayer(catchmentsLayer);
-        // Here you would load the catchment data if it's not already loaded
-      } else {
-        map.removeLayer(catchmentsLayer);
-      }
-    });
-
-  document
-    .getElementById("layer-rainfall")
-    .addEventListener("change", function () {
-      if (this.checked) {
-        map.addLayer(rainfallLayer);
-        // Here you would load the rainfall data if it's not already loaded
-      } else {
-        map.removeLayer(rainfallLayer);
-      }
-    });
-
-  // Base map radios
+function setupBasemapControls() {
   document
     .getElementById("basemap-street")
-    .addEventListener("change", function () {
-      if (this.checked) {
-        map.removeLayer(satelliteTileLayer);
-        map.removeLayer(terrainTileLayer);
-        map.removeLayer(topoTileLayer);
-        map.addLayer(osmTileLayer);
-      }
-    });
-
+    .addEventListener("change", () => switchBasemap("street"));
   document
     .getElementById("basemap-satellite")
-    .addEventListener("change", function () {
-      if (this.checked) {
-        map.removeLayer(osmTileLayer);
-        map.removeLayer(terrainTileLayer);
-        map.removeLayer(topoTileLayer);
-        map.addLayer(satelliteTileLayer);
-      }
-    });
+    .addEventListener("change", () => switchBasemap("satellite"));
+}
 
-  document
-    .getElementById("basemap-terrain")
-    .addEventListener("change", function () {
-      if (this.checked) {
-        map.removeLayer(osmTileLayer);
-        map.removeLayer(satelliteTileLayer);
-        map.removeLayer(topoTileLayer);
-        map.addLayer(terrainTileLayer);
-      }
-    });
+function switchBasemap(type) {
+  [osmTileLayer, satelliteTileLayer].forEach((layer) => {
+    map.removeLayer(layer);
+  });
 
-  document
-    .getElementById("basemap-topo")
-    .addEventListener("change", function () {
-      if (this.checked) {
-        map.removeLayer(osmTileLayer);
-        map.removeLayer(satelliteTileLayer);
-        map.removeLayer(terrainTileLayer);
-        map.addLayer(topoTileLayer);
-      } else {
-        map.removeLayer(topoTileLayer);
-      }
-    });
+  const basemaps = {
+    street: osmTileLayer,
+    satellite: satelliteTileLayer,
+  };
 
-  async function fetchAndRenderDrainageLines() {
-    try {
-      const response = await fetch("/DrainageInventory/api/drainage-lines.php");
-      if (!response.ok) {
-        throw new Error("Failed to fetch drainage lines");
-      }
+  if (basemaps[type]) {
+    map.addLayer(basemaps[type]);
+  }
+}
 
-      const geojsonData = await response.json();
-      console.log("Drainage Lines Data:", geojsonData); // Debugging
+// ==========================================
+// EMERGENCY AND INFO FUNCTIONS
+// ==========================================
 
-      // Add drainage lines to the map
-      const drainageLineLayer = L.geoJSON(geojsonData, {
-        style: {
-          color: "#007bff", // Line color
-          weight: 3, // Line thickness
-        },
-      }).addTo(map);
+function showEmergencyInfo() {
+  showModal("emergencyModal");
+}
 
-      drainageLineLayer.setZIndex(10);
+// ==========================================
+// UTILITY FUNCTIONS
+// ==========================================
 
-      // Fit the map to the bounds of the drainage lines
-      map.fitBounds(drainageLineLayer.getBounds());
-    } catch (error) {
-      console.error("Error fetching drainage lines:", error);
+function getStatusBadgeClass(status) {
+  const classes = {
+    Good: "bg-success",
+    "Needs Maintenance": "bg-warning text-dark",
+    Critical: "bg-danger",
+  };
+  return classes[status] || "bg-secondary";
+}
+
+function getTypeIcon(type) {
+  const icons = {
+    "Concrete Drain": "fas fa-square",
+    "Box Culvert": "fas fa-cube",
+    "Pipe Drain": "fas fa-circle",
+    "Earth Drain": "fas fa-mountain",
+  };
+
+  for (const [key, icon] of Object.entries(icons)) {
+    if (type.toLowerCase().includes(key.toLowerCase().split(" ")[0])) {
+      return icon;
     }
   }
-  document.addEventListener("DOMContentLoaded", () => {
-    // Initialize the map
-    const map = L.map("map").setView([1.9911, 102.5875], 13);
+  return "fas fa-map-pin";
+}
 
-    // Add a tile layer
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-    }).addTo(map);
+function getMaintenanceStatusBadgeClass(status) {
+  const classes = {
+    Pending: "bg-warning text-dark",
+    "In Progress": "bg-info",
+    Completed: "bg-success",
+    Cancelled: "bg-secondary",
+    "On Hold": "bg-dark",
+  };
+  return classes[status] || "bg-secondary";
+}
 
-    // Fetch and render drainage lines
-    fetchAndRenderDrainageLines();
+function getPriorityBadgeClass(priority) {
+  const classes = {
+    Low: "bg-light text-dark",
+    Medium: "bg-primary",
+    High: "bg-warning text-dark",
+    Critical: "bg-danger",
+  };
+  return classes[priority] || "bg-secondary";
+}
+
+function formatMaintenanceDate(dateString) {
+  if (!dateString) return "N/A";
+  try {
+    return new Date(dateString).toLocaleDateString("en-MY", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  } catch (error) {
+    return dateString;
+  }
+}
+
+function showModal(modalId) {
+  const modalElement = document.getElementById(modalId);
+  if (modalElement) {
+    const modal = new bootstrap.Modal(modalElement);
+    modal.show();
+  }
+}
+
+function hideModal(modalId) {
+  const modalElement = document.getElementById(modalId);
+  if (modalElement) {
+    const modal = bootstrap.Modal.getInstance(modalElement);
+    if (modal) modal.hide();
+  }
+}
+
+function showNotification(message, type) {
+  const notification = document.createElement("div");
+  notification.className = `alert alert-${type} alert-dismissible fade show notification`;
+  notification.style.cssText = `
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  `;
+  notification.innerHTML = `
+    <i class="fas fa-${getNotificationIcon(type)} me-2"></i>
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  `;
+
+  document.body.appendChild(notification);
+  setTimeout(() => {
+    if (notification.parentNode) {
+      notification.remove();
+    }
+  }, 5000);
+}
+
+function getNotificationIcon(type) {
+  const icons = {
+    success: "check-circle",
+    danger: "exclamation-triangle",
+    warning: "exclamation-triangle",
+    info: "info-circle",
+  };
+  return icons[type] || "info-circle";
+}
+
+function showLoading(show) {
+  const loadingOverlay = document.getElementById("loadingOverlay");
+  if (loadingOverlay) {
+    loadingOverlay.style.display = show ? "flex" : "none";
+  }
+}
+
+// Search utility functions
+function showSearchDropdown() {
+  const dropdown = document.getElementById("search-dropdown");
+  if (dropdown) {
+    dropdown.classList.add("show");
+    searchDropdownVisible = true;
+  }
+}
+
+function hideSearchDropdown() {
+  const dropdown = document.getElementById("search-dropdown");
+  if (dropdown) {
+    dropdown.classList.remove("show");
+    searchDropdownVisible = false;
+    removeActiveFromDropdownItems();
+  }
+}
+
+function setActiveDropdownItem(items, activeIndex) {
+  removeActiveFromDropdownItems();
+  if (items[activeIndex]) {
+    items[activeIndex].classList.add("active");
+    items[activeIndex].scrollIntoView({ block: "nearest" });
+  }
+}
+
+function removeActiveFromDropdownItems() {
+  document.querySelectorAll(".search-dropdown-item").forEach((item) => {
+    item.classList.remove("active");
   });
-  fetchAndRenderDrainageLines();
+}
 
-  // Filter overlay complete functionality
-  document.addEventListener("DOMContentLoaded", function () {
-    // ======== 1. TOGGLE OVERLAY FUNCTIONALITY ========
-    const collapseBtn = document.getElementById("collapse-overlay");
-    const overlay = document.getElementById("filter-overlay");
-
-    // Initialize the overlay state based on any saved preference
-    const savedState = localStorage.getItem("filterOverlayCollapsed");
-    if (savedState === "true") {
-      overlay.classList.add("collapsed");
-      updateButtonIcon(true);
-    } else {
-      overlay.classList.remove("collapsed");
-      updateButtonIcon(false);
+// CSS injection functions
+function injectEnhancedSearchCSS() {
+  const additionalCSS = `
+    .public-popup .popup-image-preview {
+      position: relative;
+      margin-bottom: 1rem;
     }
-
-    // Add click event listener to the collapse button
-    collapseBtn.addEventListener("click", () => {
-      // Toggle the collapsed class on the overlay
-      const isCollapsed = overlay.classList.toggle("collapsed");
-
-      // Update the button icon based on the collapsed state
-      updateButtonIcon(isCollapsed);
-
-      // Save user preference
-      localStorage.setItem("filterOverlayCollapsed", isCollapsed);
-    });
-
-    // Function to update button icon based on collapsed state
-    function updateButtonIcon(isCollapsed) {
-      const icon = collapseBtn.querySelector("i");
-      if (isCollapsed) {
-        icon.classList.remove("fa-chevron-left");
-        icon.classList.add("fa-chevron-right");
-        // Update the button title
-        collapseBtn.setAttribute("title", "Expand Overlay");
-      } else {
-        icon.classList.remove("fa-chevron-right");
-        icon.classList.add("fa-chevron-left");
-        // Update the button title
-        collapseBtn.setAttribute("title", "Collapse Overlay");
+    
+    .image-count-badge {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-size: 0.7rem;
+    }
+    
+    .search-dropdown.show {
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
+  `;
 
-    // ======== 2. SEARCH BOX FUNCTIONALITY ========
-    // Search Input Functionality
-    document.addEventListener("DOMContentLoaded", function () {
-      const searchInput = document.getElementById("search-input");
+  const style = document.createElement("style");
+  style.textContent = additionalCSS;
+  document.head.appendChild(style);
+}
 
-      searchInput.addEventListener("input", function () {
-        const searchTerm = this.value.trim();
-        if (searchTerm) {
-          fetchFilteredPoints(searchTerm);
-        } else {
-          fetchDrainageData(); // Show all points if search is empty
-        }
-      });
-
-      async function fetchFilteredPoints(searchTerm) {
-        try {
-          const response = await fetch(
-            `/DrainageInventory/api/drainage-points.php?search=${encodeURIComponent(
-              searchTerm
-            )}`
-          );
-          if (!response.ok) throw new Error("Failed to fetch filtered points");
-          const filteredPoints = await response.json();
-          renderDrainagePoints(filteredPoints);
-          if (filteredPoints.length === 0) {
-            showNotification("No matching drainage points found", "warning");
-          }
-        } catch (error) {
-          showNotification("Error fetching filtered points.", "danger");
-        }
-      }
-
-      // Update the map with filtered points
-      function updateMapMarkers(filteredPoints) {
-        // Clear existing markers
-        drainagePointsLayer.clearLayers();
-
-        // Add filtered points to the map
-        filteredPoints.forEach((point) => {
-          const marker = L.marker(point.coordinates, {
-            icon: createMarkerIcon(point.status),
-            title: point.name,
-          });
-
-          // Create popup content
-          const popupContent = `
-          <div class="popup-content">
-            <h5>${point.name} <span class="badge ${getStatusBadgeClass(
-            point.status
-          )}">${point.status}</span></h5>
-            <div class="property-row">
-              <div class="property-label">Type:</div>
-              <div>${point.type}</div>
-            </div>
-            <div class="property-row">
-              <div class="property-label">Depth:</div>
-              <div>${point.depth}m</div>
-            </div>
-          </div>
-        `;
-
-          marker.bindPopup(popupContent);
-          drainagePointsLayer.addLayer(marker);
-        });
-      }
-    });
-
-    // ======== 3. FILTER BADGES FUNCTIONALITY ========
-    const filterBadges = document.querySelectorAll(".filter-badge");
-
-    // Active filters storage (default to 'all')
-    const activeFilters = {
-      type: "all",
-      status: "all",
-    };
-
-    // Add click event to all filter badges
-    filterBadges.forEach((badge) => {
-      badge.addEventListener("click", function () {
-        // Get parent filter category (type or status)
-        const filterCategory =
-          this.parentElement.previousElementSibling.textContent
-            .toLowerCase()
-            .includes("type")
-            ? "type"
-            : "status";
-
-        // Remove active class from all badges in this category
-        this.parentElement.querySelectorAll(".filter-badge").forEach((b) => {
-          b.classList.remove("active");
-        });
-
-        // Add active class to the clicked badge
-        this.classList.add("active");
-
-        // Update the active filters
-        activeFilters[filterCategory] = this.getAttribute("data-filter");
-
-        // Apply all active filters
-        applyFilters();
-      });
-    });
-
-    function applyFilters() {
-      console.log("Applying filters:", activeFilters);
-
-      // Filter points based on active filters
-      let filteredPoints = drainagePoints;
-
-      // Apply type filter
-      if (activeFilters.type !== "all") {
-        filteredPoints = filteredPoints.filter(
-          (point) => point.type === activeFilters.type
-        );
-      }
-
-      // Apply status filter
-      if (activeFilters.status !== "all") {
-        filteredPoints = filteredPoints.filter(
-          (point) => point.status === activeFilters.status
-        );
-      }
-
-      // Apply depth filter (handled separately)
-
-      // This would update the map in a real application
-      console.log("Filtered points after applying filters:", filteredPoints);
-
-      // If integrated with a map:
-      // updateMapMarkers(filteredPoints);
+function injectImageGalleryCSS() {
+  const imageGalleryCSS = `
+    /* Enhanced Image Gallery Styles for Public Map */
+    .image-gallery-container {
+      position: relative;
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 1rem;
+      margin-bottom: 1rem;
     }
 
-    // ======== 4. DEPTH RANGE SLIDER FUNCTIONALITY ========
-    const depthSlider = document.getElementById("depth-range");
-    const depthValue = document.getElementById("depth-value");
-
-    // Set initial depth value display
-    depthValue.textContent = `0-${depthSlider.value}m`;
-
-    // Add event listener for range slider
-    depthSlider.addEventListener("input", function () {
-      // Update the displayed value
-      depthValue.textContent = `0-${this.value}m`;
-
-      // Filter points based on depth
-      filterByDepth(this.value);
-    });
-
-    function filterByDepth(maxDepth) {
-      console.log(`Filtering by depth: 0-${maxDepth}m`);
-
-      // Filter points by depth
-      const filteredPoints = drainagePoints.filter(
-        (point) => point.depth <= maxDepth
-      );
-
-      // This would update the map in a real application
-      console.log("Filtered points by depth:", filteredPoints);
-
-      // If integrated with a map:
-      // updateMapMarkers(filteredPoints);
+    .image-gallery-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e9ecef;
     }
 
-    // ======== 5. RECENT ACTIVITY FUNCTIONALITY ========
-    const recentActivityItems = document.querySelectorAll(".list-group-item");
-
-    // Add click event to recent activity items to highlight related points
-    recentActivityItems.forEach((item) => {
-      item.addEventListener("click", function () {
-        // Get the activity text
-        const activityText = this.querySelector("span:first-child").textContent;
-
-        // Highlight in UI
-        this.classList.add("bg-light");
-        setTimeout(() => this.classList.remove("bg-light"), 2000);
-
-        // Extract drain ID or relevant info
-        const matches = activityText.match(/#(\d+)/);
-        if (matches && matches[1]) {
-          const pointId = matches[1];
-          highlightPoint(pointId);
-        }
-      });
-    });
-
-    function highlightPoint(pointId) {
-      console.log(`Highlighting point with ID: ${pointId}`);
-
-      // In a real application, this would:
-      // 1. Center the map on the point
-      // 2. Open its popup or info window
-      // 3. Possibly animate the marker
-
-      // Example code:
-      // const point = drainagePoints.find(p => p.id === parseInt(pointId));
-      // if (point) {
-      //   map.setView([point.lat, point.lng], 16);
-      //   markers[point.id].openPopup();
-      // }
+    .image-counter {
+      font-size: 0.9rem;
+      color: #6c757d;
+      font-weight: 500;
     }
 
-    // ======== 6. COMBINED FILTER FUNCTION ========
-    // This function would combine all filters when integrated with a map
-    function applyAllFilters() {
-      const searchTerm = searchInput.value.toLowerCase();
-      const maxDepth = parseFloat(depthSlider.value);
+    .gallery-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
 
-      let filteredPoints = drainagePoints;
+    .gallery-btn {
+      padding: 0.25rem 0.5rem;
+      border: none;
+      border-radius: 6px;
+      background: #6c757d;
+      color: white;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
 
-      // Apply search filter
-      if (searchTerm) {
-        filteredPoints = filteredPoints.filter(
-          (point) =>
-            point.name.toLowerCase().includes(searchTerm) ||
-            point.type.toLowerCase().includes(searchTerm)
-        );
+    .gallery-btn:hover {
+      background: #495057;
+      transform: translateY(-1px);
+    }
+
+    .main-image-container {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #e9ecef;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .main-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .main-image:hover {
+      transform: scale(1.02);
+    }
+
+    .image-navigation {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.7);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .image-navigation:hover {
+      background: rgba(0,0,0,0.9);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .nav-prev {
+      left: 10px;
+    }
+
+    .nav-next {
+      right: 10px;
+    }
+
+    .image-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      color: white;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .image-filename {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .image-date {
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+
+    .thumbnail-strip {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding: 0.5rem 0;
+      scrollbar-width: thin;
+      scrollbar-color: #6c757d #e9ecef;
+    }
+
+    .thumbnail-strip::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .thumbnail-strip::-webkit-scrollbar-track {
+      background: #e9ecef;
+      border-radius: 3px;
+    }
+
+    .thumbnail-strip::-webkit-scrollbar-thumb {
+      background: #6c757d;
+      border-radius: 3px;
+    }
+
+    .thumbnail-item {
+      position: relative;
+      flex-shrink: 0;
+      width: 80px;
+      height: 60px;
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .thumbnail-item:hover {
+      border-color: #007bff;
+      transform: translateY(-2px);
+    }
+
+    .thumbnail-item.active {
+      border-color: #007bff;
+      box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+    }
+
+    .thumbnail-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .no-images-placeholder {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #6c757d;
+    }
+
+    .no-images-placeholder i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    /* Fullscreen Modal */
+    .image-fullscreen-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.95);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .image-fullscreen-modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .fullscreen-image {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    }
+
+    .fullscreen-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .fullscreen-close:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.1);
+    }
+
+    .fullscreen-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .fullscreen-nav:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .fullscreen-prev {
+      left: 30px;
+    }
+
+    .fullscreen-next {
+      right: 30px;
+    }
+
+    .fullscreen-info {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 25px;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .main-image-container {
+        height: 250px;
       }
-
-      // Apply type filter
-      if (activeFilters.type !== "all") {
-        filteredPoints = filteredPoints.filter(
-          (point) => point.type === activeFilters.type
-        );
+      
+      .thumbnail-item {
+        width: 60px;
+        height: 45px;
       }
-
-      // Apply status filter
-      if (activeFilters.status !== "all") {
-        filteredPoints = filteredPoints.filter(
-          (point) => point.status === activeFilters.status
-        );
+      
+      .image-navigation {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
       }
-
-      // Apply depth filter
-      filteredPoints = filteredPoints.filter(
-        (point) => point.depth <= maxDepth
-      );
-
-      // Update map (in a real application)
-      console.log("Final filtered points:", filteredPoints);
-
-      // If integrated with a map:
-      // updateMapMarkers(filteredPoints);
-
-      // Update filter summary display (optional)
-      updateFilterSummary(filteredPoints.length);
     }
+  `;
 
-    function updateFilterSummary(count) {
-      console.log(`Showing ${count} drainage points that match filters`);
-      // Could update a UI element like:
-      // document.getElementById("filter-summary").textContent = `Showing ${count} drainage points`;
-    }
+  const style = document.createElement("style");
+  style.textContent = imageGalleryCSS;
+  document.head.appendChild(style);
+}
 
-    // ======== 7. INITIALIZE MAP RENDERING (PLACEHOLDER) ========
-    // This function would initialize the map with all points
-    function initializeMap() {
-      console.log("Initializing map with all drainage points");
+// ==========================================
+// SAMPLE DATA FOR FALLBACK
+// ==========================================
 
-      // In a real application:
-      // 1. Create a Leaflet map
-      // 2. Add base layers
-      // 3. Create markers for all drain points
-      // 4. Add them to marker clusters
-      // 5. Set up click handlers for markers
-    }
+function getSampleDrainageData() {
+  return [
+    {
+      id: "MAIN01",
+      name: "Main Street Drain A1",
+      type: "Concrete Drain",
+      status: "Good",
+      depth: 2.5,
+      coordinates: [2.05788, 102.57471],
+      description: "Main drainage point on Main Street",
+      last_updated: "2025-01-01",
+      invert_level: "15.2m",
+      reduced_level: "17.7m",
+    },
+    {
+      id: "PARK02",
+      name: "Park Avenue Culvert",
+      type: "Box Culvert",
+      status: "Needs Maintenance",
+      depth: 3.2,
+      coordinates: [2.06, 102.576],
+      description: "Box culvert under Park Avenue",
+      last_updated: "2025-01-01",
+      invert_level: "14.8m",
+      reduced_level: "18.0m",
+    },
+    {
+      id: "IND03",
+      name: "Industrial Zone Pipe",
+      type: "Pipe Drain",
+      status: "Critical",
+      depth: 1.8,
+      coordinates: [2.055, 102.578],
+      description: "Large pipe drainage system",
+      last_updated: "2025-01-01",
+      invert_level: "16.1m",
+      reduced_level: "17.9m",
+    },
+  ];
+}
 
-    // Initialize map rendering (in a real app)
-    // initializeMap();
-  });
-});
+function getSampleFloodProneAreas() {
+  return [
+    {
+      name: "Downtown Flood Zone",
+      risk_level: "High",
+      last_flood: "2024-12-15",
+      coordinates: [
+        [
+          [2.055, 102.57],
+          [2.06, 102.575],
+          [2.055, 102.58],
+          [2.05, 102.575],
+          [2.055, 102.57],
+        ],
+      ],
+    },
+  ];
+}
+
+// Initialize the public map when the page loads
+console.log("DrainTrack Public Map System loaded successfully!");

@@ -7111,3 +7111,310 @@ Affected rows: 1
 2025-06-08 02:40:08 - GET request
 2025-06-08 02:47:15 - GET request
 2025-06-08 12:42:20 - GET request
+2025-06-08 13:44:59 - GET request
+2025-06-08 13:45:03 - GET request
+2025-06-08 13:45:05 - GET request
+2025-06-08 13:45:08 - GET request
+2025-06-08 13:46:49 - GET request
+2025-06-08 13:47:07 - GET request
+2025-06-08 13:47:23 - GET request
+2025-06-08 13:47:25 - GET request
+2025-06-08 13:47:47 - GET request
+2025-06-08 13:52:30 - GET request
+2025-06-08 13:53:20 - GET request
+2025-06-08 13:53:22 - GET request
+2025-06-08 13:53:33 - GET request
+2025-06-08 13:54:59 - GET request
+2025-06-08 13:55:13 - GET request
+2025-06-08 13:59:04 - GET request
+2025-06-08 14:00:55 - GET request
+2025-06-08 14:01:16 - GET request
+2025-06-08 14:02:14 - GET request
+2025-06-08 14:03:07 - GET request
+2025-06-08 14:03:31 - GET request
+2025-06-08 14:03:36 - GET request
+2025-06-08 14:04:35 - GET request
+2025-06-08 14:04:39 - GET request
+2025-06-08 14:05:21 - GET request
+2025-06-08 14:05:41 - GET request
+2025-06-08 14:05:43 - GET request
+2025-06-08 14:06:06 - GET request
+2025-06-08 14:06:26 - GET request
+2025-06-08 14:10:58 - GET request
+2025-06-08 15:39:24 - GET request
+2025-06-08 15:39:54 - GET request
+2025-06-08 15:40:24 - GET request
+2025-06-08 15:40:51 - GET request
+2025-06-08 15:42:54 - GET request
+2025-06-08 15:43:54 - GET request
+2025-06-08 15:43:57 - GET request
+2025-06-08 19:26:29 - GET request
+2025-06-08 19:26:43 - GET request
+2025-06-08 19:27:39 - GET request
+2025-06-08 19:27:40 - GET request
+2025-06-08 19:28:10 - GET request
+2025-06-08 19:28:41 - GET request
+2025-06-08 19:29:12 - GET request
+2025-06-08 19:29:43 - GET request
+2025-06-08 19:30:14 - GET request
+2025-06-08 19:30:45 - GET request
+2025-06-08 19:31:15 - GET request
+2025-06-08 19:31:18 - GET request
+2025-06-08 19:31:20 - GET request
+2025-06-08 19:31:38 - GET request
+2025-06-08 19:31:39 - GET request
+2025-06-08 19:31:54 - GET request
+2025-06-08 19:32:24 - GET request
+2025-06-08 19:32:29 - GET request
+2025-06-08 19:32:35 - GET request
+2025-06-08 19:32:38 - GET request
+2025-06-08 19:32:41 - GET request
+2025-06-08 19:32:42 - GET request
+2025-06-08 19:32:43 - GET request
+2025-06-08 19:32:44 - GET request
+2025-06-08 19:32:45 - GET request
+2025-06-08 19:32:48 - GET request
+2025-06-08 19:33:18 - GET request
+2025-06-08 19:33:49 - GET request
+2025-06-08 19:34:20 - GET request
+2025-06-08 19:34:51 - GET request
+2025-06-08 19:35:22 - GET request
+2025-06-08 19:35:53 - GET request
+2025-06-08 19:36:24 - GET request
+2025-06-08 19:36:55 - GET request
+2025-06-08 19:37:26 - GET request
+2025-06-08 19:37:57 - GET request
+2025-06-08 19:38:28 - GET request
+2025-06-08 19:38:41 - GET request
+2025-06-08 19:39:12 - GET request
+2025-06-08 19:40:57 - GET request
+2025-06-08 19:41:13 - GET request
+2025-06-08 19:41:54 - GET request
+2025-06-08 19:42:03 - GET request
+2025-06-08 19:42:15 - GET request
+2025-06-08 19:42:44 - GET request
+2025-06-08 19:43:04 - GET request
+2025-06-08 19:43:05 - GET request
+2025-06-08 19:43:12 - GET request
+2025-06-08 19:43:13 - GET request
+2025-06-08 19:43:16 - GET request
+2025-06-08 19:43:16 - GET request
+2025-06-08 19:43:26 - GET request
+2025-06-08 19:49:00 - PUT request
+PUT input: {"id":"BB7","name":"BB7 - Sg Bentayan","type":"Concrete Drain","status":"Needs Maintenance","depth":0,"invert_level":"N/A","reduced_level":"N/A","coordinates":[2.047305,102.603401],"description":"No description provided","images":"[\"/DrainageInventory/uploads/6845cd0c7962e_BB7-1.png\",\"/DrainageInventory/uploads/6845cd0c7cab2_BB7-3.png\",\"/DrainageInventory/uploads/6845cd0c7e484_BB7-4.png\"]","originalId":"BB7"}
+PUT data decoded: {"id":"BB7","name":"BB7 - Sg Bentayan","type":"Concrete Drain","status":"Needs Maintenance","depth":0,"invert_level":"N\/A","reduced_level":"N\/A","coordinates":[2.047305,102.603401],"description":"No description provided","images":"[\"\/DrainageInventory\/uploads\/6845cd0c7962e_BB7-1.png\",\"\/DrainageInventory\/uploads\/6845cd0c7cab2_BB7-3.png\",\"\/DrainageInventory\/uploads\/6845cd0c7e484_BB7-4.png\"]","originalId":"BB7"}
+PUT Original ID: BB7, New ID: BB7
+SQL: UPDATE drainage_points SET 
+            id = 'BB7',
+            name = 'BB7 - Sg Bentayan',
+            type = 'Concrete Drain',
+            status = 'Needs Maintenance',
+            depth = 0,
+            invert_level = 'N/A',
+            reduced_level = 'N/A',
+            latitude = 2.047305,
+            longitude = 102.603401,
+            description = 'No description provided',
+            last_updated = '2025-06-08'
+            , images = '[\"/DrainageInventory/uploads/6845cd0c7962e_BB7-1.png\",\"/DrainageInventory/uploads/6845cd0c7cab2_BB7-3.png\",\"/DrainageInventory/uploads/6845cd0c7e484_BB7-4.png\"]'
+            WHERE id = 'BB7'
+Affected rows: 1
+2025-06-08 19:55:21 - GET request
+2025-06-08 19:55:50 - GET request
+2025-06-08 19:55:59 - GET request
+2025-06-08 19:58:08 - GET request
+2025-06-08 20:00:09 - GET request
+2025-06-08 20:00:35 - GET request
+2025-06-08 20:01:22 - PUT request
+PUT input: {"id":"BB7","name":"BB7 - Sg Bentayan","type":"Concrete Drain","status":"Good","depth":3,"invert_level":"N/A","reduced_level":"N/A","coordinates":[2.047305,102.603401],"description":"No description provided","images":"[\"/DrainageInventory/uploads/6845cd0c7962e_BB7-1.png\",\"/DrainageInventory/uploads/6845cd0c7cab2_BB7-3.png\",\"/DrainageInventory/uploads/6845cd0c7e484_BB7-4.png\"]","originalId":"BB7"}
+PUT data decoded: {"id":"BB7","name":"BB7 - Sg Bentayan","type":"Concrete Drain","status":"Good","depth":3,"invert_level":"N\/A","reduced_level":"N\/A","coordinates":[2.047305,102.603401],"description":"No description provided","images":"[\"\/DrainageInventory\/uploads\/6845cd0c7962e_BB7-1.png\",\"\/DrainageInventory\/uploads\/6845cd0c7cab2_BB7-3.png\",\"\/DrainageInventory\/uploads\/6845cd0c7e484_BB7-4.png\"]","originalId":"BB7"}
+PUT Original ID: BB7, New ID: BB7
+SQL: UPDATE drainage_points SET 
+            id = 'BB7',
+            name = 'BB7 - Sg Bentayan',
+            type = 'Concrete Drain',
+            status = 'Good',
+            depth = 3,
+            invert_level = 'N/A',
+            reduced_level = 'N/A',
+            latitude = 2.047305,
+            longitude = 102.603401,
+            description = 'No description provided',
+            last_updated = '2025-06-08'
+            , images = '[\"/DrainageInventory/uploads/6845cd0c7962e_BB7-1.png\",\"/DrainageInventory/uploads/6845cd0c7cab2_BB7-3.png\",\"/DrainageInventory/uploads/6845cd0c7e484_BB7-4.png\"]'
+            WHERE id = 'BB7'
+Affected rows: 1
+2025-06-08 20:03:22 - GET request
+2025-06-08 20:03:27 - GET request
+2025-06-08 20:03:28 - GET request
+2025-06-08 20:03:29 - GET request
+2025-06-08 20:13:48 - GET request
+2025-06-08 20:14:18 - GET request
+2025-06-08 20:14:49 - GET request
+2025-06-08 20:17:47 - GET request
+2025-06-08 20:23:37 - GET request
+2025-06-08 20:24:38 - GET request
+2025-06-08 20:26:10 - GET request
+2025-06-08 20:28:51 - GET request
+2025-06-08 20:29:40 - GET request
+2025-06-08 20:45:35 - GET request
+2025-06-08 20:46:12 - GET request
+2025-06-08 20:46:31 - GET request
+2025-06-08 20:46:42 - GET request
+2025-06-08 20:47:02 - GET request
+2025-06-08 20:54:00 - GET request
+2025-06-08 20:56:29 - GET request
+2025-06-08 20:56:31 - GET request
+2025-06-08 21:01:05 - GET request
+2025-06-08 21:03:48 - GET request
+2025-06-08 21:03:58 - GET request
+2025-06-08 21:04:28 - GET request
+2025-06-08 21:04:30 - GET request
+2025-06-08 21:04:32 - GET request
+2025-06-08 21:37:05 - GET request
+2025-06-08 21:47:41 - GET request
+2025-06-08 21:49:50 - GET request
+2025-06-08 21:50:34 - GET request
+2025-06-08 22:04:56 - GET request
+2025-06-08 22:05:51 - GET request
+2025-06-08 22:05:54 - GET request
+2025-06-08 22:06:05 - GET request
+2025-06-08 22:06:08 - GET request
+2025-06-08 22:06:48 - GET request
+2025-06-08 22:06:57 - GET request
+2025-06-08 22:07:01 - GET request
+2025-06-08 22:07:35 - GET request
+2025-06-08 22:08:06 - GET request
+2025-06-08 22:08:45 - GET request
+2025-06-08 22:08:50 - GET request
+2025-06-08 22:08:52 - GET request
+2025-06-08 22:09:20 - GET request
+2025-06-08 22:09:28 - GET request
+2025-06-08 22:09:45 - GET request
+2025-06-08 22:09:47 - GET request
+2025-06-08 22:19:08 - GET request
+2025-06-08 22:19:11 - GET request
+2025-06-08 22:21:51 - GET request
+2025-06-08 22:24:47 - GET request
+2025-06-08 22:27:14 - GET request
+2025-06-08 22:27:25 - GET request
+2025-06-08 22:27:27 - GET request
+2025-06-08 22:38:22 - GET request
+2025-06-08 22:38:41 - GET request
+2025-06-08 22:38:43 - GET request
+2025-06-08 22:40:04 - GET request
+2025-06-08 22:40:36 - GET request
+2025-06-08 22:54:50 - GET request
+2025-06-08 22:55:22 - GET request
+2025-06-08 22:55:40 - GET request
+2025-06-08 22:55:42 - GET request
+2025-06-08 23:06:23 - GET request
+2025-06-08 23:19:03 - GET request
+2025-06-08 23:20:24 - GET request
+2025-06-08 23:25:24 - GET request
+2025-06-08 23:25:31 - GET request
+2025-06-08 23:30:32 - GET request
+2025-06-08 23:33:55 - GET request
+2025-06-08 23:38:33 - GET request
+2025-06-08 23:40:03 - GET request
+2025-06-08 23:41:10 - GET request
+2025-06-08 23:41:32 - GET request
+2025-06-08 23:42:52 - GET request
+2025-06-08 23:59:03 - GET request
+2025-06-08 23:59:04 - GET request
+2025-06-08 23:59:05 - GET request
+2025-06-09 00:02:49 - GET request
+2025-06-09 00:07:49 - GET request
+2025-06-09 00:11:43 - GET request
+2025-06-09 00:15:52 - GET request
+2025-06-09 00:16:09 - GET request
+2025-06-09 00:16:12 - GET request
+2025-06-09 00:16:51 - GET request
+2025-06-09 00:28:15 - GET request
+2025-06-09 00:28:20 - GET request
+2025-06-09 00:47:38 - GET request
+2025-06-09 00:50:13 - GET request
+2025-06-09 00:51:12 - GET request
+2025-06-09 00:52:29 - GET request
+2025-06-09 01:08:00 - GET request
+2025-06-09 01:09:13 - GET request
+2025-06-09 01:10:01 - PUT request
+PUT input: {"id":"BB7","name":"BB7 - Sg Bentayan","type":"Concrete Drain","status":"Good","depth":3,"invert_level":"N/A","reduced_level":"N/A","coordinates":[2.047305,102.603401],"description":"No description provided","images":"[\"/DrainageInventory/uploads/6845cd0c7962e_BB7-1.png\",\"/DrainageInventory/uploads/6845cd0c7cab2_BB7-3.png\",\"/DrainageInventory/uploads/6845cd0c7e484_BB7-4.png\",\"/DrainageInventory/uploads/6846184970072_BB7-4.png\"]","originalId":"BB7"}
+PUT data decoded: {"id":"BB7","name":"BB7 - Sg Bentayan","type":"Concrete Drain","status":"Good","depth":3,"invert_level":"N\/A","reduced_level":"N\/A","coordinates":[2.047305,102.603401],"description":"No description provided","images":"[\"\/DrainageInventory\/uploads\/6845cd0c7962e_BB7-1.png\",\"\/DrainageInventory\/uploads\/6845cd0c7cab2_BB7-3.png\",\"\/DrainageInventory\/uploads\/6845cd0c7e484_BB7-4.png\",\"\/DrainageInventory\/uploads\/6846184970072_BB7-4.png\"]","originalId":"BB7"}
+PUT Original ID: BB7, New ID: BB7
+SQL: UPDATE drainage_points SET 
+            id = 'BB7',
+            name = 'BB7 - Sg Bentayan',
+            type = 'Concrete Drain',
+            status = 'Good',
+            depth = 3,
+            invert_level = 'N/A',
+            reduced_level = 'N/A',
+            latitude = 2.047305,
+            longitude = 102.603401,
+            description = 'No description provided',
+            last_updated = '2025-06-09'
+            , images = '[\"/DrainageInventory/uploads/6845cd0c7962e_BB7-1.png\",\"/DrainageInventory/uploads/6845cd0c7cab2_BB7-3.png\",\"/DrainageInventory/uploads/6845cd0c7e484_BB7-4.png\",\"/DrainageInventory/uploads/6846184970072_BB7-4.png\"]'
+            WHERE id = 'BB7'
+Affected rows: 1
+2025-06-09 01:10:17 - GET request
+2025-06-09 01:10:30 - GET request
+2025-06-09 01:10:39 - PUT request
+PUT input: {"id":"BB7","name":"BB7 - Sg Bentayan","type":"Concrete Drain","status":"Good","depth":3,"invert_level":"N/A","reduced_level":"N/A","coordinates":[2.047305,102.603401],"description":"No description provided","images":"[\"/DrainageInventory/uploads/6845cd0c7962e_BB7-1.png\",\"/DrainageInventory/uploads/6845cd0c7cab2_BB7-3.png\",\"/DrainageInventory/uploads/6845cd0c7e484_BB7-4.png\"]","originalId":"BB7"}
+PUT data decoded: {"id":"BB7","name":"BB7 - Sg Bentayan","type":"Concrete Drain","status":"Good","depth":3,"invert_level":"N\/A","reduced_level":"N\/A","coordinates":[2.047305,102.603401],"description":"No description provided","images":"[\"\/DrainageInventory\/uploads\/6845cd0c7962e_BB7-1.png\",\"\/DrainageInventory\/uploads\/6845cd0c7cab2_BB7-3.png\",\"\/DrainageInventory\/uploads\/6845cd0c7e484_BB7-4.png\"]","originalId":"BB7"}
+PUT Original ID: BB7, New ID: BB7
+SQL: UPDATE drainage_points SET 
+            id = 'BB7',
+            name = 'BB7 - Sg Bentayan',
+            type = 'Concrete Drain',
+            status = 'Good',
+            depth = 3,
+            invert_level = 'N/A',
+            reduced_level = 'N/A',
+            latitude = 2.047305,
+            longitude = 102.603401,
+            description = 'No description provided',
+            last_updated = '2025-06-09'
+            , images = '[\"/DrainageInventory/uploads/6845cd0c7962e_BB7-1.png\",\"/DrainageInventory/uploads/6845cd0c7cab2_BB7-3.png\",\"/DrainageInventory/uploads/6845cd0c7e484_BB7-4.png\"]'
+            WHERE id = 'BB7'
+Affected rows: 1
+2025-06-09 01:21:40 - GET request
+2025-06-09 01:22:27 - GET request
+2025-06-09 01:24:13 - GET request
+2025-06-09 01:26:30 - GET request
+2025-06-09 01:28:04 - GET request
+2025-06-09 01:29:06 - GET request
+2025-06-09 01:30:28 - GET request
+2025-06-09 01:31:51 - GET request
+2025-06-09 01:32:18 - GET request
+2025-06-09 01:36:07 - GET request
+2025-06-09 01:36:15 - GET request
+2025-06-09 01:36:26 - GET request
+2025-06-09 01:36:38 - GET request
+2025-06-09 01:36:52 - GET request
+2025-06-09 01:36:56 - GET request
+2025-06-09 01:37:17 - GET request
+2025-06-09 01:37:55 - GET request
+2025-06-09 01:37:56 - GET request
+2025-06-09 01:38:26 - GET request
+2025-06-09 01:38:56 - GET request
+2025-06-09 01:39:28 - GET request
+2025-06-09 01:39:58 - GET request
+2025-06-09 01:40:29 - GET request
+2025-06-09 01:41:00 - GET request
+2025-06-09 01:41:31 - GET request
+2025-06-09 01:42:02 - GET request
+2025-06-09 01:42:33 - GET request
+2025-06-09 01:42:53 - GET request
+2025-06-09 01:45:27 - GET request
+2025-06-09 01:48:08 - GET request
+2025-06-09 01:48:18 - GET request
+2025-06-09 01:50:45 - GET request
+2025-06-09 01:50:48 - GET request
+2025-06-09 01:51:11 - GET request
+2025-06-09 01:51:29 - GET request
+2025-06-09 01:51:31 - GET request
+2025-06-09 01:54:30 - GET request
+2025-06-09 01:54:32 - GET request
+2025-06-09 01:54:34 - GET request
+2025-06-09 01:58:16 - GET request

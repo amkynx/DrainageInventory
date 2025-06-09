@@ -532,3 +532,439 @@ Successfully fetched 3 maintenance requests
 2025-06-08 02:47:15 - GET request
 Database connection successful
 Successfully fetched 3 maintenance requests
+2025-06-08 14:01:16 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 14:03:36 - GET request
+Database connection successful
+Successfully fetched 3 maintenance requests
+2025-06-08 14:03:57 - POST request
+Database connection successful
+POST input: {"drainage_point_id":null,"request_type":"Replacement","priority":"Medium","status":"Pending","estimated_cost":"200","assigned_to":"8","scheduled_date":"2025-06-08","description":"123","notes":"123"}
+POST error: Missing required fields: drainage_point_id, request_type, and description are required
+2025-06-08 14:05:15 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"BB5","request_type":"Cleaning","priority":"Medium","description":"123","estimated_cost":"200","scheduled_date":"2025-06-08","assigned_to":"8","requested_by":2,"notes":""}
+Maintenance request created successfully with ID: 21
+2025-06-08 14:05:21 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 14:06:06 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 14:10:58 - GET request
+Database connection successful
+2025-06-08 14:10:58 - GET request
+Successfully fetched 4 maintenance requests
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 14:11:36 - GET request
+2025-06-08 14:11:36 - GET request
+Database connection successful
+Database connection successful
+Successfully fetched 4 maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 14:15:59 - GET request
+Database connection successful
+Database connection successful
+Successfully fetched 4 maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 14:20:59 - GET request
+2025-06-08 14:20:59 - GET request
+Database connection successful
+Database connection successful
+Successfully fetched 4 maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 14:25:59 - GET request
+2025-06-08 14:25:59 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 14:30:59 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 14:35:59 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 14:35:59 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 14:40:59 - GET request
+2025-06-08 14:40:59 - GET request
+Database connection successful
+Database connection successful
+Successfully fetched 4 maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 15:42:54 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 15:42:54 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 19:32:38 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 19:32:43 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 19:32:45 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 19:40:57 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 19:40:57 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 19:42:15 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 19:43:13 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 20:03:22 - GET request
+Database connection successful
+Successfully fetched 4 maintenance requests
+2025-06-08 20:17:57 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-08 20:23:40 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-08 20:24:40 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-08 20:26:13 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-08 20:26:32 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-08 20:26:47 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-08 20:26:57 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-08 20:28:53 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-08 20:29:42 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-08 20:29:58 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-08 20:45:35 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 20:45:35 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 20:46:12 - GET request
+Database connection successful
+2025-06-08 20:46:12 - GET request
+Fetching all maintenance requests
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 20:46:31 - GET request
+Database connection successful
+2025-06-08 20:46:31 - GET request
+Fetching all maintenance requests
+Database connection successful
+Successfully fetched 4 maintenance requests
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 20:46:42 - GET request
+Database connection successful
+Fetching all maintenance requests
+2025-06-08 20:46:42 - GET request
+Successfully fetched 4 maintenance requests
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 20:47:02 - GET request
+2025-06-08 20:47:02 - GET request
+Database connection successful
+Database connection successful
+Fetching all maintenance requests
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 20:54:00 - GET request
+Database connection successful
+Fetching all maintenance requests
+2025-06-08 20:54:00 - GET request
+Successfully fetched 4 maintenance requests
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 20:56:33 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-08 21:01:05 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 21:01:05 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 21:04:28 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 21:04:28 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 21:04:30 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 21:04:30 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 21:04:32 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 21:04:32 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 22:05:51 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 22:05:51 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 4 maintenance requests
+2025-06-08 22:06:14 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: PintuAirParitKamaria
+Successfully fetched 0 maintenance requests
+2025-06-08 22:06:24 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: PintuAirParitKamaria
+Successfully fetched 0 maintenance requests
+2025-06-08 22:06:39 - POST request
+Database connection successful
+POST input: {"drainage_point_id":"PintuAirParitKamaria","request_type":"Replacement","priority":"High","description":"test ali","estimated_cost":"200","scheduled_date":"2025-06-09","assigned_to":"7","requested_by":2,"notes":""}
+Maintenance request created successfully with ID: 22
+2025-06-08 22:06:57 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:06:57 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:07:35 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:07:35 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:08:50 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:09:20 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:09:20 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:09:45 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:09:45 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:19:08 - GET request
+Database connection successful
+2025-06-08 22:19:08 - GET request
+Fetching all maintenance requests
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:27:25 - GET request
+2025-06-08 22:27:25 - GET request
+Database connection successful
+Fetching all maintenance requests
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:38:41 - GET request
+2025-06-08 22:38:41 - GET request
+Database connection successful
+Database connection successful
+Fetching all maintenance requests
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:40:04 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:40:04 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:54:50 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:54:50 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:55:22 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:55:22 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:55:42 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 22:55:42 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 23:00:43 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 23:00:43 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 23:05:43 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-08 23:05:43 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-09 00:11:49 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-09 00:15:55 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-09 00:16:14 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-09 00:16:54 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-09 00:28:30 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-09 00:47:46 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-09 00:48:07 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: PHBK3
+Successfully fetched 0 maintenance requests
+2025-06-09 00:48:20 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: PH4
+Successfully fetched 0 maintenance requests
+2025-06-09 00:49:44 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-09 00:50:19 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB2
+Successfully fetched 0 maintenance requests
+2025-06-09 00:51:15 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-09 00:52:31 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-09 01:08:04 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-09 01:08:18 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: PHL1
+Successfully fetched 0 maintenance requests
+2025-06-09 01:08:27 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-09 01:09:19 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-09 01:09:36 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-09 01:10:33 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-09 01:24:36 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB7
+Successfully fetched 1 maintenance requests
+2025-06-09 01:25:18 - GET request
+Database connection successful
+Fetching maintenance requests for drainage point: BB5
+Successfully fetched 1 maintenance requests
+2025-06-09 01:37:17 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests
+2025-06-09 01:37:55 - GET request
+Database connection successful
+Fetching all maintenance requests
+Successfully fetched 5 maintenance requests

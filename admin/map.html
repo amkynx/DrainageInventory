@@ -284,24 +284,7 @@
       });
   }
 
-  /**
-   * Logout function - redirect to centralized login
-   */
-  async function logout() {
-    try {
-      showSecurityNotification('Logging out...', 'info');
-      
-      // Clear session on server
-      await fetch('../api/logout.php', { method: 'POST' });
-      
-      // Redirect to login page
-      window.location.href = '../login.html?logout=1';
-    } catch (error) {
-      console.error('Logout failed:', error);
-      // Still redirect even if logout request fails
-      window.location.href = '../login.html?logout=1';
-    }
-  }
+
 
   /**
    * Show security-related notifications
@@ -721,7 +704,7 @@ document.head.appendChild(style);
             <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
             <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="login.html?logout=1"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+            <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
           </ul>
         </div>
       </div>
@@ -1088,7 +1071,7 @@ document.head.appendChild(style);
           </label>
         </div>
         <div class="form-check form-switch mb-3">
-          <input class="form-check-input" type="checkbox" id="layer-flood-prone" checked>
+          <input class="form-check-input" type="checkbox" id="layer-flood-prone" >
           <label class="form-check-label" for="layer-flood-prone">
             <i class="fas fa-water me-2 text-info"></i>Flood-prone Areas
           </label>

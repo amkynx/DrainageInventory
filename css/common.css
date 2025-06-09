@@ -1,27 +1,27 @@
 /* 
  * DrainTrack - Common Styles
- * Unified styling for consistent UI across all pages
+ * Unified styling for consistent UI across all pages - Muted Theme
  */
 
 /* CSS Variables */
 :root {
-  --primary-color: #0d6efd;
+  --primary-color: #4a5568;
   --secondary-color: #6c757d;
-  --accent-color: #0dcaf0;
-  --success-color: #198754;
-  --warning-color: #ffc107;
-  --danger-color: #dc3545;
-  --light-color: #f8f9fa;
-  --dark-color: #212529;
+  --accent-color: #718096;
+  --success-color: #38a169;
+  --warning-color: #ed8936;
+  --danger-color: #e53e3e;
+  --light-color: #f7fafc;
+  --dark-color: #2d3748;
   --gradient-primary: linear-gradient(
     135deg,
     var(--primary-color),
     var(--accent-color)
   );
-  --gradient-success: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-  --gradient-warning: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --gradient-info: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  --gradient-danger: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  --gradient-success: linear-gradient(135deg, #2f855a 0%, #68d391 100%);
+  --gradient-warning: linear-gradient(135deg, #dd6b20 0%, #f6ad55 100%);
+  --gradient-info: linear-gradient(135deg, #3182ce 0%, #63b3ed 100%);
+  --gradient-danger: linear-gradient(135deg, #c53030 0%, #fc8181 100%);
   --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
   --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
@@ -32,7 +32,7 @@
 /* Global Styles */
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
   color: #333;
   margin: 0;
   padding: 0;
@@ -339,7 +339,7 @@ body {
 .form-control,
 .form-select {
   border-radius: var(--border-radius-sm);
-  border: 2px solid #e9ecef;
+  border: 2px solid #e2e8f0;
   padding: 0.75rem;
   transition: all 0.3s ease;
 }
@@ -347,7 +347,7 @@ body {
 .form-control:focus,
 .form-select:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+  box-shadow: 0 0 0 0.2rem rgba(74, 85, 104, 0.15);
 }
 
 /* Modal Styles */
@@ -379,7 +379,7 @@ body {
 }
 
 .modal-footer {
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid #e2e8f0;
   padding: 1rem 1.5rem;
 }
 
@@ -497,13 +497,13 @@ body {
 .search-box input {
   padding-left: 45px;
   border-radius: 25px;
-  border: 2px solid #e9ecef;
+  border: 2px solid #e2e8f0;
   transition: all 0.3s ease;
 }
 
 .search-box input:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  box-shadow: 0 0 0 0.2rem rgba(74, 85, 104, 0.25);
 }
 
 .search-box i {
@@ -651,4 +651,57 @@ body {
     box-shadow: none;
     border: 1px solid #ddd;
   }
+}
+.text-muted,
+.text-secondary {
+  color: #495057 !important; /* Much darker than #6c757d */
+}
+
+.card .text-muted,
+.card .text-secondary {
+  color: #495057 !important;
+}
+.badge,
+.badge-status {
+  color: #222 !important;
+  background: #e9ecef !important;
+}
+.text-success {
+  color: #38a169 !important;
+}
+.text-warning {
+  color: #ed8936 !important;
+}
+.text-info {
+  color: #3182ce !important;
+}
+.text-danger {
+  color: #e53e3e !important;
+}
+
+.task-tabs .nav-link {
+  border: none;
+  border-radius: var(--border-radius-sm);
+  margin-right: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.task-tabs .nav-link.active {
+  background: var(--gradient-primary);
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(74, 85, 104, 0.1);
+}
+
+.task-tabs .nav-link:not(.active) {
+  background: #e2e8f0 !important; /* darker than #f8f9fa */
+  color: #495057 !important; /* dark gray for better contrast */
+  opacity: 1 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+.task-tabs .nav-link:not(.active):hover {
+  background: #cbd5e1 !important; /* slightly darker on hover */
+  color: var(--primary-color) !important;
 }
