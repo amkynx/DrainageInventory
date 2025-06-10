@@ -1,6 +1,8 @@
 <?php
-// Enable error reporting for debugging
+// Enable error reporting for debugging but suppress HTML output
 error_reporting(E_ALL);
+ini_set('display_errors', 0); // FIXED: Changed to 0 to prevent HTML error output
+ini_set('log_errors', 1); // Log errors instead of displaying them
 ini_set('display_errors', 1);
 
 // Set headers
@@ -97,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     LEFT JOIN drainage_points dp ON ins.drainage_point_id = dp.id
                     LEFT JOIN users u1 ON ins.operator_id = u1.id
                     LEFT JOIN users u2 ON ins.created_by = u2.id
-                    ORDER BY ins.created_at DESC, ins.id DESC"; // This line changed to sort by newest first
+                    ORDER BY ins.created_at DESC, ins.id DESC";
         }
         
         $result = $conn->query($sql);
@@ -125,9 +127,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     'description' => $row['description'],
                     'inspection_checklist' => $row['inspection_checklist'] ? json_decode($row['inspection_checklist'], true) : null,
                     'findings' => $row['findings'] ?? null,
-'recommendations' => $row['recommendations'] ?? null,
-'images' => $row['images'] ?? null,
-'completion_date' => $row['completion_date'] ?? null,
+                    'recommendations' => $row['recommendations'] ?? null,
+                    'images' => $row['images'] ?? null,
+                    'completion_date' => $row['completion_date'] ?? null,
                     'created_by' => $row['created_by'],
                     'created_by_name' => $row['created_by_name'] ? $row['created_by_name'] . ' ' . $row['created_by_lastname'] : null,
                     'created_at' => $row['created_at'],
@@ -186,8 +188,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Prepare and execute the insert query
         $sql = "INSERT INTO inspection_schedules (
             schedule_number, drainage_point_id, inspection_type, priority,
-            status, scheduled_date, scheduled_time, frequency,
-            operator_id, description
+            status, scheduled_date, scheduled_time, frequency, description,
+            operator_id 
         ) VALUES (?, ?, ?, ?, 'Scheduled', ?, ?, ?, ?, ?)";
         
         $stmt = $conn->prepare($sql);
@@ -229,6 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     try {
         $input = file_get_contents('php://input');
+        file_put_contents($logFile, "PUT input: " . $input . "\n", FILE_APPEND);
         $data = json_decode($input, true);
         
         if (!isset($data['id'])) {
@@ -273,6 +276,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         if (isset($data['recommendations'])) {
             $updates[] = "recommendations = '" . $conn->real_escape_string($data['recommendations']) . "'";
         }
+        if (isset($data['completion_notes'])) {
+            $updates[] = "completion_notes = '" . $conn->real_escape_string($data['completion_notes']) . "'";
+        }
+        if (isset($data['hours_worked'])) {
+            $updates[] = "hours_worked = " . (float)$data['hours_worked'];
+        }
         if (isset($data['inspection_checklist']) && is_array($data['inspection_checklist'])) {
             $updates[] = "inspection_checklist = '" . $conn->real_escape_string(json_encode($data['inspection_checklist'])) . "'";
         }
@@ -281,16 +290,161 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
             throw new Exception('No valid fields provided for update');
         }
         
-        $sql = "UPDATE inspection_schedules SET " . implode(', ', $updates) . " WHERE id = $id";
+        // Update always includes updated_at
+        $updates[] = "updated_at = NOW()";
         
-        if ($conn->query($sql)) {
-            if ($conn->affected_rows > 0) {
-                echo json_encode(['success' => true, 'message' => 'Inspection schedule updated successfully']);
-            } else {
-                echo json_encode(['success' => true, 'message' => 'No changes made to inspection schedule']);
+        // Start transaction for completion processing
+        $conn->autocommit(false);
+        
+        try {
+            // Update the inspection schedule
+            $sql = "UPDATE inspection_schedules SET " . implode(', ', $updates) . " WHERE id = $id";
+            file_put_contents($logFile, "Executing SQL: $sql\n", FILE_APPEND);
+            
+            if (!$conn->query($sql)) {
+                throw new Exception('Failed to update inspection schedule: ' . $conn->error);
             }
-        } else {
-            throw new Exception('Database error: ' . $conn->error);
+            
+            $completion_id = null;
+            
+            // FIXED: If this is a completion, insert into task_completions table
+            if (isset($data['status']) && $data['status'] === 'Completed') {
+                
+                file_put_contents($logFile, "Processing completion for inspection ID $id\n", FILE_APPEND);
+                
+                // Get the inspection details for completion record
+                $inspectionQuery = "SELECT * FROM inspection_schedules WHERE id = $id";
+                $inspectionResult = $conn->query($inspectionQuery);
+                
+                if (!$inspectionResult || $inspectionResult->num_rows === 0) {
+                    throw new Exception('Inspection not found for completion');
+                }
+                
+                $inspection = $inspectionResult->fetch_assoc();
+                
+                // Check if task_completions table exists, if not create it
+                $tableCheckSql = "SHOW TABLES LIKE 'task_completions'";
+                $tableExists = $conn->query($tableCheckSql);
+                
+                if ($tableExists->num_rows === 0) {
+                    // Create the table if it doesn't exist
+                    $createTableSql = "CREATE TABLE task_completions (
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        task_id INT NOT NULL,
+                        task_type VARCHAR(50) NOT NULL,
+                        operator_id INT,
+                        completion_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        hours_worked DECIMAL(5,2) DEFAULT 0.00,
+                        work_description TEXT,
+                        notes TEXT,
+                        findings TEXT,
+                        recommendations TEXT,
+                        materials_used TEXT,
+                        actual_cost DECIMAL(10,2) DEFAULT 0.00,
+                        follow_up_requested TINYINT(1) DEFAULT 0,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                    )";
+                    
+                    if (!$conn->query($createTableSql)) {
+                        file_put_contents($logFile, "Failed to create task_completions table: " . $conn->error . "\n", FILE_APPEND);
+                    } else {
+                        file_put_contents($logFile, "Created task_completions table\n", FILE_APPEND);
+                    }
+                }
+                
+                // Extract completion data with defaults
+                $operator_id = $inspection['operator_id'] ?? 0;
+                $hours_worked = isset($data['hours_worked']) ? (float)$data['hours_worked'] : 0.00;
+                $work_description = $data['work_description'] ?? $data['findings'] ?? 'Inspection completed';
+                $notes = $data['completion_notes'] ?? $data['notes'] ?? 'Inspection completed successfully';
+                $findings = $data['findings'] ?? 'Inspection completed successfully';
+                $recommendations = $data['recommendations'] ?? 'No specific recommendations';
+                $materials_used = $data['materials_used'] ?? 'Standard inspection tools';
+                $actual_cost = isset($data['actual_cost']) ? (float)$data['actual_cost'] : 0.00;
+                $follow_up_requested = isset($data['follow_up_requested']) ? (int)$data['follow_up_requested'] : 0;
+                
+                // FIXED: Ensure operator_id is always an integer (use 0 if null)
+                if ($operator_id === null || $operator_id === '') {
+                    $operator_id = 0;
+                } else {
+                    $operator_id = (int)$operator_id;
+                }
+                
+                // Log the data being inserted
+                file_put_contents($logFile, "Completion data: operator_id=$operator_id, hours_worked=$hours_worked, actual_cost=$actual_cost, follow_up_requested=$follow_up_requested\n", FILE_APPEND);
+                
+                // Insert into task_completions table
+                $completionSql = "INSERT INTO task_completions (
+                    task_id, task_type, operator_id, completion_date, 
+                    hours_worked, work_description, notes, findings, 
+                    recommendations, materials_used, actual_cost, 
+                    follow_up_requested
+                ) VALUES (?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?)";
+                
+                $stmt = $conn->prepare($completionSql);
+                
+                if (!$stmt) {
+                    throw new Exception('Failed to prepare completion statement: ' . $conn->error);
+                }
+                
+                // Assign string literal to a variable for bind_param
+                $task_type = 'inspection';
+
+                // FIXED: Correct bind_param type string - 'isiisssssdi' (11 parameters)
+                // i = integer, s = string, d = double/decimal
+                $bindResult = $stmt->bind_param(
+                    'isiisssssdi',
+                    $id,                    // task_id (int)
+                    $task_type,             // task_type (string)  
+                    $operator_id,           // operator_id (int)
+                    $hours_worked,          // hours_worked (decimal)
+                    $work_description,      // work_description (string)
+                    $notes,                 // notes (string)
+                    $findings,              // findings (string)
+                    $recommendations,       // recommendations (string)
+                    $materials_used,        // materials_used (string)
+                    $actual_cost,           // actual_cost (decimal)
+                    $follow_up_requested    // follow_up_requested (int)
+                );
+                
+                if (!$bindResult) {
+                    throw new Exception('Failed to bind parameters: ' . $stmt->error);
+                }
+                
+                if (!$stmt->execute()) {
+                    throw new Exception('Failed to create completion record: ' . $stmt->error);
+                }
+                
+                $completion_id = $conn->insert_id;
+                file_put_contents($logFile, "Created completion record with ID: $completion_id\n", FILE_APPEND);
+                
+                $stmt->close();
+            }
+            
+            // Commit transaction
+            $conn->commit();
+            $conn->autocommit(true);
+            
+            $response = [
+                'success' => true, 
+                'message' => 'Inspection schedule updated successfully',
+                'completion_recorded' => isset($data['status']) && $data['status'] === 'Completed'
+            ];
+            
+            if ($completion_id) {
+                $response['completion_id'] = $completion_id;
+            }
+            
+            echo json_encode($response);
+            
+            file_put_contents($logFile, "Successfully updated inspection schedule ID $id\n", FILE_APPEND);
+            
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            $conn->rollback();
+            $conn->autocommit(true);
+            throw $e;
         }
         
     } catch (Exception $e) {
@@ -300,6 +454,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     }
     exit;
 }
+
 
 // Handle DELETE request
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {

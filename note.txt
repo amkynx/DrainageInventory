@@ -110,3 +110,322 @@ user_id (Foreign Key) - ID of the user
 layer_name (VARCHAR) - Name of the map layer
 is_visible (BOOLEAN) - Whether the layer is visible for the user
 updated_at (DATETIME) - Timestamp of the last update
+
+
+# User Acceptance Testing (UAT) Form
+## Centralized Drainage Information Management System - Muar District
+
+---
+
+### **Section 1: Participant Information**
+
+**1. What is your role in this UAT?** *(Single choice)*
+- System Administrator
+- Field Staff/Operator  
+- Public User
+- Stakeholder/Management
+- Technical Evaluator
+
+**2. How familiar are you with drainage management systems?** *(Single choice)*
+- Very familiar (5+ years experience)
+- Somewhat familiar (2-5 years experience)
+- Basic knowledge (1-2 years experience)
+- Limited knowledge (less than 1 year)
+- No prior experience
+
+**3. What is your technical proficiency level?** *(Single choice)*
+- Expert (IT professional)
+- Advanced (Very comfortable with technology)
+- Intermediate (Comfortable with most applications)
+- Basic (Can use simple applications)
+- Beginner (Need assistance with technology)
+
+---
+
+### **Section 2: System Access & Authentication**
+
+**4. How easy was it to access the system login page?** *(Scale 1-5)*
+- 1 = Very Difficult
+- 2 = Difficult  
+- 3 = Neutral
+- 4 = Easy
+- 5 = Very Easy
+
+**5. Rate the login process (username/password authentication)** *(Scale 1-5)*
+- 1 = Very Poor
+- 2 = Poor
+- 3 = Average
+- 4 = Good
+- 5 = Excellent
+
+**6. Did you encounter any login issues?** *(Multiple choice)*
+- No issues
+- Password reset problems
+- Account lockout
+- Slow response time
+- Error messages
+- Other: ___________
+
+---
+
+### **Section 3: User Interface & Navigation**
+
+**7. How would you rate the overall interface design?** *(Scale 1-5)*
+- 1 = Very Poor
+- 2 = Poor
+- 3 = Average
+- 4 = Good
+- 5 = Excellent
+
+**8. Rate the ease of navigation between different modules** *(Scale 1-5)*
+- 1 = Very Difficult
+- 2 = Difficult
+- 3 = Neutral
+- 4 = Easy
+- 5 = Very Easy
+
+**9. How intuitive did you find the menu structure?** *(Scale 1-5)*
+- 1 = Very Confusing
+- 2 = Confusing
+- 3 = Neutral
+- 4 = Intuitive
+- 5 = Very Intuitive
+
+**10. Rate the visual clarity of buttons and icons** *(Scale 1-5)*
+- 1 = Very Poor
+- 2 = Poor
+- 3 = Average
+- 4 = Good
+- 5 = Excellent
+
+---
+
+### **Section 4: Core Functionality Testing**
+
+#### **A. Drainage Data Management** *(Admin/Field Staff)*
+
+**11. How easy was it to view drainage point information?** *(Scale 1-5)*
+- 1 = Very Difficult
+- 2 = Difficult
+- 3 = Neutral
+- 4 = Easy
+- 5 = Very Easy
+- N/A (Did not test this feature)
+
+**12. Rate the process of adding/updating drainage data** *(Scale 1-5)*
+- 1 = Very Difficult
+- 2 = Difficult
+- 3 = Neutral
+- 4 = Easy
+- 5 = Very Easy
+- N/A (Did not test this feature)
+
+#### **B. Mapping & GIS Functionality**
+
+**13. How well did the interactive map perform?** *(Scale 1-5)*
+- 1 = Very Poor
+- 2 = Poor
+- 3 = Average
+- 4 = Good
+- 5 = Excellent
+
+**14. Rate the map loading speed** *(Scale 1-5)*
+- 1 = Very Slow
+- 2 = Slow
+- 3 = Average
+- 4 = Fast
+- 5 = Very Fast
+
+**15. How useful were the map layers and filters?** *(Scale 1-5)*
+- 1 = Not Useful
+- 2 = Slightly Useful
+- 3 = Moderately Useful
+- 4 = Very Useful
+- 5 = Extremely Useful
+
+#### **C. Incident/Flood Reporting**
+
+**16. Rate the ease of reporting drainage issues** *(Scale 1-5)*
+- 1 = Very Difficult
+- 2 = Difficult
+- 3 = Neutral
+- 4 = Easy
+- 5 = Very Easy
+
+**17. How clear was the flood reporting form?** *(Scale 1-5)*
+- 1 = Very Confusing
+- 2 = Confusing
+- 3 = Neutral
+- 4 = Clear
+- 5 = Very Clear
+
+**18. Rate the photo upload functionality** *(Scale 1-5)*
+- 1 = Very Poor
+- 2 = Poor
+- 3 = Average
+- 4 = Good
+- 5 = Excellent
+- N/A (Did not use this feature)
+
+#### **D. Task Management** *(Admin/Field Staff)*
+
+**19. How effective was the task assignment process?** *(Scale 1-5)*
+- 1 = Very Ineffective
+- 2 = Ineffective
+- 3 = Neutral
+- 4 = Effective
+- 5 = Very Effective
+- N/A (Did not test this feature)
+
+**20. Rate the task status update functionality** *(Scale 1-5)*
+- 1 = Very Poor
+- 2 = Poor
+- 3 = Average
+- 4 = Good
+- 5 = Excellent
+- N/A (Did not test this feature)
+
+#### **E. User Management** *(Admin Only)*
+
+**21. How easy was it to manage user accounts?** *(Scale 1-5)*
+- 1 = Very Difficult
+- 2 = Difficult
+- 3 = Neutral
+- 4 = Easy
+- 5 = Very Easy
+- N/A (Did not test this feature)
+
+---
+
+### **Section 5: System Performance**
+
+**22. Rate the overall system response time** *(Scale 1-5)*
+- 1 = Very Slow
+- 2 = Slow
+- 3 = Average
+- 4 = Fast
+- 5 = Very Fast
+
+**23. Did you experience any system crashes or errors?** *(Multiple choice)*
+- No issues encountered
+- Occasional freezing
+- Error messages appeared
+- System crashed once
+- System crashed multiple times
+- Data loss occurred
+
+**24. How stable was the system during your testing?** *(Scale 1-5)*
+- 1 = Very Unstable
+- 2 = Unstable
+- 3 = Moderately Stable
+- 4 = Stable
+- 5 = Very Stable
+
+---
+
+### **Section 6: Mobile Responsiveness** *(If tested on mobile)*
+
+**25. Did you test the system on a mobile device?** *(Single choice)*
+- Yes, smartphone
+- Yes, tablet
+- No, desktop/laptop only
+
+**26. If yes, rate the mobile user experience** *(Scale 1-5)*
+- 1 = Very Poor
+- 2 = Poor
+- 3 = Average
+- 4 = Good
+- 5 = Excellent
+- N/A (Did not test on mobile)
+
+---
+
+### **Section 7: Feature Completeness**
+
+**27. Which features met your expectations?** *(Multiple choice)*
+- User authentication
+- Dashboard overview
+- Interactive mapping
+- Drainage data management
+- Incident reporting
+- Task management
+- User management
+- Report generation
+- Photo upload/gallery
+- Search and filter functions
+
+**28. Which features need improvement?** *(Multiple choice)*
+- User authentication
+- Dashboard overview
+- Interactive mapping
+- Drainage data management
+- Incident reporting
+- Task management
+- User management
+- Report generation
+- Photo upload/gallery
+- Search and filter functions
+- None - all features are satisfactory
+
+---
+
+### **Section 8: Overall Satisfaction**
+
+**29. Rate your overall satisfaction with the system** *(Scale 1-5)*
+- 1 = Very Dissatisfied
+- 2 = Dissatisfied
+- 3 = Neutral
+- 4 = Satisfied
+- 5 = Very Satisfied
+
+**30. How likely would you be to recommend this system?** *(Scale 1-5)*
+- 1 = Very Unlikely
+- 2 = Unlikely
+- 3 = Neutral
+- 4 = Likely
+- 5 = Very Likely
+
+**31. Does the system meet the intended objectives for drainage management?** *(Scale 1-5)*
+- 1 = Does not meet objectives at all
+- 2 = Meets few objectives
+- 3 = Meets some objectives
+- 4 = Meets most objectives
+- 5 = Fully meets all objectives
+
+---
+
+### **Section 9: Specific Issues & Suggestions**
+
+**32. What was the most challenging aspect of using the system?** *(Open text)*
+
+**33. What did you like most about the system?** *(Open text)*
+
+**34. List any bugs or technical issues you encountered** *(Open text)*
+
+**35. What additional features would you like to see?** *(Open text)*
+
+**36. Any other comments or suggestions for improvement?** *(Open text)*
+
+---
+
+### **Section 10: System Readiness**
+
+**37. In your opinion, is the system ready for deployment?** *(Single choice)*
+- Yes, ready for immediate deployment
+- Yes, ready with minor fixes
+- Needs moderate improvements before deployment
+- Needs major improvements before deployment
+- Not ready for deployment
+
+**38. What is your confidence level in using this system for actual drainage management operations?** *(Scale 1-5)*
+- 1 = No Confidence
+- 2 = Low Confidence
+- 3 = Moderate Confidence
+- 4 = High Confidence
+- 5 = Very High Confidence
+
+---
+
+**Thank you for participating in the User Acceptance Testing!**
+
+*Your feedback is valuable for improving the Centralized Drainage Information Management System for Muar District.*

@@ -1,11 +1,10 @@
 <?php
 header('Content-Type: application/json');
 
-// Database connection
 $host = 'localhost';
 $db = 'DrainageInventory';
 $user = 'root';
-$pass = ''; // Replace with your MySQL password
+$pass = ''; 
 
 $conn = new mysqli($host, $user, $pass, $db);
 

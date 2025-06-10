@@ -88,6 +88,15 @@ body {
   color: white !important;
   transform: translateY(-1px);
 }
+.nav-tabs .nav-link {
+  border-radius: 15px 15px 0 0;
+  border: none;
+  background: #808080 !important; /* Muted gray background */
+  margin-right: 0.5rem;
+  padding: 1rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
 
 .nav-link.active::after {
   content: "";

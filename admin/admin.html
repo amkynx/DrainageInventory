@@ -615,16 +615,18 @@
     async function loadDashboard() {
       try {
         // Fetch all data at once - FIXED: All use same path format
-        const [drainageData, floodData, inspectionData, usersData] = await Promise.all([
+        const [drainageData, floodData, inspectionData, usersData, floodProneData] = await Promise.all([
           fetchData('../api/drainage-points.php'),
           fetchData('../api/flood-reports.php'),
           fetchData('../api/inspection-schedules.php'),
-          fetchData('../api/users.php')
+          fetchData('../api/users.php'),
+          fetchData('../api/flood-prone-areas.php') // <-- Add this line
+
         ]);
         
         // Update dashboard with real data
-        updateStats(drainageData, floodData, inspectionData, usersData);
-        updateTables(drainageData, floodData);
+        updateStats(drainageData, floodData, inspectionData, usersData, floodProneData);
+                updateTables(drainageData, floodData);
         updateChart(drainageData);
         
         console.log('Dashboard loaded successfully');
@@ -652,35 +654,35 @@
     /**
      * Update all statistics cards - FIXED
      */
-    function updateStats(drainage, floods, inspections, users) {
-      // Ensure arrays
-      drainage = Array.isArray(drainage) ? drainage : [];
-      floods = Array.isArray(floods) ? floods : [];
-      inspections = Array.isArray(inspections) ? inspections : [];
-      users = Array.isArray(users) ? users : [];
-      
-      // Calculate stats - FIXED: Show total floods, not just recent
-      const stats = {
-        totalPoints: drainage.length,
-        goodStatus: drainage.filter(p => p.status === 'Good').length,
-        maintenanceNeeded: drainage.filter(p => p.status === 'Needs Maintenance').length,
-        criticalStatus: drainage.filter(p => p.status === 'Critical').length,
-        floodReports: floods.length, // FIXED: Show total, not just recent
-        floodProneAreas: floods.filter(f => f.severity === 'Severe' || f.severity === 'Extreme').length,
-        totalInspections: getMonthlyInspections(inspections),
-        totalUsers: users.length
-      };
-      
-      // Animate counters - FIXED: Use correct element IDs
-      animateCounter('total-points', stats.totalPoints);
-      animateCounter('good-status', stats.goodStatus);
-      animateCounter('maintenance-needed', stats.maintenanceNeeded);
-      animateCounter('critical-status', stats.criticalStatus);
-      animateCounter('flood-reports', stats.floodReports);
-      animateCounter('flood-prone-areas', stats.floodProneAreas);
-      animateCounter('total-inspections', stats.totalInspections);
-      animateCounter('total-users', stats.totalUsers);
-    }
+     function updateStats(drainage, floods, inspections, users, floodProneAreas) {
+  // Ensure arrays
+  drainage = Array.isArray(drainage) ? drainage : [];
+  floods = Array.isArray(floods) ? floods : [];
+  inspections = Array.isArray(inspections) ? inspections : [];
+  users = Array.isArray(users) ? users : [];
+  floodProneAreas = Array.isArray(floodProneAreas) ? floodProneAreas : [];
+
+  const stats = {
+    totalPoints: drainage.length,
+    goodStatus: drainage.filter(p => p.status === 'Good').length,
+    maintenanceNeeded: drainage.filter(p => p.status === 'Needs Maintenance').length,
+    criticalStatus: drainage.filter(p => p.status === 'Critical').length,
+    floodReports: floods.length,
+    floodProneAreas: floodProneAreas.length, // <-- Use the actual count
+    totalInspections: getMonthlyInspections(inspections),
+    totalUsers: users.length
+  };
+
+  // Animate counters - FIXED: Use correct element IDs
+  animateCounter('total-points', stats.totalPoints);
+  animateCounter('good-status', stats.goodStatus);
+  animateCounter('maintenance-needed', stats.maintenanceNeeded);
+  animateCounter('critical-status', stats.criticalStatus);
+  animateCounter('flood-reports', stats.floodReports);
+  animateCounter('flood-prone-areas', stats.floodProneAreas);
+  animateCounter('total-inspections', stats.totalInspections);
+  animateCounter('total-users', stats.totalUsers);
+}
     
     /**
      * Get inspections for current month

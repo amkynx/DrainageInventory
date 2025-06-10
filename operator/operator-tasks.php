@@ -295,6 +295,9 @@ function updateTaskStatus($pdo, $operatorId, $data) {
             $params = [$status];
             
             if ($status === 'Completed') {
+                $reportData = generateCompletionReport($pdo, $taskId, $taskCategory, $data);
+                notifyAdminNewReport($pdo, $taskId, $taskCategory, $operatorId);
+
                 $updateSql .= ", completion_date = NOW()";
             } elseif ($status === 'In Progress') {
                 $updateSql .= ", work_start_date = COALESCE(work_start_date, NOW())";
@@ -376,7 +379,108 @@ function updateTaskStatus($pdo, $operatorId, $data) {
         throw new Exception('Failed to update task: ' . $e->getMessage());
     }
 }
+function generateCompletionReport($pdo, $taskId, $taskCategory, $completionData) {
+    $additionalFields = [];
+    $additionalValues = [];
+    
+    // Add completion-specific fields
+    if (isset($completionData['work_summary'])) {
+        $additionalFields[] = "work_summary = ?";
+        $additionalValues[] = $completionData['work_summary'];
+    }
+    
+    if (isset($completionData['hours_worked'])) {
+        $additionalFields[] = "hours_worked = ?";
+        $additionalValues[] = $completionData['hours_worked'];
+    }
+    
+    if (isset($completionData['materials_used'])) {
+        $additionalFields[] = "materials_used = ?";
+        $additionalValues[] = $completionData['materials_used'];
+    }
+    
+    if (isset($completionData['completion_notes'])) {
+        $additionalFields[] = "completion_notes = ?";
+        $additionalValues[] = $completionData['completion_notes'];
+    }
+    
+    if (!empty($additionalFields)) {
+        if ($taskCategory === 'Maintenance') {
+            $sql = "UPDATE maintenance_requests SET " . implode(', ', $additionalFields) . " WHERE id = ?";
+        } else {
+            $sql = "UPDATE inspection_schedules SET " . implode(', ', $additionalFields) . " WHERE id = ?";
+        }
+        
+        $additionalValues[] = $taskId;
+        $pdo->prepare($sql)->execute($additionalValues);
+    }
+    
+    return true;
+}
 
+function notifyAdminNewReport($pdo, $taskId, $taskCategory, $operatorId) {
+    try {
+        // Get operator details
+        $operatorStmt = $pdo->prepare("SELECT first_name, last_name FROM users WHERE id = ?");
+        $operatorStmt->execute([$operatorId]);
+        $operator = $operatorStmt->fetch();
+        $operatorName = ($operator['first_name'] ?? '') . ' ' . ($operator['last_name'] ?? '');
+        
+        // Get task details
+        if ($taskCategory === 'Maintenance') {
+            $taskStmt = $pdo->prepare("
+                SELECT mr.request_number, mr.request_type, dp.name as location 
+                FROM maintenance_requests mr 
+                LEFT JOIN drainage_points dp ON mr.drainage_point_id = dp.id 
+                WHERE mr.id = ?
+            ");
+        } else {
+            $taskStmt = $pdo->prepare("
+                SELECT ins.schedule_number as request_number, ins.inspection_type as request_type, dp.name as location 
+                FROM inspection_schedules ins 
+                LEFT JOIN drainage_points dp ON ins.drainage_point_id = dp.id 
+                WHERE ins.id = ?
+            ");
+        }
+        
+        $taskStmt->execute([$taskId]);
+        $task = $taskStmt->fetch();
+        
+        // Get all admin users
+        $adminStmt = $pdo->prepare("SELECT id FROM users WHERE role = 'Admin'");
+        $adminStmt->execute();
+        $admins = $adminStmt->fetchAll();
+        
+        // Create notification for each admin
+        foreach ($admins as $admin) {
+            $notificationSql = "INSERT INTO admin_notifications 
+                               (admin_id, title, message, type, task_id, task_category, created_at, is_read) 
+                               VALUES (?, ?, ?, 'completion_report', ?, ?, NOW(), 0)";
+            
+            $title = "New Completion Report: " . ($task['request_number'] ?? "Task #$taskId");
+            $message = "$operatorName completed {$taskCategory} task at " . ($task['location'] ?? 'Unknown Location') . 
+                      ". Report ready for review.";
+            
+            $pdo->prepare($notificationSql)->execute([
+                $admin['id'], 
+                $title, 
+                $message, 
+                $taskId, 
+                $taskCategory
+            ]);
+        }
+        
+        // Log the notification
+        logOperatorActivity($pdo, $operatorId, 'report_generated', 
+                          "Generated completion report for $taskCategory task $taskId");
+        
+        return true;
+        
+    } catch (Exception $e) {
+        error_log("Failed to notify admin of new report: " . $e->getMessage());
+        return false; // Don't throw exception - notification failure shouldn't stop task completion
+    }
+}
 /**
  * Schedule a new inspection
  */
