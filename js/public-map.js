@@ -119,6 +119,48 @@ function handleMapClick(e) {
   }
 }
 
+async function uploadFloodImages(files) {
+  const uploadedUrls = [];
+  const maxFileSize = 5 * 1024 * 1024; // 5MB
+  const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+
+  // Validate files
+  for (let file of files) {
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error(
+        `Invalid file type: ${file.name}. Only JPG and PNG files are allowed.`
+      );
+    }
+    if (file.size > maxFileSize) {
+      throw new Error(`File too large: ${file.name}. Maximum size is 5MB.`);
+    }
+  }
+
+  // Upload each file
+  for (let file of files) {
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      // Send to upload-image.php
+      const response = await fetch("../api/upload-image.php", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        uploadedUrls.push(`/${result.url}`);
+      }
+    } catch (error) {
+      console.error(`Failed to upload ${file.name}:`, error);
+    }
+  }
+
+  return uploadedUrls;
+}
+
 function handleLocationPick(e) {
   const lat = e.latlng.lat.toFixed(6);
   const lng = e.latlng.lng.toFixed(6);
@@ -299,76 +341,124 @@ function createPublicMarkerIcon(status) {
 
 function createPublicPopupContent(point) {
   const statusClass = getStatusBadgeClass(point.status);
+  let imagesHtml = "";
 
-  // Parse images for preview
+  // Parse and handle images
   let images = [];
   if (point.images) {
     try {
-      if (typeof point.images === "string" && point.images.startsWith("[")) {
-        images = JSON.parse(point.images);
+      // Handle string URLs separated by spaces
+      if (typeof point.images === "string") {
+        if (point.images.startsWith("http") || point.images.startsWith("/")) {
+          // Single URL or multiple URLs separated by spaces
+          images = point.images.split(" ").filter((url) => url.trim());
+        } else {
+          // Try parsing as JSON
+          try {
+            const parsed = JSON.parse(point.images);
+            images = Array.isArray(parsed) ? parsed : [parsed];
+          } catch (e) {
+            // If JSON parsing fails, treat as single URL
+            images = [point.images];
+          }
+        }
       } else if (Array.isArray(point.images)) {
+        // Already an array
         images = point.images;
-      } else if (typeof point.images === "string") {
-        images = point.images.split(" ").filter((url) => url.trim());
       }
+
+      // Clean up URLs and filter out empty ones
+      images = images
+        .map((url) => url.trim())
+        .filter((url) => url && url.length > 0)
+        .map((url) => {
+          // Ensure URL starts with proper path
+          if (!url.startsWith("http") && !url.startsWith("/")) {
+            return `/DrainageInventory/${url}`;
+          }
+          return url;
+        });
     } catch (e) {
-      console.error("Error parsing images:", e);
+      console.error("Error parsing images for point", point.id, e);
       images = [];
     }
   }
 
-  const imagePreview =
-    images.length > 0
-      ? `
-    <div class="popup-image-preview mb-2">
-      <img src="${images[0]}" 
-           style="width: 100%; height: 120px; object-fit: cover; border-radius: 5px; cursor: pointer;"
-           onclick="showPointDetails('${point.id}')"
-           alt="Drainage point preview">
-      ${
-        images.length > 1
-          ? `<div class="image-count-badge">${images.length} photos</div>`
-          : ""
-      }
-    </div>
-  `
-      : "";
+  // Create image carousel if there are images
+  if (images && images.length > 0) {
+    imagesHtml = `
+        <div class="popup-image-carousel mb-3">
+          <div class="carousel slide" id="carousel-${
+            point.id
+          }" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              ${images
+                .map(
+                  (img, index) => `
+                <div class="carousel-item ${
+                  index === 0 ? "active" : ""
+                }" style="height: 200px;">
+                  <div class="portrait-image-container">
+                    <img src="${img}" 
+                         class="d-block w-100" 
+                         style="object-fit: contain; height: 100%; max-height: 200px;"
+                         alt="Drainage point image ${index + 1}"
+                         onerror="this.onerror=null; this.src='/DrainageInventory/images/no-image.png';">
+                  </div>
+                </div>
+              `
+                )
+                .join("")}
+            </div>
+            ${
+              images.length > 1
+                ? `
+              <button class="carousel-control-prev" type="button" data-bs-target="#carousel-${point.id}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carousel-${point.id}" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            `
+                : ""
+            }
+          </div>
+        </div>
+      `;
+  }
 
+  // Rest of your popup content...
   return `
-    <div class="popup-content">
-      ${imagePreview}
-      <h5><i class="fas fa-map-pin me-2"></i>${point.name}</h5>
-      <div class="mb-2">
-        <span class="badge ${statusClass}">${point.status}</span>
+      <div class="popup-content">
+        ${imagesHtml}
+        <h5><i class="fas fa-map-pin me-2"></i>${point.name}</h5>
+        <div class="mb-2">
+          <span class="badge ${statusClass}">${point.status}</span>
+        </div>
+        <div class="property-row">
+          <div class="property-label">Type:</div>
+          <div>${point.type}</div>
+        </div>
+        <div class="property-row">
+          <div class="property-label">Depth:</div>
+          <div>${point.depth}m</div>
+        </div>
+        <div class="property-row">
+          <div class="property-label">Description:</div>
+          <div>${point.description || "No description available"}</div>
+        </div>
+        <div class="text-center mt-3">
+          <button class="btn btn-sm btn-primary view-details-btn" data-id="${
+            point.id
+          }">
+            <i class="fas fa-eye me-1"></i>View Details
+          </button>
+        </div>
       </div>
-      <div class="property-row">
-        <div class="property-label">Type:</div>
-        <div>${point.type}</div>
-      </div>
-      <div class="property-row">
-        <div class="property-label">Depth:</div>
-        <div>${point.depth}m</div>
-      </div>
-      <div class="property-row">
-        <div class="property-label">Description:</div>
-        <div>${point.description || "No description available"}</div>
-      </div>
-      <div class="text-center mt-3">
-        <button class="btn btn-sm btn-primary view-details-btn" data-id="${
-          point.id
-        }">
-          <i class="fas fa-eye me-1"></i>View Details
-        </button>
-        <button class="btn btn-sm btn-warning ms-1" onclick="reportPointIssue('${
-          point.id
-        }')">
-          <i class="fas fa-flag me-1"></i>Report Issue
-        </button>
-      </div>
-    </div>
-  `;
+    `;
 }
-
 function setupPublicPopupHandlers(pointId) {
   const detailsBtn = document.querySelector(".view-details-btn");
   if (detailsBtn) {

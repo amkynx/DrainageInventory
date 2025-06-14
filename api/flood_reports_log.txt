@@ -22286,3 +22286,2072 @@ Successfully fetched 8 reports
 2025-06-10 20:19:05 - GET request
 Database connection successful
 Successfully fetched 8 reports
+2025-06-10 20:20:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:20:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:21:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:21:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:22:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:22:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:23:05 - GET request
+2025-06-10 20:23:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+Successfully fetched 8 reports
+2025-06-10 20:24:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:24:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:25:05 - GET request
+2025-06-10 20:25:05 - GET request
+Database connection successful
+Database connection successful
+Successfully fetched 8 reports
+Successfully fetched 8 reports
+2025-06-10 20:26:02 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:26:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:27:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:28:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:29:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:30:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:31:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:32:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:33:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:34:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:35:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:36:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:37:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:38:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:39:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:40:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:41:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:42:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:43:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:44:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:45:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:46:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:47:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:48:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:49:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:50:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:51:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:52:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:53:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:54:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:55:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:56:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:57:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:58:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 20:59:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:00:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:01:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:02:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:03:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:04:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:05:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:06:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:07:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:08:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:09:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:10:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:11:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:12:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:13:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:14:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:15:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:16:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:17:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:18:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:19:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:20:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:21:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:21:14 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:22:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:23:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:24:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:25:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:26:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:27:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:28:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:29:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:30:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:31:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:32:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:33:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:34:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:35:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:35:12 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:36:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:37:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:38:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:39:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:40:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:41:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:42:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:43:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:44:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:45:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:46:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:47:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:48:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:49:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:50:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:51:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:52:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:53:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:54:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:55:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:56:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:57:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:58:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 21:59:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:00:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:01:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:01:20 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:02:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:02:20 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:03:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:03:20 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:04:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:04:20 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:04:57 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:05:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:05:21 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:05:58 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:06:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:06:21 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:06:58 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:07:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:07:21 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:07:58 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:08:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:08:58 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:09:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:09:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:09:58 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:10:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:10:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:10:58 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:11:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:11:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:12:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:12:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:12:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:13:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:13:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:13:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:14:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:14:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:14:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:15:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:15:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:15:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:16:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:16:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:16:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:17:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:17:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:17:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:18:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:18:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:19:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:19:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:20:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:20:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:21:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:21:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:22:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:22:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:23:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:23:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:24:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:24:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:25:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:25:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:26:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:26:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:26:41 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:26:46 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:27:11 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:27:21 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:27:43 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:29:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:29:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:30:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:30:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:31:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:31:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:32:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:32:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:33:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:33:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:34:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:34:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:35:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:35:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:36:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:36:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:37:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:37:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:38:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:38:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:39:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:39:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:40:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:40:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:41:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:41:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:42:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:42:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:43:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:43:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:44:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:44:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:45:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:45:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:46:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:46:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:47:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:47:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:48:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:48:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:49:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:49:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:50:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:50:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:51:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:51:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:52:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:52:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:53:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:53:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:54:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:54:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:55:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:55:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:56:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:56:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:57:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:57:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:58:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:58:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:59:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 22:59:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:00:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:00:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:01:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:01:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:02:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:02:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:03:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:03:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:04:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:04:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:05:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:05:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:06:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:06:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:07:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:07:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:08:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:08:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:09:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:09:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:10:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:10:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:11:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:11:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:12:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:12:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:13:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:13:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:14:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:14:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:15:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:15:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:16:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:16:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:17:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:17:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:18:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:18:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:19:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:19:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:20:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:20:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:21:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:21:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:22:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:22:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:23:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:23:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:24:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:24:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:25:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:25:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:26:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:26:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:27:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:27:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:28:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:28:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:29:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:29:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:30:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:30:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:31:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:31:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:32:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:32:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:33:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:33:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:34:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:34:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:35:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:35:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:36:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:36:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:37:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:37:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:38:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:38:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:39:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:39:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:40:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:40:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:41:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:41:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:42:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:42:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:43:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:43:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:44:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:44:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:45:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:45:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:46:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:46:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:47:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:47:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:48:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:48:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:49:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:49:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:50:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:50:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:51:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:51:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:52:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:52:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:53:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:53:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:54:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:54:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:55:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:55:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:56:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:56:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:57:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:57:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:58:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:58:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:59:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-10 23:59:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:00:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:00:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:01:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:01:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:02:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:02:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:03:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:03:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:04:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:04:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:05:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:05:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:06:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:06:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:07:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:07:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:08:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:08:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:09:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:09:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:10:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:10:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:11:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:11:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:12:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:12:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:13:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:13:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:14:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:14:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:15:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:15:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:16:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:16:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:17:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:17:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:18:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:18:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:19:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:19:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:20:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:20:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:21:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:21:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:22:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:22:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:23:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:23:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:24:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:24:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:25:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:25:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:26:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:26:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:27:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:27:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:28:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:28:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:29:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:29:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:30:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:30:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:31:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:31:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:32:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:32:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:33:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:33:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:34:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:34:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:35:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:35:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:36:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:36:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:37:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:37:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:38:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:38:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:39:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:39:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:40:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:40:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:41:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:41:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:42:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:42:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:43:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:43:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:44:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:44:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:45:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:45:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:46:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:46:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:47:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:47:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:48:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:48:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:49:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:49:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:50:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:50:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:51:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:51:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:52:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:52:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:53:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:53:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:54:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:54:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:55:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:55:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:56:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:56:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:57:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:57:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:58:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:58:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:59:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 00:59:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:00:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:00:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:01:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:01:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:02:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:02:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:03:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:03:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:04:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:04:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:05:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:05:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:06:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:06:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:07:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:07:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:08:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:08:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:09:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:09:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:10:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:10:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:11:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:11:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:12:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:12:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:13:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:13:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:14:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:14:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:15:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:15:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:16:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:16:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:17:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:17:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:18:06 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:18:06 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:19:06 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:19:06 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:20:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:20:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:21:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:21:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:22:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:23:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:23:26 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:24:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:25:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:25:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:26:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:26:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:27:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:27:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:28:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:28:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:29:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:29:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:30:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:30:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:31:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:31:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:32:06 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:32:07 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:33:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:33:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:34:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:34:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:35:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:35:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:36:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:36:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:37:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:37:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:38:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:38:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:39:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:39:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:40:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:40:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:41:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:41:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:42:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:42:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:43:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:43:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:44:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:44:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:45:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:45:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:46:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:46:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:47:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:47:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:48:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:48:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:49:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:49:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:50:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:50:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:51:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:51:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:52:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:52:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:53:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:53:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:54:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:54:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:55:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:55:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:56:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:56:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:57:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:57:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:58:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 01:58:05 - GET request
+Database connection successful
+Successfully fetched 8 reports
+2025-06-11 22:15:41 - POST request
+Database connection successful
+POST input: {"location":"2.047150, 102.604914","severity":"Minor","water_depth":20,"description":"Water overflow","reporter_name":"ali","reporter_contact":"01145781245","timestamp":"2025-06-11T20:15:41.275Z","source":"public_web","coordinates":[2.04715,102.604914],"images":"[\"/uploads/6849e3ed588ab_james-lee-BMO1SzQHWRs-unsplash.jpg\"]"}
+SQL Query: INSERT INTO flood_reports (
+                        location, 
+                        latitude, 
+                        longitude, 
+                        severity, 
+                        water_depth, 
+                        description, 
+                        contact, 
+                        images, 
+                        status,
+                        timestamp
+                    ) VALUES (
+                        '2.047150, 102.604914', 
+                        2.04715, 
+                        102.604914, 
+                        'Minor', 
+                        20, 
+                        'Water overflow', 
+                        '', 
+                        '[\"/uploads/6849e3ed588ab_james-lee-BMO1SzQHWRs-unsplash.jpg\"]',
+                        'pending',
+                        NOW()
+                    )
+Report created successfully with ID: 10
+2025-06-11 22:15:59 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:16:23 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:20:59 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:21:30 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:21:32 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:22:04 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:22:07 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:22:24 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:22:32 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:23:08 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:23:38 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:24:08 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:24:16 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:24:22 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:24:52 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:25:06 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:32:34 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:33:34 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:34:34 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:35:34 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:36:34 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:37:34 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:38:18 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:39:19 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:46:07 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:47:06 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:48:06 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:49:06 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:50:06 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:51:06 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:52:06 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:53:06 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:54:06 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:55:06 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:56:06 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:56:50 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:57:50 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:58:50 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 22:59:36 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 23:00:35 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 23:01:35 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 23:02:18 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 23:03:18 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 23:03:50 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-11 23:04:49 - GET request
+Database connection successful
+Successfully fetched 9 reports
+2025-06-12 02:50:03 - POST request
+Database connection successful
+POST input: {"location":"2.047570, 102.605782","severity":"Moderate","water_depth":20,"description":"test mobile flood report","reporter_name":"Amar","reporter_contact":"0127969166","timestamp":"2025-06-12T00:49:55.078Z","source":"public_web","coordinates":[2.04757,102.605782],"images":"[\"/uploads/684a243b0b2a3_image.jpg\"]"}
+SQL Query: INSERT INTO flood_reports (
+                        location, 
+                        latitude, 
+                        longitude, 
+                        severity, 
+                        water_depth, 
+                        description, 
+                        contact, 
+                        images, 
+                        status,
+                        timestamp
+                    ) VALUES (
+                        '2.047570, 102.605782', 
+                        2.04757, 
+                        102.605782, 
+                        'Moderate', 
+                        20, 
+                        'test mobile flood report', 
+                        '', 
+                        '[\"/uploads/684a243b0b2a3_image.jpg\"]',
+                        'pending',
+                        NOW()
+                    )
+Report created successfully with ID: 11
+2025-06-12 02:50:48 - GET request
+Database connection successful
+Successfully fetched 10 reports
+2025-06-12 02:53:17 - GET request
+Database connection successful
+Successfully fetched 10 reports
+2025-06-12 02:53:31 - GET request
+Database connection successful
+Successfully fetched 10 reports
+2025-06-12 02:53:59 - GET request
+Database connection successful
+Successfully fetched 10 reports
+2025-06-12 02:54:22 - GET request
+Database connection successful
+Successfully fetched 10 reports
+2025-06-12 02:55:24 - GET request
+Database connection successful
+Successfully fetched 10 reports
+2025-06-12 02:56:23 - GET request
+Database connection successful
+Successfully fetched 10 reports
+2025-06-12 02:56:40 - GET request
+Database connection successful
+Successfully fetched 10 reports
+2025-06-12 02:57:23 - GET request
+Database connection successful
+Successfully fetched 10 reports
+2025-06-12 02:58:04 - GET request
+Database connection successful
+Successfully fetched 10 reports
+2025-06-12 02:58:16 - GET request
+Database connection successful
+Successfully fetched 10 reports
+2025-06-12 02:58:23 - GET request
+Database connection successful
+Successfully fetched 10 reports
+2025-06-12 02:59:23 - GET request
+Database connection successful
+Successfully fetched 10 reports
+2025-06-12 03:00:23 - GET request
+Database connection successful
+Successfully fetched 10 reports
+2025-06-12 19:16:54 - POST request
+Database connection successful
+POST input: {"location":"2.048823, 102.589869","severity":"Moderate","water_depth":2,"description":"test","reporter_name":"test","reporter_contact":"test","timestamp":"2025-06-12T17:16:54.662Z","source":"public_web","coordinates":[2.048823,102.589869],"images":"[\"/uploads/684b0b86a4a37_BB7-1.png\"]"}
+SQL Query: INSERT INTO flood_reports (
+                        location, 
+                        latitude, 
+                        longitude, 
+                        severity, 
+                        water_depth, 
+                        description, 
+                        contact, 
+                        images, 
+                        status,
+                        timestamp
+                    ) VALUES (
+                        '2.048823, 102.589869', 
+                        2.048823, 
+                        102.589869, 
+                        'Moderate', 
+                        2, 
+                        'test', 
+                        '', 
+                        '[\"/uploads/684b0b86a4a37_BB7-1.png\"]',
+                        'pending',
+                        NOW()
+                    )
+Report created successfully with ID: 12
+2025-06-12 19:17:16 - GET request
+Database connection successful
+Successfully fetched 11 reports
+2025-06-12 19:17:23 - GET request
+Database connection successful
+Successfully fetched 11 reports
+2025-06-12 19:18:23 - GET request
+Database connection successful
+Successfully fetched 11 reports
+2025-06-12 19:19:23 - GET request
+Database connection successful
+Successfully fetched 11 reports
+2025-06-12 19:20:23 - GET request
+Database connection successful
+Successfully fetched 11 reports
+2025-06-14 20:55:49 - GET request
+Database connection successful
+Successfully fetched 11 reports
+2025-06-14 21:43:57 - GET request
+Database connection successful
+Successfully fetched 11 reports

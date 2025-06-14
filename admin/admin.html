@@ -325,9 +325,6 @@
               <i class="fas fa-user-circle me-1"></i><span id="userName">Admin</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
-              <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
-              <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
             </ul>
           </div>
@@ -447,7 +444,6 @@
                       <th>Status</th>
                       <th>Depth</th>
                       <th>Added</th>
-                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -725,14 +721,7 @@
           <td><span class="badge ${getStatusClass(point.status)}">${point.status}</span></td>
           <td>${point.depth || 0}m</td>
           <td>${point.last_updated}</td>
-          <td>
-            <button class="btn btn-sm btn-primary" onclick="viewPoint('${point.id}')">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="btn btn-sm btn-warning" onclick="editPoint('${point.id}')">
-              <i class="fas fa-edit"></i>
-            </button>
-          </td>
+          
         </tr>
       `).join('');
     }

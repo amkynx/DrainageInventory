@@ -280,6 +280,53 @@
         font-size: 0.75rem;
       }
     }
+    .report-images-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 1rem;
+    }
+
+    .report-image-item {
+        aspect-ratio: 1;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid #e9ecef;
+    }
+
+    .report-image-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .image-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .image-modal-content {
+        max-width: 90%;
+        max-height: 90vh;
+        position: relative;
+    }
+
+    .image-modal-content img {
+        max-width: 100%;
+        max-height: 90vh;
+        object-fit: contain;
+    }
+
   </style>
 </head>
 <body>
@@ -307,7 +354,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link" href="admin.html">
+            <a class="nav-link active" href="admin.html">
               <i class="fas fa-tachometer-alt me-1"></i>Dashboard
             </a>
           </li>
@@ -317,7 +364,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="flood-report.html">
+            <a class="nav-link" href="flood-report.html">
               <i class="fas fa-exclamation-triangle me-1"></i>Flood Reports
             </a>
           </li>
@@ -338,9 +385,6 @@
               <i class="fas fa-user-circle me-1"></i><span id="userName">Admin</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
-              <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
-              <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
             </ul>
           </div>
@@ -396,7 +440,7 @@
       </div>
 
       <!-- Export and Bulk Actions -->
-      <div class="export-section animate-fade-in">
+     <!-- <div class="export-section animate-fade-in">
         <div class="row align-items-center">
           <div class="col-md-6">
             <h6 class="mb-0">
@@ -416,7 +460,7 @@
             </button>
           </div>
         </div>
-      </div>
+      </div>-->
 
       <!-- Bulk Actions Bar -->
       <div class="bulk-actions animate-fade-in" id="bulk-actions">
@@ -484,7 +528,6 @@
                 <option value="today">Today</option>
                 <option value="week">This Week</option>
                 <option value="month">This Month</option>
-                <option value="custom">Custom Range</option>
               </select>
             </div>
           </div>
@@ -595,6 +638,12 @@
         </div>
         <div class="modal-body" id="reportDetailsContent">
           <!-- Report details will be loaded here -->
+           <div class="col-12 mt-4">
+        <h6 class="text-primary">Submitted Photos</h6>
+        <div class="report-images-container" id="reportImages">
+            <!-- Images will be loaded here -->
+        </div>
+    </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -1216,6 +1265,24 @@
       if (!report) return;
       
       currentReportId = reportId;
+
+      let images = [];
+      if (report.images) {
+        try {
+            // Parse images and ensure proper path
+            const parsedImages = JSON.parse(report.images);
+            images = parsedImages.map(img => {
+                // Add base path if not present
+                return img.startsWith('/') ? 
+                    `/DrainageInventory${img}` : 
+                    `/DrainageInventory/uploads/${img}`;
+            });
+        } catch (e) {
+            console.error('Error parsing images:', e);
+            const imageArray = report.images.split(',').filter(img => img.trim());
+            images = imageArray.map(img => `/DrainageInventory/uploads/${img}`);
+        }
+    }
       
       const modalContent = document.getElementById('reportDetailsContent');
       modalContent.innerHTML = `
@@ -1239,6 +1306,30 @@
             <div class="border rounded p-3 mb-3" style="background-color: #f8f9fa;">
               ${report.description}
             </div>
+            ${images.length > 0 ? `
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h6 class="text-primary">Submitted Photos</h6>
+                    <div class="report-images-grid">
+                        ${images.map((img, index) => `
+                            <div class="report-image-item">
+                                <img src="${img}" 
+                                     alt="Report photo ${index + 1}"
+                                     onclick="showFullImage('${img}')"
+                                     onerror="this.src='../images/image.png'">
+                                     loading="lazy">
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        ` : `
+            <div class="text-muted text-center mt-4">
+                <i class="fas fa-image fa-2x mb-2"></i>
+                <p>No images submitted with this report</p>
+            </div>
+        `}
+    
             
             <h6 class="text-primary">Location Map</h6>
             <div id="detailMap" style="height: 200px; border-radius: 10px;"></div>
@@ -1258,7 +1349,19 @@
         }
       }, 500);
     }
-
+function showFullImage(imgSrc) {
+    const modal = document.createElement('div');
+    modal.className = 'image-modal';
+    modal.innerHTML = `
+        <div class="image-modal-content">
+            <img src="${imgSrc}" alt="Full size image">
+            <button class="close-btn" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
     async function updateReportStatus(reportId, newStatus) {
       try {
         const response = await fetch('/DrainageInventory/api/flood-reports.php', {

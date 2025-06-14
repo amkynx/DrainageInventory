@@ -483,9 +483,6 @@
               <i class="fas fa-user-circle me-1"></i><span id="userName">Operator</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
-              <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
-              <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
             </ul>
           </div>
@@ -688,23 +685,6 @@
             </div>
           </div>
 
-          <!-- Recent Activities -->
-          <div class="card dashboard-card animate-fade-in">
-            <div class="card-header-custom">
-              <i class="fas fa-history"></i>
-              Recent Activities
-            </div>
-            <div class="card-body">
-              <div id="recent-activities-list">
-                <div class="text-center py-3">
-                  <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- Notifications -->
           <div class="card dashboard-card animate-fade-in">
             <div class="card-header-custom">
@@ -723,6 +703,25 @@
             </div>
           </div>
 
+
+          <!-- Recent Activities -->
+          <div class="card dashboard-card animate-fade-in">
+            <div class="card-header-custom">
+              <i class="fas fa-history"></i>
+              Recent Activities
+            </div>
+            <div class="card-body">
+              <div id="recent-activities-list">
+                <div class="text-center py-3">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          
           <!-- Performance Summary -->
           <div class="card dashboard-card animate-fade-in">
             <div class="card-header-custom">
@@ -988,8 +987,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   
   <script>
-    // Global variables - Using same pattern as operator-map.html
-    let currentUser = null;
+     // Global variables - Using same pattern as operator-map.html
+     let currentUser = null;
     let operatorTasks = []; // Main array for user's tasks
     let operatorStats = {};
     let operatorNotifications = [];
@@ -1113,11 +1112,57 @@
         const result = await response.json();
         operatorTasks = result.success ? (result.tasks || []) : [];
         
+        // Sort tasks by nearest due date
+        operatorTasks = sortTasksByDueDate(operatorTasks);
+        
         console.log('Loaded operator tasks:', operatorTasks.length);
       } catch (error) {
         console.error('Error loading operator tasks:', error);
         operatorTasks = [];
       }
+    }
+
+    /**
+     * Sort tasks by nearest due date (pending/in-progress first, then by date)
+     */
+    function sortTasksByDueDate(tasks) {
+      return tasks.sort((a, b) => {
+        // First, prioritize non-completed tasks
+        const aCompleted = a.status === 'Completed';
+        const bCompleted = b.status === 'Completed';
+        
+        if (aCompleted && !bCompleted) return 1;
+        if (!aCompleted && bCompleted) return -1;
+        
+        // Then sort by due date
+        const aDate = new Date(a.scheduled_date || a.due_date || '9999-12-31');
+        const bDate = new Date(b.scheduled_date || b.due_date || '9999-12-31');
+        
+        // For overdue tasks, show them first
+        const today = new Date();
+        const aOverdue = aDate < today && !aCompleted;
+        const bOverdue = bDate < today && !bCompleted;
+        
+        if (aOverdue && !bOverdue) return -1;
+        if (!aOverdue && bOverdue) return 1;
+        
+        // Finally sort by date
+        return aDate - bDate;
+      });
+    }
+
+    /**
+     * Get active (non-completed) tasks
+     */
+    function getActiveTasks() {
+      return operatorTasks.filter(task => task.status !== 'Completed');
+    }
+
+    /**
+     * Get completed tasks
+     */
+    function getCompletedTasks() {
+      return operatorTasks.filter(task => task.status === 'Completed');
     }
 
     /**
@@ -1139,19 +1184,45 @@
     /**
      * Load operator notifications - Same as operator-map.html
      */
-    async function loadOperatorNotifications() {
-      try {
-        const response = await fetch(`operator-notifications.php?operator_id=${currentUser.id}`);
-        if (!response.ok) throw new Error('Failed to fetch notifications');
-        
-        const data = await response.json();
-        operatorNotifications = Array.isArray(data) ? data : [];
-      } catch (error) {
-        console.error('Error loading notifications:', error);
-        operatorNotifications = [];
-      }
+     async function loadOperatorNotifications() {
+  try {
+    console.log('Loading notifications for operator:', currentUser.id);
+    
+    const response = await fetch(`operator-notifications.php?operator_id=${currentUser.id}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
-
+    
+    const data = await response.json();
+    console.log('Raw notification response:', data);
+    
+    // Handle different response formats
+    if (data.success && Array.isArray(data.notifications)) {
+      operatorNotifications = data.notifications;
+    } else if (data.success && Array.isArray(data.data)) {
+      operatorNotifications = data.data;
+    } else if (Array.isArray(data)) {
+      operatorNotifications = data;
+    } else {
+      console.warn('Unexpected notification data format:', data);
+      operatorNotifications = [];
+    }
+    
+    console.log('Processed notifications:', operatorNotifications);
+    
+    // Generate sample notifications if none exist (for testing)
+    if (operatorNotifications.length === 0) {
+      operatorNotifications = generateSampleNotifications();
+      console.log('Generated sample notifications:', operatorNotifications);
+    }
+    
+  } catch (error) {
+    console.error('Error loading notifications:', error);
+    // Generate sample notifications for testing
+    operatorNotifications = generateSampleNotifications();
+  }
+}
     /**
      * Load drainage points
      */
@@ -1177,12 +1248,15 @@
      * Update dashboard display with operator data - Safe element handling
      */
     function updateDashboardDisplay() {
+      // Get active tasks for statistics
+      const activeTasks = getActiveTasks();
+      
       // Update statistics - safely handle missing elements
       const statElements = {
-        'stat-pending': operatorStats.pending || 0,
-        'stat-progress': operatorStats.in_progress || 0,
+        'stat-pending': activeTasks.filter(t => t.status === 'Pending' || t.status === 'Scheduled').length,
+        'stat-progress': activeTasks.filter(t => t.status === 'In Progress').length,
         'stat-completed': operatorStats.completed_today || 0,
-        'stat-overdue': operatorStats.overdue || 0
+        'stat-overdue': activeTasks.filter(t => new Date(t.scheduled_date) < new Date()).length
       };
 
       Object.entries(statElements).forEach(([id, value]) => {
@@ -1203,20 +1277,23 @@
      * Update statistics based on operatorTasks
      */
     function updateStatistics() {
-      const totalTasks = operatorTasks.length;
-      const pendingTasks = operatorTasks.filter(t => t.status === 'Pending' || t.status === 'Scheduled').length;
-      const inProgressTasks = operatorTasks.filter(t => t.status === 'In Progress').length;
-      const inspectionTasks = operatorTasks.filter(t => t.task_category === 'Inspection').length;
-      const completedTasks = operatorTasks.filter(t => t.status === 'Completed').length;
-      const overdueTasks = operatorTasks.filter(t => 
-        new Date(t.scheduled_date) < new Date() && t.status !== 'Completed'
+      const activeTasks = getActiveTasks();
+      const completedTasks = getCompletedTasks();
+      
+      const totalActiveTasks = activeTasks.length;
+      const pendingTasks = activeTasks.filter(t => t.status === 'Pending' || t.status === 'Scheduled').length;
+      const inProgressTasks = activeTasks.filter(t => t.status === 'In Progress').length;
+      const inspectionTasks = activeTasks.filter(t => t.task_category === 'Inspection').length;
+      const totalCompletedTasks = completedTasks.length;
+      const overdueTasks = activeTasks.filter(t => 
+        new Date(t.scheduled_date) < new Date()
       ).length;
 
-      animateCounter('total-tasks', totalTasks);
+      animateCounter('total-tasks', totalActiveTasks);
       animateCounter('pending-tasks', pendingTasks);
       animateCounter('in-progress-tasks', inProgressTasks);
       animateCounter('inspection-tasks', inspectionTasks);
-      animateCounter('completed-tasks', completedTasks);
+      animateCounter('completed-tasks', totalCompletedTasks);
       animateCounter('overdue-tasks', overdueTasks);
     }
 
@@ -1228,13 +1305,14 @@
       if (!container) return;
       
       const today = new Date().toISOString().split('T')[0];
-      const todayTasks = operatorTasks.filter(task => task.scheduled_date === today);
+      const activeTasks = getActiveTasks();
+      const todayTasks = activeTasks.filter(task => task.scheduled_date === today);
       
       if (todayTasks.length === 0) {
         container.innerHTML = `
           <div class="text-center text-muted py-4">
             <i class="fas fa-calendar-check fa-3x mb-3"></i>
-            <p>No tasks assigned to me for today</p>
+            <p>No active tasks assigned to me for today</p>
           </div>
         `;
         return;
@@ -1288,86 +1366,101 @@
     function updateTaskCount() {
       const taskCountElement = document.getElementById('user-task-count');
       if (taskCountElement) {
-        taskCountElement.textContent = operatorTasks.length;
+        taskCountElement.textContent = getActiveTasks().length;
       }
     }
 
     /**
-     * Display operator tasks in sidebar - Same as operator-map.html
+     * Display operator tasks in sidebar - Updated to separate active and completed tasks
      */
     function displayOperatorTasks() {
-      const allTasks = operatorTasks;
-      const maintenanceTasks = operatorTasks.filter(t => t.task_category === 'Maintenance');
-      const inspectionTasks = operatorTasks.filter(t => t.task_category === 'Inspection');
-      const todayTasks = operatorTasks.filter(t => {
+      const activeTasks = getActiveTasks();
+      const completedTasks = getCompletedTasks();
+      
+      const activeMaintenanceTasks = activeTasks.filter(t => t.task_category === 'Maintenance');
+      const activeInspectionTasks = activeTasks.filter(t => t.task_category === 'Inspection');
+      const todayActiveTasks = activeTasks.filter(t => {
         const today = new Date().toISOString().split('T')[0];
         return t.scheduled_date === today;
       });
 
+      // Display active tasks in main sections
       const allTasksList = document.getElementById('all-tasks-list');
       const maintenanceTasksList = document.getElementById('maintenance-tasks-list');
       const inspectionTasksList = document.getElementById('inspection-tasks-list');
       const todayTasksList = document.getElementById('today-tasks-list');
+      const completedTasksList = document.getElementById('completed-tasks-list');
 
       if (allTasksList) {
-        allTasksList.innerHTML = renderTasksList(allTasks, 'No tasks assigned to me');
+        allTasksList.innerHTML = renderTasksList(activeTasks, 'No active tasks assigned to me');
       }
       if (maintenanceTasksList) {
-        maintenanceTasksList.innerHTML = renderTasksList(maintenanceTasks, 'No maintenance tasks assigned to me');
+        maintenanceTasksList.innerHTML = renderTasksList(activeMaintenanceTasks, 'No active maintenance tasks assigned to me');
       }
       if (inspectionTasksList) {
-        inspectionTasksList.innerHTML = renderTasksList(inspectionTasks, 'No inspection tasks assigned to me');
+        inspectionTasksList.innerHTML = renderTasksList(activeInspectionTasks, 'No active inspection tasks assigned to me');
       }
       if (todayTasksList) {
-        todayTasksList.innerHTML = renderTasksList(todayTasks, 'No tasks assigned to me for today');
+        todayTasksList.innerHTML = renderTasksList(todayActiveTasks, 'No active tasks assigned to me for today');
+      }
+      
+      // Display completed tasks in separate section
+      if (completedTasksList) {
+        completedTasksList.innerHTML = renderTasksList(completedTasks, 'No completed tasks yet', true);
       }
     }
 
     /**
-     * Render tasks list
+     * Render tasks list - Updated to handle completed tasks styling
      */
-    function renderTasksList(tasks, emptyMessage = 'No tasks found') {
+    function renderTasksList(tasks, emptyMessage = 'No tasks found', isCompleted = false) {
       if (!tasks || tasks.length === 0) {
         return `<p class="text-muted text-center py-4">${emptyMessage}</p>`;
       }
 
-      return tasks.map(task => createOperatorTaskCard(task)).join('');
+      return tasks.map(task => createOperatorTaskCard(task, isCompleted)).join('');
     }
 
     /**
-     * Create task card for operator interface - Same as operator-map.html
+     * Create task card for operator interface - Updated with completed task styling
      */
-    function createOperatorTaskCard(task) {
+    function createOperatorTaskCard(task, isCompleted = false) {
       const isOverdue = new Date(task.scheduled_date) < new Date() && task.status !== 'Completed';
       const priorityClass = `priority-${(task.priority || 'medium').toLowerCase()}`;
       const categoryClass = `${(task.task_category || task.request_type || 'maintenance').toLowerCase()}-task`;
+      const completedClass = isCompleted ? 'completed-task' : '';
       
       return `
-        <div class="task-card ${priorityClass} ${categoryClass} assigned-to-me" onclick="focusOnTask('${task.id}', '${task.task_category || task.request_type}')">
+        <div class="task-card ${priorityClass} ${categoryClass} ${completedClass} assigned-to-me" onclick="focusOnTask('${task.id}', '${task.task_category || task.request_type}')">
           <div class="task-header">
-            <h6 class="task-title">${task.drainage_point_name || task.point_name || 'Unknown Location'}</h6>
+            <h6 class="task-title ${isCompleted ? 'text-muted' : ''}">${task.drainage_point_name || task.point_name || 'Unknown Location'}</h6>
+            ${isCompleted ? '<i class="fas fa-check-circle text-success ms-2"></i>' : ''}
           </div>
           
-          <div class="task-location">${task.task_type || task.request_type || 'Task'}</div>
+          <div class="task-location ${isCompleted ? 'text-muted' : ''}">${task.task_type || task.request_type || 'Task'}</div>
           
           <div class="task-badges">
             <span class="task-badge badge-${(task.task_category || task.request_type || 'maintenance').toLowerCase()}">${task.task_category || task.request_type || 'Maintenance'}</span>
             <span class="task-badge badge-priority-${(task.priority || 'medium').toLowerCase()}">${task.priority || 'Medium'}</span>
             <span class="task-badge badge-status-${(task.status || 'pending').toLowerCase().replace(' ', '-')}">${task.status || 'Pending'}</span>
-            ${isOverdue ? '<span class="task-badge badge-priority-critical">OVERDUE</span>' : ''}
+            ${isOverdue && !isCompleted ? '<span class="task-badge badge-priority-critical">OVERDUE</span>' : ''}
             <span class="task-badge bg-info text-white">MY TASK</span>
+            ${isCompleted ? `<span class="task-badge bg-success text-white">COMPLETED ${task.completion_date ? formatDate(task.completion_date) : ''}</span>` : ''}
           </div>
           
-          <div class="task-meta">
+          <div class="task-meta ${isCompleted ? 'text-muted' : ''}">
             <span><i class="fas fa-calendar me-1"></i>${task.scheduled_date}</span>
             ${task.scheduled_time ? `<span><i class="fas fa-clock me-1"></i>${task.scheduled_time}</span>` : ''}
+            ${isCompleted && task.completion_date ? `<span><i class="fas fa-check me-1"></i>Completed: ${formatDate(task.completion_date)}</span>` : ''}
           </div>
           
           <div class="task-actions">
-            <button class="task-action-btn btn-task-update" onclick="event.stopPropagation(); updateSpecificTask('${task.id}', '${task.task_category || task.request_type}')">
-              <i class="fas fa-edit"></i>
-              Update
-            </button>
+            ${!isCompleted ? `
+              <button class="task-action-btn btn-task-update" onclick="event.stopPropagation(); updateSpecificTask('${task.id}', '${task.task_category || task.request_type}')">
+                <i class="fas fa-edit"></i>
+                Update
+              </button>
+            ` : ''}
             <button class="task-action-btn btn-task-details" onclick="event.stopPropagation(); viewTaskDetails('${task.id}', '${task.task_category || task.request_type}')">
               <i class="fas fa-eye"></i>
               Details
@@ -1378,7 +1471,19 @@
     }
 
     /**
-     * Display recent activities
+     * Format date helper
+     */
+    function formatDate(dateString) {
+      if (!dateString) return '';
+      try {
+        return new Date(dateString).toLocaleDateString();
+      } catch (error) {
+        return dateString;
+      }
+    }
+
+    /**
+     * Display recent activities - Updated to show more relevant active task activities
      */
     function displayRecentActivities() {
       const container = document.getElementById('recent-activities-list');
@@ -1387,15 +1492,15 @@
       // Create recent activities from operator tasks
       const recentActivities = [];
       
-      // Add recently updated tasks
-      operatorTasks
+      // Add recently updated active tasks
+      getActiveTasks()
         .filter(task => task.updated_at)
         .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
         .slice(0, 5)
         .forEach(task => {
           recentActivities.push({
             icon: task.task_category === 'Inspection' ? 'clipboard-check' : 'tools',
-            color: task.task_category === 'Inspection' ? 'warning' : 'success',
+            color: task.task_category === 'Inspection' ? 'warning' : 'primary',
             title: `${task.task_category || 'Task'} Updated`,
             description: `${task.task_type || task.request_type} at ${task.drainage_point_name}`,
             time: formatTimeAgo(task.updated_at),
@@ -1404,8 +1509,8 @@
         });
       
       // Add recently completed tasks
-      operatorTasks
-        .filter(task => task.status === 'Completed' && task.completion_date)
+      getCompletedTasks()
+        .filter(task => task.completion_date)
         .sort((a, b) => new Date(b.completion_date) - new Date(a.completion_date))
         .slice(0, 3)
         .forEach(task => {
@@ -1478,50 +1583,116 @@
         return 'Recently';
       }
     }
+
     function displayOperatorNotifications() {
-      const container = document.getElementById('notifications-list');
-      if (!container) return;
-      
-      if (!operatorNotifications || operatorNotifications.length === 0) {
-        container.innerHTML = '<p class="text-muted small">No new notifications.</p>';
-        return;
-      }
+  const container = document.getElementById('notifications-list');
+  
+  if (!container) {
+    console.warn('Notifications container not found');
+    return;
+  }
+  
+  // Debug: Log the actual notifications data
+  console.log('Displaying notifications:', operatorNotifications);
+  console.log('Notifications count:', operatorNotifications ? operatorNotifications.length : 0);
+  
+  if (!operatorNotifications || operatorNotifications.length === 0) {
+    container.innerHTML = '<p class="text-muted small">No new notifications.</p>';
+    updateBadge(0);
+    return;
+  }
 
-      const notifications = operatorNotifications.slice(0, 5);
-      container.innerHTML = notifications.map(notification => `
-        <div class="notification-item">
-          <i class="notification-icon fas fa-${getNotificationIcon(notification.type)}"></i>
-          <div class="notification-content">
-            <h6>${notification.title}</h6>
-            <p>${notification.message}</p>
-          </div>
-        </div>
-      `).join('');
+  const notifications = operatorNotifications.slice(0, 5);
+  container.innerHTML = notifications.map(notification => `
+    <div class="notification-item">
+      <i class="notification-icon fas fa-${getNotificationIcon(notification.type)}"></i>
+      <div class="notification-content">
+        <h6>${notification.title}</h6>
+        <p>${notification.message}</p>
+        <small class="text-muted">${formatTimeAgo(notification.created_at || notification.timestamp)}</small>
+      </div>
+    </div>
+  `).join('');
+  
+  // Update badge with notification count
+  updateBadge(operatorNotifications.length);
+}
+
+function updateBadge(count) {
+  // Try multiple possible badge element IDs
+  const possibleBadgeIds = ['unread-count', 'notification-badge', 'notifications-count', 'badge-notifications'];
+  let badge = null;
+  
+  for (const id of possibleBadgeIds) {
+    badge = document.getElementById(id);
+    if (badge) break;
+  }
+  
+  if (!badge) {
+    console.warn('Notification badge element not found. Tried IDs:', possibleBadgeIds);
+    return;
+  }
+  
+  console.log('Updating badge count to:', count);
+  badge.textContent = count;
+  
+  // Hide badge if no notifications, show if there are notifications
+  if (count === 0) {
+    badge.style.display = 'none';
+    badge.classList.remove('badge-danger', 'badge-warning');
+  } else {
+    badge.style.display = 'inline-block';
+    // Add visual styling based on count
+    if (count > 5) {
+      badge.classList.add('badge-danger');
+      badge.classList.remove('badge-warning');
+    } else if (count > 0) {
+      badge.classList.add('badge-warning');
+      badge.classList.remove('badge-danger');
     }
-
+  }
+}
+function createTaskNotification(task) {
+  const notification = {
+    id: `new-task-${task.id}`,
+    title: 'New Task Assigned',
+    message: `You have been assigned: ${task.task_type} at ${task.drainage_point_name}`,
+    type: 'info',
+    created_at: new Date().toISOString(),
+    read: false
+  };
+  
+  // Add to notifications array
+  operatorNotifications.unshift(notification);
+  
+  // Update display
+  displayOperatorNotifications();
+  
+  // Show toast notification
+  showNotification(`New task assigned: ${task.task_type}`, 'info');
+}
     /**
-     * Populate task selection dropdowns
+     * Populate task selection dropdowns - Updated to exclude completed tasks
      */
     function populateTaskSelects() {
       const taskSelect = document.getElementById('task-select');
       const worklogTaskSelect = document.getElementById('worklog-task');
+      const activeTasks = getActiveTasks();
 
       if (taskSelect) {
-        taskSelect.innerHTML = '<option value="">Choose one of my tasks...</option>';
-        operatorTasks.forEach(task => {
-          if (task.status !== 'Completed') {
-            const option = document.createElement('option');
-            option.value = task.id;
-            option.textContent = `${task.drainage_point_name || task.point_name} - ${task.task_type || task.request_type}`;
-            option.setAttribute('data-task-type', task.task_category || task.request_type);
-            taskSelect.appendChild(option);
-          }
+        taskSelect.innerHTML = '<option value="">Choose one of my active tasks...</option>';
+        activeTasks.forEach(task => {
+          const option = document.createElement('option');
+          option.value = task.id;
+          option.textContent = `${task.drainage_point_name || task.point_name} - ${task.task_type || task.request_type}`;
+          option.setAttribute('data-task-type', task.task_category || task.request_type);
+          taskSelect.appendChild(option);
         });
       }
 
       if (worklogTaskSelect) {
-        worklogTaskSelect.innerHTML = '<option value="">Choose one of my tasks...</option>';
-        operatorTasks.forEach(task => {
+        worklogTaskSelect.innerHTML = '<option value="">Choose one of my active tasks...</option>';
+        activeTasks.forEach(task => {
           const option = document.createElement('option');
           option.value = task.id;
           option.textContent = `${task.drainage_point_name || task.point_name} - ${task.task_type || task.request_type}`;
@@ -1533,7 +1704,7 @@
       if (taskSelect) {
         taskSelect.addEventListener('change', function() {
           const selectedTaskId = this.value;
-          const selectedTask = operatorTasks.find(t => t.id == selectedTaskId);
+          const selectedTask = activeTasks.find(t => t.id == selectedTaskId);
           
           if (selectedTask) {
             const taskInfo = document.getElementById('task-type-display');
@@ -1578,7 +1749,10 @@
         return;
       }
       
-      // Sample data for chart
+      // Sample data for chart based on active vs completed tasks
+      const activeTasks = getActiveTasks();
+      const completedTasks = getCompletedTasks();
+      
       const chartData = {
         labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
         datasets: [

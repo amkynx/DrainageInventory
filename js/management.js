@@ -237,6 +237,7 @@ async function loadMaintenanceRequests() {
 
     filteredMaintenanceRequests = [...maintenanceRequests];
     updateMaintenanceStatistics();
+    setLoadingState(false);
     renderMaintenanceTable();
 
     console.log("Loaded maintenance requests:", maintenanceRequests.length);
@@ -250,6 +251,7 @@ async function loadMaintenanceRequests() {
     // Show empty state instead of sample data
     maintenanceRequests = [];
     filteredMaintenanceRequests = [];
+    setLoadingState(false);
     updateMaintenanceStatistics();
     renderMaintenanceTable();
   }
@@ -284,6 +286,7 @@ async function loadInspectionSchedules() {
 
     filteredInspectionSchedules = [...inspectionSchedules];
     updateInspectionStatistics();
+    setLoadingState(false);
     renderInspectionTable();
 
     console.log("Loaded inspection schedules:", inspectionSchedules.length);
@@ -297,6 +300,7 @@ async function loadInspectionSchedules() {
     // Show empty state instead of sample data
     inspectionSchedules = [];
     filteredInspectionSchedules = [];
+    setLoadingState(false);
     updateInspectionStatistics();
     renderInspectionTable();
   }
@@ -513,12 +517,18 @@ function renderMaintenanceTable() {
 
     // Get drainage point name
     const point = drainagePoints.find((p) => p.id == request.drainage_point_id);
-    const pointName = point ? point.name : `Point ${request.drainage_point_id}`;
+
+    const pointName =
+      request.drainage_point_name || `Point ${request.drainage_point_id}`;
 
     // Get assigned user name
-    const assignedUser = users.find((u) => u.id == request.assigned_to);
+    const assignedUser = users.find(
+      (u) => u.id === parseInt(request.assigned_to)
+    );
     const assignedName = assignedUser
       ? `${assignedUser.first_name} ${assignedUser.last_name}`
+      : request.assigned_to
+      ? "User not found"
       : "Unassigned";
 
     row.innerHTML = `
@@ -564,6 +574,14 @@ function renderMaintenanceTable() {
 
   document.getElementById("maintenance-count").textContent =
     filteredMaintenanceRequests.length;
+  filteredMaintenanceRequests.forEach((request) => {
+    console.log(
+      "Maintenance request drainage_point_id:",
+      request.drainage_point_id
+    );
+    const point = drainagePoints.find((p) => p.id == request.drainage_point_id);
+    console.log("Found drainage point:", point);
+  });
 }
 
 /**
@@ -772,10 +790,12 @@ function editMaintenanceRequest(id) {
   document.getElementById("saveMaintenanceBtn").innerHTML =
     '<i class="fas fa-save me-1"></i>Update Request';
 
+  console.log("Editing maintenance request:", request);
+  console.log("Drainage point ID:", request.drainage_point_id);
   // Populate form
   document.getElementById("maintenance-id").value = request.id;
   document.getElementById("modal-maintenance-point").value =
-    request.drainage_point_id;
+    request.drainage_point_id ? request.drainage_point_id.toString() : "";
   document.getElementById("modal-maintenance-type").value =
     request.request_type;
   document.getElementById("modal-maintenance-priority").value =
@@ -784,9 +804,9 @@ function editMaintenanceRequest(id) {
   document.getElementById("modal-maintenance-cost").value =
     request.estimated_cost;
   document.getElementById("modal-maintenance-assigned").value =
-    request.assigned_to;
+    request.assigned_to ? request.assigned_to.toString() : "";
   document.getElementById("modal-maintenance-scheduled").value =
-    request.scheduled_date;
+    request.scheduled_date || "";
   document.getElementById("modal-maintenance-description").value =
     request.description;
   document.getElementById("modal-maintenance-notes").value =
