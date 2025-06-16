@@ -32,12 +32,11 @@ DrainTrack is a comprehensive web-based system for managing drainage infrastruct
 - MySQL 5.7 or higher
 - XAMPP/WAMP/LAMP stack (for local development)
 ### Setup Instructions
-1. Clone the repository to your web server directory
-2. Create a MySQL database named 'DrainageInventory'
-3. Import the database schema:
-4. Configure database connection in db.php :
-5. Ensure proper permissions for upload directories:
-6. Access the application:
+1. Go to https://10.65.200.6/ai220132/index.html
+2. Click Login
+3. To access Admin page : email: amar@a.com pw: 123456
+4. To access Operator Page : email: ali@a.com pw: 123456
+5. Access the application:
 ## User Access
 - Public Map : /public/public-map.html
 - Login Page : /login.html
