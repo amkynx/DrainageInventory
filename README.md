@@ -13,7 +13,7 @@
 
 **🎓 Final Year Project | Universiti Tun Hussein Onn Malaysia (UTHM)**
 
-[🌐 Live Demo](https://10.65.200.6/ai220132/index.html) • [📖 Documentation](#documentation) • [🚀 Getting Started](#getting-started)
+[🌐 Live Demo](https://lightgreen-louse-461521.hostingersite.com/index.html) • [📖 Documentation](#documentation) • [🚀 Getting Started](#getting-started)
 
 </div>
 
@@ -108,7 +108,7 @@ To provide efficient, data-driven drainage management solutions that help preven
 
 1. **Access the System**
    ```
-   🌐 https://10.65.200.6/ai220132/index.html
+   🌐 https://lightgreen-louse-461521.hostingersite.com/index.html
    ```
 
 2. **Choose Your Role**
@@ -405,7 +405,7 @@ This project is developed as an academic project for educational purposes under 
 
 ### 🎯 **Made with ❤️ for Muar District Community**
 
-**🔗 [Live System](https://10.65.200.6/ai220132/index.html)** | **📖 [Documentation](#)** | **🐛 [Report Issues](#)**
+**🔗 [Live System](https://lightgreen-louse-461521.hostingersite.com/index.html)** | **📖 [Documentation](#)** | **🐛 [Report Issues](#)**
 
 ---
 
